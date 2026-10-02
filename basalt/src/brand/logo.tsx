@@ -1,3 +1,4 @@
+import type { JSX } from "solid-js"
 import { cn } from "@/lib/utils"
 
 /**
@@ -8,48 +9,40 @@ import { cn } from "@/lib/utils"
 
 const SIGNAL_RED = "#C8102E"
 
-export function BasaltMark({
-  size = 28,
-  redBar = false,
-  className,
-}: {
+export function BasaltMark(props: {
   size?: number
   redBar?: boolean
-  className?: string
+  class?: string
 }) {
   return (
     <svg
       viewBox="0 0 32 32"
-      width={size}
-      height={size}
+      width={props.size ?? 28}
+      height={props.size ?? 28}
       fill="currentColor"
-      className={className}
+      class={props.class}
       aria-hidden="true"
     >
       <rect x="3" y="9" width="7" height="23" />
-      <rect x="12.5" y="2" width="7" height="30" fill={redBar ? SIGNAL_RED : undefined} />
+      <rect x="12.5" y="2" width="7" height="30" fill={props.redBar ? SIGNAL_RED : undefined} />
       <rect x="22" y="12" width="7" height="20" />
     </svg>
   )
 }
 
-export function Wordmark({
-  suffix,
-  redDot = false,
-  className,
-}: {
+export function Wordmark(props: {
   suffix?: string
   redDot?: boolean
-  className?: string
+  class?: string
 }) {
   return (
-    <span className={cn("flex flex-col items-start leading-none", className)}>
-      <span className="serif-display font-serif text-[1.6em] tracking-[-0.01em]">
-        Basalt{redDot && <span className="text-signal">.</span>}
+    <span class={cn("flex flex-col items-start leading-none", props.class)}>
+      <span class="serif-display font-serif text-[1.6em] tracking-[-0.01em]">
+        Basalt{props.redDot && <span class="text-signal">.</span>}
       </span>
-      {suffix && (
-        <span className="mt-[0.35em] font-sans text-[0.32em] font-medium uppercase tracking-[0.34em] text-muted-foreground">
-          {suffix}
+      {props.suffix && (
+        <span class="mt-[0.35em] font-sans text-[0.32em] font-medium uppercase tracking-[0.34em] text-muted-foreground">
+          {props.suffix}
         </span>
       )}
     </span>
@@ -59,33 +52,28 @@ export function Wordmark({
 /**
  * Full lockup scales with `size` via em units — mark, word, and suffix all move together.
  */
-export function Logo({
-  variant = "full",
-  size = 28,
-  redBar = false,
-  redDot = false,
-  suffix,
-  className,
-}: {
+export function Logo(props: {
   variant?: "mark" | "word" | "full"
   size?: number
   redBar?: boolean
   redDot?: boolean
   suffix?: string
-  className?: string
-}) {
-  if (variant === "mark") return <BasaltMark size={size} redBar={redBar} className={className} />
+  class?: string
+  children?: JSX.Element
+}): JSX.Element {
+  if (props.variant === "mark")
+    return <BasaltMark size={props.size} redBar={props.redBar} class={props.class} />
 
-  if (variant === "word")
-    return <Wordmark suffix={suffix} redDot={redDot} className={cn("text-[1em]", className)} />
+  if (props.variant === "word")
+    return <Wordmark suffix={props.suffix} redDot={props.redDot} class={cn("text-[1em]", props.class)} />
 
   return (
     <span
-      className={cn("inline-flex items-center gap-[0.55em] leading-none", className)}
-      style={{ fontSize: size }}
+      class={cn("inline-flex items-center gap-[0.55em] leading-none", props.class)}
+      style={{ "font-size": `${props.size ?? 28}px` }}
     >
-      <BasaltMark size={size} redBar={redBar} />
-      <Wordmark suffix={suffix} redDot={redDot} />
+      <BasaltMark size={props.size} redBar={props.redBar} />
+      <Wordmark suffix={props.suffix} redDot={props.redDot} />
     </span>
   )
 }

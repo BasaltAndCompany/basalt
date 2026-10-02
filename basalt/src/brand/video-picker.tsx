@@ -1,4 +1,10 @@
-import { useEffect, useState } from "react"
+import { createEffect, createSignal, onCleanup, Show } from "solid-js"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 
 type Clip = {
   title: string
@@ -27,21 +33,18 @@ const KEY = "basalt.heroVideo"
  * ponytail: Commons = zero keys and stable URLs; swap in Pexels/Coverr later
  * if the quality bar demands it.
  */
-export function VideoPicker({
-  heroVideo,
-  onSetHero,
-  onBack,
-}: {
+export function VideoPicker(props: {
   heroVideo: string | null
   onSetHero: (url: string | null) => void
   onBack: () => void
 }) {
-  const [query, setQuery] = useState("lava flow")
-  const [clips, setClips] = useState<Clip[]>([])
-  const [loading, setLoading] = useState(false)
-  const [preview, setPreview] = useState<Clip | null>(null)
+  const [query, setQuery] = createSignal("lava flow")
+  const [clips, setClips] = createSignal<Clip[]>([])
+  const [loading, setLoading] = createSignal(false)
+  const [preview, setPreview] = createSignal<Clip | null>(null)
 
-  useEffect(() => {
+  createEffect(() => {
+    const q = query()
     const ctrl = new AbortController()
     setLoading(true)
     const params = new URLSearchParams({
@@ -49,7 +52,7 @@ export function VideoPicker({
       format: "json",
       origin: "*",
       generator: "search",
-      gsrsearch: `filetype:video ${query}`,
+      gsrsearch: `filetype:video ${q}`,
       gsrnamespace: "6",
       gsrlimit: "24",
       prop: "imageinfo",
@@ -79,152 +82,178 @@ export function VideoPicker({
         setLoading(false)
       })
       .catch(() => setLoading(false))
-    return () => ctrl.abort()
-  }, [query])
+    onCleanup(() => ctrl.abort())
+  })
 
   const setHero = (url: string | null) => {
     if (url) localStorage.setItem(KEY, url)
     else localStorage.removeItem(KEY)
-    onSetHero(url)
+    props.onSetHero(url)
     setPreview(null)
   }
 
   return (
-    <div className="min-h-svh">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <p className="font-serif text-xl">Footage library</p>
-          <a
+    <div class="min-h-svh">
+      <header class="border-b border-border">
+        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <p class="font-serif text-xl">Footage library</p>
+          <Button
+            variant="link"
+            size="link"
+            as="a"
             href="#"
+            class="text-muted-foreground"
             onClick={(e) => {
               e.preventDefault()
-              onBack()
+              props.onBack()
             }}
-            className="font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             ← Back to site
-          </a>
+          </Button>
         </div>
       </header>
 
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        <p className="max-w-xl font-sans text-sm leading-relaxed text-muted-foreground">
+      <div class="mx-auto max-w-5xl px-6 py-10">
+        <p class="max-w-xl font-sans text-sm leading-relaxed text-muted-foreground">
           Free, licensed stock video from Wikimedia Commons. Click any clip to preview it
           looping full-bleed, then set it as the hero background. Files under ~15 MB loop
           best on first load.
         </p>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+        <Separator class="my-8" />
+
+        <div class="flex max-w-sm flex-col gap-2">
+          <Label for="footage-search" class="text-muted-foreground">
+            Search Commons
+          </Label>
+          <Input
+            id="footage-search"
+            placeholder="e.g. lava flow"
+            value={query()}
+            onInput={(e) => setQuery(e.currentTarget.value)}
+          />
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
           {TOPICS.map((t) => (
-            <button
-              key={t}
+            <Button
+              variant="outline"
+              size="sm"
+              data-active={query() === t}
               onClick={() => setQuery(t)}
-              className={`border border-border px-3 py-1.5 font-sans text-xs transition-colors ${
-                query === t
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              class="text-muted-foreground hover:bg-transparent data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:hover:bg-foreground data-[active=true]:hover:text-background"
             >
               {t}
-            </button>
+            </Button>
           ))}
         </div>
 
-        {heroVideo && (
-          <p className="mt-6 font-sans text-xs text-muted-foreground">
-            Current hero video is set.{" "}
-            <a
+        <Show when={props.heroVideo}>
+          <div class="mt-6 flex items-center gap-3 font-sans text-xs text-muted-foreground">
+            <Badge variant="outline">hero set</Badge>
+            <span>A Commons clip is the current hero background.</span>
+            <Button
+              variant="link"
+              size="link"
+              as="a"
               href="#"
+              class="text-signal"
               onClick={(e) => {
                 e.preventDefault()
                 setHero(null)
               }}
-              className="text-signal hover:underline"
             >
               Remove it
-            </a>
-            .
-          </p>
-        )}
+            </Button>
+          </div>
+        </Show>
 
-        {loading ? (
-          <p className="mt-10 font-sans text-sm text-muted-foreground">Searching…</p>
-        ) : (
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {clips.map((c) => (
-              <button
-                key={c.title}
-                onClick={() => setPreview(c)}
-                className="group text-left"
-              >
-                <div className="aspect-video w-full overflow-hidden bg-card">
-                  {c.poster ? (
-                    <img
-                      src={c.poster}
-                      alt=""
-                      className="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
-                    />
-                  ) : null}
-                </div>
-                <p className="mt-2 truncate font-sans text-xs text-muted-foreground">
-                  {c.title}
-                </p>
-                <p className="font-sans text-[10px] text-muted-foreground/60">{c.mb} MB</p>
+        <Show
+          when={!loading()}
+          fallback={
+            <p class="mt-10 font-sans text-sm text-muted-foreground">Searching…</p>
+          }
+        >
+          <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {clips().map((c) => (
+              <button class="group text-left" onClick={() => setPreview(c)}>
+                <Card class="overflow-hidden border-0 bg-transparent p-0 shadow-none">
+                  <div class="aspect-video w-full bg-card">
+                    <Show when={c.poster}>
+                      <img
+                        src={c.poster}
+                        alt=""
+                        class="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
+                      />
+                    </Show>
+                  </div>
+                </Card>
+                <p class="mt-2 truncate font-sans text-xs text-muted-foreground">{c.title}</p>
+                <p class="font-sans text-[10px] text-muted-foreground/60">{c.mb} MB</p>
               </button>
             ))}
-            {clips.length === 0 && (
-              <p className="col-span-full font-sans text-sm text-muted-foreground">
-                Nothing found for “{query}”. Try another topic.
+            {clips().length === 0 && (
+              <p class="col-span-full font-sans text-sm text-muted-foreground">
+                Nothing found for “{query()}”. Try another topic.
               </p>
             )}
           </div>
-        )}
+        </Show>
       </div>
 
-      {preview && (
-        <div className="fixed inset-0 z-50 bg-background/95">
-          <video
-            key={preview.url}
-            src={preview.url}
-            poster={preview.poster}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover opacity-80"
-          />
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-background to-transparent p-8">
-            <div className="min-w-0 pr-4">
-              <p className="truncate font-sans text-sm">{preview.title}</p>
-              <p className="font-sans text-xs text-muted-foreground">
-                {preview.mb} MB · {preview.mime}
-              </p>
-            </div>
-            <div className="flex shrink-0 items-center gap-6">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setHero(preview.url)
-                }}
-                className="font-sans text-sm text-signal hover:underline"
-              >
-                Use in hero
-              </a>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setPreview(null)
-                }}
-                className="font-sans text-sm text-muted-foreground hover:text-foreground"
-              >
-                Close
-              </a>
+      <Show when={preview()} keyed>
+        {(clip) => (
+          <div class="fixed inset-0 z-50 bg-background/95">
+            <video
+              ref={(el) => {
+                el.muted = true
+              }}
+              src={clip.url}
+              poster={clip.poster}
+              autoplay
+              loop
+              playsinline
+              class="h-full w-full object-cover opacity-80"
+            />
+            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-background to-transparent p-8">
+              <div class="min-w-0 pr-4">
+                <p class="truncate font-sans text-sm">{clip.title}</p>
+                <p class="font-sans text-xs text-muted-foreground">
+                  {clip.mb} MB · {clip.mime}
+                </p>
+              </div>
+              <div class="flex shrink-0 items-center gap-6">
+                <Button
+                  variant="link"
+                  size="link"
+                  as="a"
+                  href="#"
+                  class="text-signal"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setHero(clip.url)
+                  }}
+                >
+                  Use in hero
+                </Button>
+                <Button
+                  variant="link"
+                  size="link"
+                  as="a"
+                  href="#"
+                  class="text-muted-foreground"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setPreview(null)
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </Show>
     </div>
   )
 }
