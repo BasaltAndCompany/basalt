@@ -142,7 +142,6 @@ export default function CommandPalette() {
 				setOpen(o);
 				if (o) setSearch("");
 			}}
-			label="Command menu"
 		>
 			<CommandInput value={search()} onValueChange={setSearch} placeholder="Type a command…" spellcheck={false} />
 			<CommandList>
