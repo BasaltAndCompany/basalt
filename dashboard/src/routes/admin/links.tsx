@@ -5,7 +5,7 @@ import ConfirmButton from "~/components/ConfirmButton";
 import CreateDialog from "~/components/CreateDialog";
 import Layout from "~/components/Layout";
 import { getUserQuery } from "~/lib/queries";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 type Link = { slug: string; target: string; clicks: number; docId: string | null; docTitle: string | null; docKind: string | null; createdAt: string };
 type Doc = { id: string; title: string; kind: string; publishedAt: string | null };
@@ -174,34 +174,34 @@ export default function AdminLinks() {
 				Clean /l/&lt;slug&gt; URLs for first comments and posts — UTMs hide behind the redirect, clicks count per link.
 			</p>
 
-			<table style={{ width: "100%", "border-collapse": "collapse" }}>
-				<thead>
-					<tr style={{ "text-align": "left", "border-bottom": "1px solid #ddd" }}>
-						<th style={{ padding: "8px" }}>Link</th>
-						<th style={{ padding: "8px" }}>Target</th>
-						<th style={{ padding: "8px" }}>Attached to</th>
-						<th style={{ padding: "8px" }}>Clicks</th>
-						<th style={{ padding: "8px" }} />
-					</tr>
-				</thead>
-				<tbody>
+			<Table >
+				<TableHeader>
+					<TableRow >
+						<TableHead >Link</TableHead>
+						<TableHead >Target</TableHead>
+						<TableHead >Attached to</TableHead>
+						<TableHead >Clicks</TableHead>
+						<TableHead />
+					</TableRow>
+				</TableHeader>
+				<TableBody>
 					<For each={links()}>
 						{(l) => (
-							<tr style={{ "border-bottom": "1px solid #eee" }}>
-								<td style={{ padding: "8px" }}>
+							<TableRow >
+								<TableCell >
 									<code>{l.slug}</code>
-								</td>
-								<td style={{ padding: "8px", "max-width": "420px", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>{l.target}</td>
-								<td style={{ padding: "8px" }}>
+								</TableCell>
+								<TableCell style={{ padding: "8px", "max-width": "420px", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>{l.target}</TableCell>
+								<TableCell >
 									<Show
 										when={l.docId && l.docTitle}
 										fallback={<span class="muted" style={{ "font-size": "13px" }}>—</span>}
 									>
 										<a href={docHref(l.docId!, l.docKind)}>{l.docTitle}</a>
 									</Show>
-								</td>
-								<td style={{ padding: "8px", "font-variant-numeric": "tabular-nums" }}>{l.clicks}</td>
-								<td style={{ padding: "8px" }}>
+								</TableCell>
+								<TableCell style={{ padding: "8px", "font-variant-numeric": "tabular-nums" }}>{l.clicks}</TableCell>
+								<TableCell >
 									<span style={{ display: "inline-flex", gap: "6px", "align-items": "center" }}>
 									<Button variant="outline" size="sm" type="button"  onClick={() => void copyLink(l)}>
 										{copied() === l.slug ? "Copied" : "Copy link"}
@@ -209,12 +209,12 @@ export default function AdminLinks() {
 									<Button variant="outline" size="sm" type="button"  onClick={() => openEdit(l)}>Edit</Button>
 									<ConfirmButton label="Delete" danger onConfirm={() => remove(l.slug)} />
 								</span>
-								</td>
-							</tr>
+								</TableCell>
+							</TableRow>
 						)}
 					</For>
-				</tbody>
-			</table>
+				</TableBody>
+			</Table>
 
 			<dialog
 				ref={dialogRef}
@@ -226,11 +226,11 @@ export default function AdminLinks() {
 					<form onSubmit={saveEdit} style={{ display: "grid", gap: "8px" }}>
 						<label style={{ display: "grid", gap: "4px" }}>
 							Target URL
-							<input name="target" value={editing()!.target} required style={{ padding: "8px" }} spellcheck={false} />
+							<input name="target" value={editing()!.target} required spellcheck={false} />
 						</label>
 						<label style={{ display: "grid", gap: "4px" }}>
 							Attached post / newsletter
-							<select name="docId" style={{ padding: "8px" }}>
+							<select name="docId" >
 								<option value="">— none (standalone link) —</option>
 								<For each={docOptions()}>
 									{(d) => (

@@ -14,7 +14,7 @@ import {
 	getOverviewQuery,
 	type ExternalResult,
 } from "~/lib/overview";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 /** Render an external-source metric, degrading to a muted "not connected" tile. */
 function SourceTile(props: {
@@ -181,34 +181,34 @@ export default function Home() {
 							{/* ── Work needing attention ── */}
 							<Show when={ov().deliverables.attention.length > 0}>
 								<div class="section-heading">Needs Attention</div>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Deliverable</th>
-											<th>Project</th>
-											<th>Status</th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Deliverable</TableHead>
+											<TableHead>Project</TableHead>
+											<TableHead>Status</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={ov().deliverables.attention}>
 											{(d) => (
-												<tr>
-													<td>
+												<TableRow>
+													<TableCell>
 														<A href={`/admin/projects/${d.projectId}`} class="gold">
 															{d.title}
 														</A>
-													</td>
-													<td class="muted">{d.projectName}</td>
-													<td>
+													</TableCell>
+													<TableCell class="muted">{d.projectName}</TableCell>
+													<TableCell>
 														<span class={`badge ${DELIVERABLE_STATUS_META[d.status].cls}`}>
 															{DELIVERABLE_STATUS_META[d.status].label}
 														</span>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 
 							{/* ── Outstanding invoices ── */}
@@ -219,58 +219,58 @@ export default function Home() {
 										${ov().invoices.outstandingTotal.toFixed(2)} unpaid
 									</span>
 								</div>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Invoice</th>
-											<th>Project</th>
-											<th style={{ "text-align": "right" }}>Amount</th>
-											<th>Due</th>
-											<th>Status</th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Invoice</TableHead>
+											<TableHead>Project</TableHead>
+											<TableHead style={{ "text-align": "right" }}>Amount</TableHead>
+											<TableHead>Due</TableHead>
+											<TableHead>Status</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={ov().invoices.outstanding.slice(0, 6)}>
 											{(inv) => (
-												<tr>
-													<td>{inv.number}</td>
-													<td class="muted">{inv.projectName}</td>
-													<td class="hours" style={{ "text-align": "right" }}>
+												<TableRow>
+													<TableCell>{inv.number}</TableCell>
+													<TableCell class="muted">{inv.projectName}</TableCell>
+													<TableCell class="hours" style={{ "text-align": "right" }}>
 														${Number(inv.amount).toFixed(2)}
-													</td>
-													<td class="muted">
+													</TableCell>
+													<TableCell class="muted">
 														{inv.dueDate
 															? new Date(inv.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 															: "—"}
-													</td>
-													<td>
+													</TableCell>
+													<TableCell>
 														<span class={`badge ${inv.status === "sent" ? "badge-paused" : "badge-completed"}`}>
 															{inv.status}
 														</span>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 
 							{/* ── Open Linear issues (when connected) ── */}
 							<Show when={ov().external.linear.ok}>
 								<div class="section-heading">Open Issues</div>
-								<table class="table">
-									<tbody>
+								<Table class="table">
+									<TableBody>
 										<For each={(ov().external.linear as any).data.issues}>
 											{(issue) => (
-												<tr>
-													<td class="mono" style={{ "white-space": "nowrap" }}>{issue.identifier}</td>
-													<td>{issue.title}</td>
-													<td class="muted" style={{ "text-align": "right" }}>{issue.state}</td>
-												</tr>
+												<TableRow>
+													<TableCell class="mono" style={{ "white-space": "nowrap" }}>{issue.identifier}</TableCell>
+													<TableCell>{issue.title}</TableCell>
+													<TableCell class="muted" style={{ "text-align": "right" }}>{issue.state}</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						</>
 					)}
@@ -385,29 +385,29 @@ export default function Home() {
 							{/* Recent entries */}
 							<div class="section-heading">Recent Entries</div>
 							<Show when={d().entries.length > 0} fallback={<p class="empty">No entries yet.</p>}>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Project</th>
-											<th>Description</th>
-											<th style={{ "text-align": "right" }}>Hours</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Date</TableHead>
+											<TableHead>Project</TableHead>
+											<TableHead>Description</TableHead>
+											<TableHead style={{ "text-align": "right" }}>Hours</TableHead>
+											<TableHead></TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={d().entries}>
 											{(e) => (
-												<tr>
-													<td class="muted">
+												<TableRow>
+													<TableCell class="muted">
 														{new Date(e.entryDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-													</td>
-													<td>
+													</TableCell>
+													<TableCell>
 														<A href={`/admin/projects/${e.projectId}`} class="gold">{e.projectName}</A>
-													</td>
-													<td>{e.description}</td>
-													<td class="hours" style={{ "text-align": "right" }}>{e.hours}</td>
-													<td style={{ width: "40px" }}>
+													</TableCell>
+													<TableCell>{e.description}</TableCell>
+													<TableCell class="hours" style={{ "text-align": "right" }}>{e.hours}</TableCell>
+													<TableCell style={{ width: "40px" }}>
 														<ConfirmButton
 															label="Delete"
 															class="delete-btn"
@@ -417,12 +417,12 @@ export default function Home() {
 																return deleteEntry(fd);
 															}}
 														/>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						</>
 					)}

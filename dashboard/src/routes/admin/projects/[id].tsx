@@ -14,7 +14,7 @@ import {
 } from "~/lib/queries";
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
 	"planned",
@@ -258,29 +258,29 @@ export default function ProjectDetail() {
 								when={(entries() ?? []).length > 0}
 								fallback={<p class="empty">No entries yet.</p>}
 							>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Description</th>
-											<th style={{ "text-align": "right" }}>Hours</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Date</TableHead>
+											<TableHead>Description</TableHead>
+											<TableHead style={{ "text-align": "right" }}>Hours</TableHead>
+											<TableHead></TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={entries() ?? []}>
 											{(e) => (
-												<tr>
-													<td class="muted" style={{ "white-space": "nowrap" }}>
+												<TableRow>
+													<TableCell class="muted" style={{ "white-space": "nowrap" }}>
 														{new Date(e.entryDate).toLocaleDateString("en-US", {
 															month: "short",
 															day: "numeric",
 															year: "numeric",
 														})}
-													</td>
-													<td>{e.description}</td>
-													<td class="hours" style={{ "text-align": "right" }}>{e.hours}</td>
-													<td style={{ width: "40px" }}>
+													</TableCell>
+													<TableCell>{e.description}</TableCell>
+													<TableCell class="hours" style={{ "text-align": "right" }}>{e.hours}</TableCell>
+													<TableCell style={{ width: "40px" }}>
 														<ConfirmButton
 													label="Delete"
 													class="delete-btn"
@@ -290,12 +290,12 @@ export default function ProjectDetail() {
 														return deleteEntry(fd);
 													}}
 												/>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						</>
 					)}

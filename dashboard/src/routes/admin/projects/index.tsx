@@ -9,6 +9,7 @@ import {
 	getUserQuery,
 } from "~/lib/queries";
 import { getCompaniesForSelectQuery } from "~/lib/admin-queries";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 const statusBadge: Record<string, string> = {
 	active: "badge-active",
@@ -104,38 +105,38 @@ export default function Projects() {
 						<Show when={list().length > 0} fallback={
 							<div class="card empty">No projects yet. Create your first one above.</div>
 						}>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Project</th>
-										<th>Company</th>
-										<th>Type</th>
-										<th>Rate / Price</th>
-										<th>Cap</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Project</TableHead>
+										<TableHead>Company</TableHead>
+										<TableHead>Type</TableHead>
+										<TableHead>Rate / Price</TableHead>
+										<TableHead>Cap</TableHead>
+										<TableHead>Status</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(p) => (
-											<tr>
-												<td>
+											<TableRow>
+												<TableCell>
 													<A href={`/admin/projects/${p.id}`} class="gold">{p.name}</A>
-												</td>
-												<td class="muted">{p.companyName}</td>
-												<td style={{ "text-transform": "capitalize" }}>{p.engagementType}</td>
-												<td class="mono">
+												</TableCell>
+												<TableCell class="muted">{p.companyName}</TableCell>
+												<TableCell style={{ "text-transform": "capitalize" }}>{p.engagementType}</TableCell>
+												<TableCell class="mono">
 													{p.engagementType === "project"
 														? `$${(p.fixedPrice ?? 0).toLocaleString()} fixed`
 														: `$${p.hourlyRate}/hr`}
-												</td>
-												<td class="muted">{p.monthlyCapHours ? `${p.monthlyCapHours}h` : "—"}</td>
-												<td><span class={`badge ${statusBadge[p.status]}`}>{p.status}</span></td>
-											</tr>
+												</TableCell>
+												<TableCell class="muted">{p.monthlyCapHours ? `${p.monthlyCapHours}h` : "—"}</TableCell>
+												<TableCell><span class={`badge ${statusBadge[p.status]}`}>{p.status}</span></TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>

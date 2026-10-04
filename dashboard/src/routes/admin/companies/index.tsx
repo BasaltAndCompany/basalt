@@ -13,7 +13,7 @@ import {
 	getSignedInEmailsQuery,
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 export default function Companies() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -85,37 +85,37 @@ export default function Companies() {
 						<Show when={list().length > 0} fallback={
 							<div class="card empty">No companies yet. Create one above.</div>
 						}>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Company</th>
-										<th>Members</th>
-										<th>Created</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Company</TableHead>
+										<TableHead>Members</TableHead>
+										<TableHead>Created</TableHead>
+										<TableHead>Actions</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(c) => (
-											<tr>
-												<td>
+											<TableRow>
+												<TableCell>
 													<A href={`/admin/companies/${c.id}`} class="gold">{c.name}</A>
-												</td>
-												<td class="muted">
+												</TableCell>
+												<TableCell class="muted">
 													{(members() ?? []).filter((m) =>
 														// ponytail: member-company link shown on detail page; here just count
 														false,
 													).length}
-												</td>
-												<td class="muted">{new Date(c.createdAt).toLocaleDateString()}</td>
-												<td>
+												</TableCell>
+												<TableCell class="muted">{new Date(c.createdAt).toLocaleDateString()}</TableCell>
+												<TableCell>
 													<Button as="a" variant="outline" size="sm" href={`/admin/companies/${c.id}`}>Manage</Button>
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>
@@ -136,27 +136,27 @@ export default function Companies() {
 							<Show when={list().length > 0} fallback={
 								<div class="card empty">No members yet. Add them from a company detail page.</div>
 							}>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Email</th>
-											<th>Status</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Name</TableHead>
+											<TableHead>Email</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Actions</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={list()}>
 											{(m) => (
-												<tr>
-													<td>{m.name}</td>
-													<td class="muted">{m.email}</td>
-													<td>
+												<TableRow>
+													<TableCell>{m.name}</TableCell>
+													<TableCell class="muted">{m.email}</TableCell>
+													<TableCell>
 														<span class={`badge ${m.isActive ? "badge-active" : "badge-paused"}`}>
 															{m.isActive ? "active" : "disabled"}
 														</span>
-													</td>
-													<td>
+													</TableCell>
+													<TableCell>
 														<div style={{ display: "flex", gap: "8px" }}>
 															<Show when={invitePending(m.email)}>
 																<Button variant="outline" size="sm" onClick={() => handleResend(m.id)} disabled={resendingId() === m.id}>{resendingId() === m.id ? "Sending…" : "Resend Invite"}</Button>
@@ -167,12 +167,12 @@ export default function Companies() {
 																<Button variant="outline" size="sm" type="submit">{m.isActive ? "Disable" : "Enable"}</Button>
 															</form>
 														</div>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						)}
 					</Show>

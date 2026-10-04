@@ -8,7 +8,7 @@ import { getDocQuery, getDocStatsQuery } from "~/lib/docs-queries";
 import { computeBreaks } from "~/lib/doc-pages";
 import { VoiceLintPanel } from "~/components/VoiceLintPanel";
 import { docSurface, type LintResult } from "~/lib/voice-lint";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 type VersionRow = {
 	id: string;
@@ -589,26 +589,26 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 							{s().opens} opens · {s().clicks} clicks · {s().requests} brain requests
 						</p>
 						<Show when={s().perPerson.length}>
-							<table style={{ "font-size": "12px", "border-collapse": "collapse", width: "100%" }}>
-								<thead>
-									<tr class="muted" style={{ "text-align": "left" }}>
-										<th style={{ padding: "2px 12px 2px 0", "font-weight": 500 }}>Recipient</th>
-										<th style={{ padding: "2px 12px 2px 0", "font-weight": 500 }}>Opens</th>
-										<th style={{ padding: "2px 0", "font-weight": 500 }}>Clicks</th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table >
+								<TableHeader>
+									<TableRow class="muted" >
+										<TableHead >Recipient</TableHead>
+										<TableHead >Opens</TableHead>
+										<TableHead style={{ padding: "2px 0", "font-weight": 500 }}>Clicks</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={s().perPerson}>
 										{(p) => (
-											<tr>
-												<td style={{ padding: "2px 12px 2px 0" }}>{p.recipient ?? "(anon)"}</td>
-												<td style={{ padding: "2px 12px 2px 0" }}>{p.opens}</td>
-												<td style={{ padding: "2px 0" }}>{p.clicks}</td>
-											</tr>
+											<TableRow>
+												<TableCell style={{ padding: "2px 12px 2px 0" }}>{p.recipient ?? "(anon)"}</TableCell>
+												<TableCell style={{ padding: "2px 12px 2px 0" }}>{p.opens}</TableCell>
+												<TableCell style={{ padding: "2px 0" }}>{p.clicks}</TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					</div>
 				)}

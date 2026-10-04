@@ -7,7 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { InvoiceStatus } from "~/db/schema";
-import { Button } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 const statusBadge: Record<InvoiceStatus, string> = {
 	draft: "badge-paused",
@@ -35,33 +35,33 @@ export default function PortalInvoices() {
 							when={list().length > 0}
 							fallback={<div class="card empty">No invoices yet.</div>}
 						>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Invoice #</th>
-										<th>Amount</th>
-										<th>Issued</th>
-										<th>Due</th>
-										<th>Status</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Invoice #</TableHead>
+										<TableHead>Amount</TableHead>
+										<TableHead>Issued</TableHead>
+										<TableHead>Due</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(inv) => (
-											<tr>
-												<td class="mono">{inv.number}</td>
-												<td class="mono" style={{ "font-weight": "500" }}>
+											<TableRow>
+												<TableCell class="mono">{inv.number}</TableCell>
+												<TableCell class="mono" style={{ "font-weight": "500" }}>
 													${inv.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-												</td>
-												<td class="muted">{inv.issueDate.toLocaleDateString()}</td>
-												<td class="muted">{inv.dueDate ? inv.dueDate.toLocaleDateString() : "—"}</td>
-												<td>
+												</TableCell>
+												<TableCell class="muted">{inv.issueDate.toLocaleDateString()}</TableCell>
+												<TableCell class="muted">{inv.dueDate ? inv.dueDate.toLocaleDateString() : "—"}</TableCell>
+												<TableCell>
 													<span class={`badge ${statusBadge[inv.status]}`}>
 														{inv.status}
 													</span>
-												</td>
-												<td>
+												</TableCell>
+												<TableCell>
 													<div style={{ display: "flex", gap: "8px" }}>
 														<Show when={inv.paymentUrl && inv.status !== "paid"}>
 															<Button as="a" size="sm" href={inv.paymentUrl!}
@@ -83,12 +83,12 @@ export default function PortalInvoices() {
 															</span>
 														</Show>
 													</div>
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>
