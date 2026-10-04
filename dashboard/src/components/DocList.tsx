@@ -73,7 +73,7 @@ export default function DocList(props: {
 						{(d) => (
 							<div class="card" style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
 								<A href={`/admin/${props.kind ? `${props.kind}s` : "docs"}/${d.id}`} style={{ display: "block", "text-decoration": "none" }}>
-									<div style={{ "font-size": "15px", "font-weight": 500, color: "var(--text)" }}>{d.title}</div>
+									<div style={{ "font-size": "15px", "font-weight": 500, color: "var(--foreground)" }}>{d.title}</div>
 								<div class="muted" style={{ "font-size": "13px", "margin-top": "4px" }}>
 									{new Date(d.updatedAt).toLocaleString()} · v{d.version}
 									<Show when={d.genre}> · {d.genre}</Show>

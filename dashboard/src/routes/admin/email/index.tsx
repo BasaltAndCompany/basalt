@@ -850,7 +850,7 @@ export default function AdminEmail() {
 							setSearchParams({ q: undefined });
 						}
 					}}
-					style={{ flex: 1, padding: "10px 14px", background: "var(--bg-card)", border: "1px solid rgba(0,0,0,0.12)", "font-size": "14px" }}
+					style={{ flex: 1, padding: "10px 14px", background: "var(--card)", border: "1px solid rgba(0,0,0,0.12)", "font-size": "14px" }}
 				/>
 				<Show when={q() || activeQ()}>
 					<button
@@ -871,7 +871,7 @@ export default function AdminEmail() {
 				<div>
 					<Show when={folder() === "inbox"}>
 					<Show when={visMode()}>
-						<div class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", color: "#bc9c5c" }}>
+						<div class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", color: "var(--foreground)" }}>
 							visual — {visRangeIds().length} selected · j/k extend · e done · u unread · ! spam · # delete · esc cancel
 						</div>
 					</Show>
@@ -900,7 +900,7 @@ export default function AdminEmail() {
 									onpointerover={() => prefetch(t)}
 								>
 									<div style={{ display: "flex", gap: "10px", "align-items": "baseline" }}>
-										<Show when={isUnread(t)}><span style={{ color: "#bc9c5c" }}>●</span></Show>
+										<Show when={isUnread(t)}><span style={{ color: "var(--foreground)" }}>●</span></Show>
 										<strong style={{ "font-size": "14px", flex: 1 }}>{t.subject}</strong>
 										<span class="muted" style={{ "font-size": "12px" }}>{new Date(t.lastMessageAt).toLocaleDateString()}</span>
 									</div>
@@ -1019,7 +1019,7 @@ export default function AdminEmail() {
 					style={{ position: "fixed", inset: "0", background: "rgba(0, 0, 0, 0.35)", "z-index": 60, display: "grid", "place-items": "center" }}
 					onClick={() => setPending(null)}
 				>
-					<div class="card" style={{ width: "460px", "max-width": "90vw", padding: "24px", background: "var(--bg-card)", "border-top-color": pending()!.danger ? "#a33" : "var(--text)" }} onClick={(e) => e.stopPropagation()}>
+					<div class="card" style={{ width: "460px", "max-width": "90vw", padding: "24px", background: "var(--card)", "border-top-color": pending()!.danger ? "#a33" : "var(--foreground)" }} onClick={(e) => e.stopPropagation()}>
 						<h2 style={{ "font-size": "17px", margin: "0 0 8px" }}>{pending()!.title}</h2>
 						<p class="muted" style={{ "font-size": "14px", "line-height": "1.5", margin: 0, "overflow-wrap": "anywhere" }}>{pending()!.body}</p>
 						<div style={{ display: "flex", gap: "8px", "justify-content": "flex-end", "margin-top": "16px" }}>
@@ -1027,7 +1027,7 @@ export default function AdminEmail() {
 							<button
 								type="button"
 								class="btn btn-sm"
-								style={pending()!.danger ? { "border-color": "#a33", color: "#a33" } : { "border-color": "var(--gold)", color: "var(--gold)" }}
+								style={pending()!.danger ? { "border-color": "#a33", color: "#a33" } : { "border-color": "var(--foreground)", color: "var(--foreground)" }}
 								onClick={() => void confirmPending()}
 							>
 								{pending()!.confirm} (⏎)

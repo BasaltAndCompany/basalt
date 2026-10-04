@@ -38,7 +38,7 @@ export default function Login() {
 							<img src="/cactus-seal.svg" alt="Mad Cactus" style={{ width: "40px", height: "40px" }} />
 							<div>
 								<div style={{ "font-family": "var(--font-serif)", "font-size": "20px" }}>Mad Cactus</div>
-								<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--text-subtle)" }}>Portal</div>
+								<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--muted-foreground)" }}>Portal</div>
 							</div>
 						</div>
 						<h1 style={{ "font-family": "var(--font-serif)", "font-size": "22px", "margin-bottom": "8px" }}>Sign in</h1>

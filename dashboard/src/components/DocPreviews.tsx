@@ -81,7 +81,7 @@ export function LinkedInPreview(props: { markdown: string; title: string; firstC
 						"border-left": "3px solid #0a66c2",
 						padding: "8px 12px",
 						"font-size": "13px",
-						color: "var(--text)",
+						color: "var(--foreground)",
 						background: "rgb(0 0 0 / 0.03)",
 						"border-radius": "6px",
 					}}

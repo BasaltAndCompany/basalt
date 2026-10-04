@@ -139,7 +139,7 @@ export default function PortalApiKeys() {
 					</button>
 					<pre
 						style={{
-							background: "var(--bg-elevated)",
+							background: "var(--secondary)",
 							border: "1px solid rgba(255,255,255,0.1)",
 							"border-radius": "0px",
 							padding: "16px",
@@ -174,7 +174,7 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 					style={{
 						flex: "1",
 						padding: "10px 14px",
-						background: "var(--bg-elevated)",
+						background: "var(--secondary)",
 						border: "1px solid rgba(255,255,255,0.1)",
 						"font-size": "13px",
 						"word-break": "break-all",

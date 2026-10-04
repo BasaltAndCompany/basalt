@@ -69,7 +69,7 @@ export default function ClientLogin() {
 					<img src="/cactus-seal.svg" alt="Mad Cactus" style={{ width: "40px", height: "40px" }} />
 					<div>
 						<div style={{ "font-family": "var(--font-serif)", "font-size": "20px" }}>Mad Cactus</div>
-						<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--text-subtle)" }}>Client Portal</div>
+						<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--muted-foreground)" }}>Client Portal</div>
 					</div>
 				</div>
 

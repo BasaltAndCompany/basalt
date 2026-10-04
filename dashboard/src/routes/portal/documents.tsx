@@ -47,10 +47,10 @@ export default function PortalDocuments() {
 					style={{
 						width: "100%",
 						padding: "12px 16px",
-						background: "var(--bg-card)",
+						background: "var(--card)",
 						border: "1px solid rgba(0,0,0,0.12)",
 						"border-radius": "0px",
-						color: "var(--text)",
+						color: "var(--foreground)",
 						"font-size": "14px",
 						outline: "none",
 					}}

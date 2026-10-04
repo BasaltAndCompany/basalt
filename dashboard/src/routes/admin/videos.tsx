@@ -180,7 +180,7 @@ export default function AdminVideos() {
 							<div class="board-card">
 								<div style={{ display: "flex", "align-items": "baseline", gap: "6px" }}>
 									<span style={{ "font-weight": "600", "font-size": "13px" }}>{company ?? v.title}</span>
-									<span class="badge" style={{ color: "var(--text-subtle)", "margin-left": "auto" }}>{stageLabel(stage ?? v.status)}</span>
+									<span class="badge" style={{ color: "var(--muted-foreground)", "margin-left": "auto" }}>{stageLabel(stage ?? v.status)}</span>
 								</div>
 								<Show when={v.description}>
 									<p class="muted" style={{ "font-size": "12px", margin: "4px 0" }}>{v.description}</p>

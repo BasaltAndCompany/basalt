@@ -59,17 +59,7 @@
     --ring: rgba(250, 250, 250, 0.3);
     --radius: 0rem;
 
-    /* Legacy aliases — hand-rolled classes still read these. Same ink values;
-       delete at the end of the library adoption (Phase 3c). */
-    --bg: #0A0A0A;
-    --bg-elevated: #111113; /* sidebar band */
-    --bg-card: #111113;
-    --text: #FAFAFA;
-    --text-muted: rgba(250, 250, 250, 0.55);
-    --text-subtle: rgba(250, 250, 250, 0.4);
-    --gold: #FAFAFA; /* was burnished gold — ink theme has paper, not gold */
-    --gold-light: #FAFAFA;
-    --gold-border: rgba(250, 250, 250, 0.3);
+    /* Status colors (semantic, not aliases): used by tables/badges in admin. */
     --green: #3d9970;
     --orange: #c4862a;
     --red: #C8102E; /* the one red */
@@ -102,7 +92,7 @@
   width: 240px;
   /* wide pages must never squeeze the nav off-screen */
   flex-shrink: 0;
-  background: var(--bg-elevated);
+  background: var(--secondary);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -183,8 +173,8 @@
 }
 
 .nav-link.active {
-  color: var(--gold);
-  border-left-color: var(--gold);
+  color: var(--foreground);
+  border-left-color: var(--foreground);
   background: rgba(188, 156, 92, 0.06);
 }
 
@@ -223,7 +213,7 @@
 
 .sidebar-footer-actions [data-feedback-widget]:hover {
   background: none;
-  color: var(--gold);
+  color: var(--foreground);
 }
 
 .sidebar-collapse {
@@ -235,7 +225,7 @@
   height: 22px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: var(--bg-elevated);
+  background: var(--secondary);
   color: rgba(255, 255, 255, 0.6);
   font-size: 13px;
   line-height: 1;
@@ -359,7 +349,7 @@
 .page-subtitle {
   font-family: var(--font-sans);
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   margin-bottom: 32px;
 }
 
@@ -368,11 +358,11 @@
   font-style: italic;
   font-weight: 400;
   font-size: 16px;
-  color: var(--text);
+  color: var(--foreground);
   margin-bottom: 16px;
   margin-top: 40px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--gold-border);
+  border-bottom: 1px solid var(--border);
 }
 
 /* ── Stat grid ── */
@@ -380,9 +370,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0;
-  background: var(--bg-card);
-  border-top: 1px solid var(--text);
-  border-bottom: 1px solid var(--text);
+  background: var(--card);
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .stat-card {
@@ -400,7 +390,7 @@
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
   margin-bottom: 10px;
 }
 
@@ -413,14 +403,14 @@
 
 .stat-card .value .unit {
   font-size: 18px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-family: var(--font-sans);
 }
 
 .stat-card .sub {
   font-family: var(--font-sans);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   margin-top: 8px;
 }
 
@@ -434,7 +424,7 @@
 
 .progress-fill {
   height: 100%;
-  background: var(--gold);
+  background: var(--foreground);
   transition: width 0.4s;
 }
 
@@ -459,9 +449,9 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
   padding: 12px 16px;
-  border-bottom: 1px solid var(--text);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .table td {
@@ -501,7 +491,7 @@
 }
 
 .badge-completed {
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
 }
 
 .badge-over {
@@ -510,7 +500,7 @@
 
 /* ── Overview tiles — external / placeholder states ── */
 .stat-card .value-muted {
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
   font-style: italic;
   font-size: 24px;
 }
@@ -535,7 +525,7 @@
 }
 
 .stat-card-placeholder .label {
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
 }
 
 /* ── Section heading aside (e.g. total unpaid) ── */
@@ -546,7 +536,7 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--gold);
+  color: var(--foreground);
 }
 
 /* ── Forms ── */
@@ -561,7 +551,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   margin-bottom: 6px;
 }
 
@@ -570,9 +560,9 @@
 .form-group textarea {
   width: 100%;
   padding: 10px 14px;
-  background: var(--bg-card);
+  background: var(--card);
   border: 1px solid rgba(0, 0, 0, 0.12);
-  color: var(--text);
+  color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 14px;
   transition: border-color 0.2s;
@@ -582,7 +572,7 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: var(--foreground);
 }
 
 .form-row {
@@ -593,9 +583,9 @@
 
 /* ── Card ── */
 .card {
-  background: var(--bg-card);
-  border-top: 1px solid var(--text);
-  border-bottom: 1px solid var(--text);
+  background: var(--card);
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
   padding: 24px;
 }
 
@@ -648,7 +638,7 @@
 
 .board-col-count {
   margin-left: auto;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-size: 12px;
   font-weight: 400;
 }
@@ -667,7 +657,7 @@
 }
 
 .board-card {
-  background: var(--bg-card);
+  background: var(--card);
   border: 1px solid rgba(127, 127, 127, 0.25);
   border-radius: 6px;
   padding: 10px 12px;
@@ -687,8 +677,8 @@
 .prospect-modal {
   border: 1px solid rgba(127, 127, 127, 0.25);
   border-radius: 8px;
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--card);
+  color: var(--foreground);
   padding: 20px;
   width: min(560px, calc(100vw - 32px));
   max-height: min(720px, calc(100vh - 64px));
@@ -723,9 +713,9 @@
   z-index: 101;
   width: 520px;
   max-width: calc(100vw - 32px);
-  background: var(--bg-card);
-  border-top: 1px solid var(--text);
-  border-bottom: 1px solid var(--text);
+  background: var(--card);
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   overflow: hidden;
   outline: none;
@@ -755,7 +745,7 @@
 [cmdk-empty] {
   padding: 14px 16px;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 [cmdk-item] {
@@ -811,9 +801,9 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  border: 1px solid var(--text);
+  border: 1px solid var(--foreground);
   background: transparent;
-  color: var(--text);
+  color: var(--foreground);
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
   text-decoration: none;
@@ -821,19 +811,19 @@
 }
 
 .btn:hover {
-  background: var(--text);
-  color: var(--bg-card);
+  background: var(--foreground);
+  color: var(--card);
 }
 
 .btn-primary {
-  background: var(--gold);
+  background: var(--foreground);
   color: #fff;
-  border-color: var(--gold);
+  border-color: var(--foreground);
 }
 
 .btn-primary:hover {
-  background: var(--gold-light);
-  border-color: var(--gold-light);
+  background: var(--foreground);
+  border-color: var(--foreground);
   color: #fff;
 }
 
@@ -844,25 +834,25 @@
 
 /* ── Standalone form elements (outside .form-group) ── */
 select {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--card);
+  color: var(--foreground);
   border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 select option {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--card);
+  color: var(--foreground);
 }
 
 input[type="date"] {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--card);
+  color: var(--foreground);
   color-scheme: light;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not(.form-group input):not(.doc-title) {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--card);
+  color: var(--foreground);
   border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 10px 14px;
   font-family: var(--font-sans);
@@ -871,25 +861,25 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type=
 
 input:not(.form-group input):not(.doc-title):focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: var(--foreground);
 }
 
 /* ── Misc ── */
 .empty {
   font-family: var(--font-serif);
   font-style: italic;
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
   font-size: 14px;
   padding: 40px;
   text-align: center;
 }
 
 .muted {
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .gold {
-  color: var(--gold);
+  color: var(--foreground);
 }
 
 .mono {
@@ -900,7 +890,7 @@ input:not(.form-group input):not(.doc-title):focus {
 .delete-btn {
   background: none;
   border: none;
-  color: var(--text-subtle);
+  color: var(--muted-foreground);
   cursor: pointer;
   font-size: 18px;
   padding: 4px 8px;
@@ -987,7 +977,7 @@ input:not(.form-group input):not(.doc-title):focus {
 }
 
 .timer-start {
-	background: var(--gold);
+	background: var(--foreground);
 	border: none;
 	color: #0a0a0a;
 	font-weight: 600;
@@ -999,7 +989,7 @@ input:not(.form-group input):not(.doc-title):focus {
 
 .timer-elapsed {
 	font-size: 26px;
-	color: var(--gold);
+	color: var(--foreground);
 	font-variant-numeric: tabular-nums;
 	margin-bottom: 2px;
 }
@@ -1028,8 +1018,8 @@ input:not(.form-group input):not(.doc-title):focus {
 
 .timer-stop {
 	background: none;
-	border: 1px solid var(--gold);
-	color: var(--gold);
+	border: 1px solid var(--foreground);
+	color: var(--foreground);
 	margin-bottom: 6px;
 }
 
@@ -1066,7 +1056,7 @@ input:not(.form-group input):not(.doc-title):focus {
 	gap: 12px;
 	margin-bottom: 4px;
 	font-size: 12px;
-	color: var(--text-muted);
+	color: var(--muted-foreground);
 }
 .doc-share { font-size: 13px; margin: 0 0 4px; }
 .doc-kind { display: flex; gap: 2px; }
@@ -1074,8 +1064,8 @@ input:not(.form-group input):not(.doc-title):focus {
 .doc-sched-input {
 	font: inherit;
 	font-size: 12px;
-	color: var(--text);
-	background: var(--bg-elev, #141414);
+	color: var(--foreground);
+	background: var(--secondary, #141414);
 	border: 1px solid var(--border, #2a2a2a);
 	border-radius: 6px;
 	padding: 3px 8px;
@@ -1086,7 +1076,7 @@ input:not(.form-group input):not(.doc-title):focus {
 	gap: 8px;
 	margin: 0 0 16px;
 	font-size: 12px;
-	color: var(--text-muted);
+	color: var(--muted-foreground);
 }
 .doc-firstcomment .doc-sched-input { flex: 1; min-width: 0; }
 
@@ -1131,11 +1121,11 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	padding: 8px 18px;
 	font: inherit;
 	font-size: 14px;
-	color: var(--text-muted);
+	color: var(--muted-foreground);
 	cursor: pointer;
 }
-.folder-tabs button:hover { color: var(--text); }
-.folder-tabs button.active { color: var(--text); font-weight: 600; border-bottom-color: var(--gold, #bc9c5c); }
+.folder-tabs button:hover { color: var(--foreground); }
+.folder-tabs button.active { color: var(--foreground); font-weight: 600; border-bottom-color: var(--foreground); }
 
 /* right-side version history / preview panel */
 .doc-shell { display: flex; align-items: flex-start; gap: 36px; }
@@ -1178,9 +1168,9 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	font-size: 11px;
 	text-transform: uppercase;
 	letter-spacing: 0.4px;
-	color: var(--text-muted);
+	color: var(--muted-foreground);
 }
-.doc-history-author.agent { color: var(--gold, #bc9c5c); }
+.doc-history-author.agent { color: var(--foreground); }
 .doc-history.wide { width: 420px; }
 @media (max-width: 1300px) {
 	.doc-history.wide { width: 360px; }
@@ -1195,7 +1185,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	overflow-y: auto;
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	padding: 10px 12px;
-	background: var(--bg-card);
+	background: var(--card);
 }
 .doc-diff ins { background: rgba(46, 125, 50, 0.18); text-decoration: none; }
 .doc-diff del { background: rgba(198, 40, 40, 0.15); color: #7a2018; }
@@ -1218,7 +1208,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	left: 0;
 	width: 816px;
 	height: 1056px;
-	background: var(--bg-card, #fff);
+	background: var(--card);
 	border-radius: 3px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14), 0 10px 28px rgba(0, 0, 0, 0.09);
 	z-index: 0;
@@ -1244,7 +1234,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	font-size: 14.67px;   /* 11pt */
 	line-height: 1.35;    /* browser-readable; pdfkit uses its own leading (SPEC.lh) */
 	outline: none;
-	caret-color: var(--gold, #bc9c5c);
+	caret-color: var(--foreground);
 }
 .doc-editor.readonly { opacity: 0.7; }
 /* blocks space DOWNWARD only (margin-bottom) so the pager's math is exact;
@@ -1275,17 +1265,17 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	font-size: 11px;
 }
 .doc-editor li[role="checkbox"][aria-checked="true"]::before {
-	background: var(--gold, #bc9c5c);
-	border-color: var(--gold, #bc9c5c);
+	background: var(--foreground);
+	border-color: var(--foreground);
 	content: "\2713";
 	color: #fff;
 }
 .doc-editor ul.contains-task-list, .doc-editor li.task-list-item { list-style: none; }
 .doc-editor blockquote {
-	border-left: 2px solid var(--gold, #bc9c5c);
+	border-left: 2px solid var(--foreground);
 	margin: 0 0 10.67px;
 	padding: 10.67px 0 10.67px 18.67px;
-	color: var(--text-muted);
+	color: var(--muted-foreground);
 }
 .doc-editor blockquote p { margin-bottom: 0; }
 .doc-editor code { background: rgba(0, 0, 0, 0.05); padding: 0 3px; font-family: "Courier New", Courier, monospace; font-size: 14.67px; }
@@ -1303,7 +1293,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	line-height: 1.4;     /* 0.786 (Courier metrics) overlaps badly in browsers */
 }
 .doc-editor pre code { background: transparent; padding: 0; font-size: 12px; }
-.doc-editor a { color: var(--text); text-decoration: underline; text-decoration-color: var(--gold, #bc9c5c); }
+.doc-editor a { color: var(--foreground); text-decoration: underline; text-decoration-color: var(--foreground); }
 .doc-editor hr {
 	border: none;
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
@@ -1352,14 +1342,14 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	left: 50%;
 	top: 3px;
 	transform: translateX(-50%);
-	background: var(--bg-card, #fff);
+	background: var(--card);
 	padding: 0 14px;
 	font-size: 12px;
 	white-space: nowrap;
 	color: rgba(0, 0, 0, 0.5);
 	font-style: italic;
 }
-.doc-pagebreak[data-selected="true"]::before { border-color: var(--gold, #bc9c5c); }
+.doc-pagebreak[data-selected="true"]::before { border-color: var(--foreground); }
 
 /* Export dropdown (details/summary — native, keyboard-accessible) */
 .doc-export { position: relative; }
@@ -1371,7 +1361,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	right: 0;
 	top: calc(100% + 6px);
 	z-index: 60;
-	background: var(--bg-card, #fff);
+	background: var(--card);
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	border-radius: 8px;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
@@ -1447,10 +1437,10 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 
 /* ── Create dialog — shared button → modal → toast pattern (components/CreateDialog.tsx) ── */
 .modal {
-	border: 1px solid var(--gold-border);
-	border-left: 3px solid var(--gold);
-	background: var(--bg-card);
-	color: var(--text);
+	border: 1px solid var(--border);
+	border-left: 3px solid var(--foreground);
+	background: var(--card);
+	color: var(--foreground);
 	padding: 0;
 	width: min(560px, calc(100vw - 48px));
 	max-height: calc(100vh - 64px);
@@ -1493,9 +1483,9 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 }
 
 .toast {
-	background: var(--bg-elevated);
+	background: var(--secondary);
 	color: #fff;
-	border: 1px solid var(--gold-border);
+	border: 1px solid var(--border);
 	border-left: 3px solid var(--green);
 	padding: 10px 14px;
 	font-family: var(--font-sans);
@@ -1510,7 +1500,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 }
 
 .toast-info {
-	border-left-color: var(--gold);
+	border-left-color: var(--foreground);
 }
 
 /* ── Component mentions (@[kind:id] chips) ────────────────────────── */
@@ -1594,7 +1584,7 @@ a.component-mention-link:hover {
 	font-size: 11px;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
-	color: #bc9c5c;
+	color: var(--foreground);
 }
 .mention-picker-title {
 	flex: 1;
@@ -1635,7 +1625,7 @@ a.component-mention-link:hover {
 	font-size: 11px;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
-	color: #bc9c5c;
+	color: var(--foreground);
 }
 .mention-popover-status {
 	margin-left: auto;
@@ -1669,7 +1659,7 @@ a.component-mention-link:hover {
 	color: #777;
 }
 .mention-popover-meta a {
-	color: #bc9c5c;
+	color: var(--foreground);
 	text-decoration: none;
 }
 .mention-popover-meta a:hover {

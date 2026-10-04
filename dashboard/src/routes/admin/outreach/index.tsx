@@ -26,9 +26,9 @@ import type { ProspectEmailStatus } from "~/lib/admin-queries";
 import { fmtDate, fmtDur, videoSummary } from "~/lib/video-summary";
 
 const STAGE_COLOR: Record<string, string> = {
-	candidate: "var(--text-subtle)",
+	candidate: "var(--muted-foreground)",
 	proposed: "#8e7cc3",
-	sent: "var(--text-subtle)",
+	sent: "var(--muted-foreground)",
 	watching: "var(--orange)",
 	replied: "#2980b9",
 	meeting: "#2980b9",
@@ -91,7 +91,7 @@ function DigestSection(props: { brainUrl: string }) {
 								<For each={(d() as { items: BrainDigestItem[] }).items}>
 									{(item) => (
 										<li style={{ "margin-bottom": "3px" }}>
-											<span class="badge" style={{ color: "var(--text-subtle)", "margin-right": "6px" }}>{item.kind}</span>
+											<span class="badge" style={{ color: "var(--muted-foreground)", "margin-right": "6px" }}>{item.kind}</span>
 											<Show when={item.citationUrl} fallback={<span>{item.headline}</span>}>
 												<a href={item.citationUrl} target="_blank" rel="noreferrer">{item.headline}</a>
 											</Show>
@@ -280,7 +280,7 @@ function EmailSection(props: { prospect: OutreachProspect }) {
 								<span
 									class="badge"
 									style={{
-										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--green)" : "var(--text-subtle)",
+										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--green)" : "var(--muted-foreground)",
 										"margin-left": "auto",
 									}}
 								>
