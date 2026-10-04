@@ -380,6 +380,110 @@ function ErrorBoundary(props) {
 	return { t: `<!--!$e${id}-->${resolveSSRNode$1(escape$1(res))}<!--!$/e${id}-->` };
 }
 var SuspenseContext = createContext();
+var resourceContext = null;
+function createResource(source, fetcher, options = {}) {
+	if (typeof fetcher !== "function") {
+		options = fetcher || {};
+		fetcher = source;
+		source = true;
+	}
+	const contexts = /* @__PURE__ */ new Set();
+	const id = sharedConfig.getNextContextId();
+	let resource = {};
+	let value = options.storage ? options.storage(options.initialValue)[0]() : options.initialValue;
+	let p;
+	let error;
+	if (sharedConfig.context.async && options.ssrLoadFrom !== "initial") {
+		resource = sharedConfig.context.resources[id] || (sharedConfig.context.resources[id] = {});
+		if (resource.ref) {
+			if (!resource.data && !resource.ref[0]._loading && !resource.ref[0].error) resource.ref[1].refetch();
+			return resource.ref;
+		}
+	}
+	const prepareResource = () => {
+		if (error) throw error;
+		const resolved = options.ssrLoadFrom !== "initial" && sharedConfig.context.async && "data" in sharedConfig.context.resources[id];
+		if (!resolved && resourceContext) resourceContext.push(id);
+		if (!resolved && read._loading) {
+			const ctx = useContext(SuspenseContext);
+			if (ctx) {
+				ctx.resources.set(id, read);
+				contexts.add(ctx);
+			}
+		}
+		return resolved;
+	};
+	const read = () => {
+		return prepareResource() ? sharedConfig.context.resources[id].data : value;
+	};
+	const loading = () => {
+		prepareResource();
+		return read._loading;
+	};
+	read._loading = false;
+	read.error = void 0;
+	read.state = "initialValue" in options ? "ready" : "unresolved";
+	Object.defineProperties(read, {
+		latest: { get() {
+			return read();
+		} },
+		loading: { get() {
+			return loading();
+		} }
+	});
+	function load() {
+		const ctx = sharedConfig.context;
+		if (!ctx.async) return read._loading = !!(typeof source === "function" ? source() : source);
+		if (ctx.resources && id in ctx.resources && "data" in ctx.resources[id]) {
+			value = ctx.resources[id].data;
+			return;
+		}
+		let lookup;
+		try {
+			resourceContext = [];
+			lookup = typeof source === "function" ? source() : source;
+			if (resourceContext.length) return;
+		} finally {
+			resourceContext = null;
+		}
+		if (!p) {
+			if (lookup == null || lookup === false) return;
+			p = fetcher(lookup, { value });
+		}
+		if (p != void 0 && typeof p === "object" && "then" in p) {
+			read._loading = true;
+			read.state = "pending";
+			p = p.then((res) => {
+				read._loading = false;
+				read.state = "ready";
+				ctx.resources[id].data = res;
+				p = null;
+				notifySuspense(contexts);
+				return res;
+			}).catch((err) => {
+				read._loading = false;
+				read.state = "errored";
+				read.error = error = castError(err);
+				p = null;
+				notifySuspense(contexts);
+				throw error;
+			});
+			if (ctx.serialize) ctx.serialize(id, p, options.deferStream);
+			return p;
+		}
+		ctx.resources[id].data = p;
+		if (ctx.serialize) ctx.serialize(id, p);
+		p = null;
+		return ctx.resources[id].data;
+	}
+	if (options.ssrLoadFrom !== "initial") load();
+	const ref = [read, {
+		refetch: load,
+		mutate: (v) => value = v
+	}];
+	if (p) resource.ref = ref;
+	return ref;
+}
 function lazy(fn) {
 	let p;
 	let load = (id) => {
@@ -3473,4 +3577,4 @@ function handleDiffArray(current, prev, handleAdded, handleRemoved) {
 }
 function createEventListener(targets, type, handler, options) {}
 //#endregion
-export { createComputed as $, O as A, cu as B, ssrElement as C, useAssets as D, ssrStyleProperty as E, l as F, Match as G, $TRACK as H, le as I, Switch as J, Show as K, oe as L, de as M, i as N, H as O, j as P, createComponent as Q, ye as R, ssrAttribute as S, ssrStyle as T, ErrorBoundary as U, fu as V, For as W, catchError as X, batch as Y, children as Z, memo as _, startTransition as _t, chain as a, createSignal as at, renderToString as b, noop as c, lazy as ct, HydrationScript as d, onCleanup as dt, createContext as et, NoHydration as f, onMount as ft, getRequestEvent as g, splitProps as gt, escape as h, sharedConfig as ht, asArray as i, createRoot as it, Q as j, M as k, Dynamic as l, mergeProps as lt, RequestContext as m, runWithOwner as mt, access as n, createMemo as nt, filterNonNullable as o, createUniqueId as ot, Portal as p, resetErrorBoundaries as pt, Suspense as q, accessWith as r, createRenderEffect as rt, handleDiffArray as s, getOwner as st, createEventListener as t, createEffect as tt, Hydration as u, on$1 as ut, notSup as v, untrack as vt, ssrHydrationKey as w, ssr as x, renderToStream as y, useContext as yt, L as z };
+export { createComputed as $, O as A, cu as B, ssrElement as C, useAssets as D, ssrStyleProperty as E, l as F, Match as G, $TRACK as H, le as I, Switch as J, Show as K, oe as L, de as M, i as N, H as O, j as P, createComponent as Q, ye as R, ssrAttribute as S, ssrStyle as T, ErrorBoundary as U, fu as V, For as W, catchError as X, batch as Y, children as Z, memo as _, splitProps as _t, chain as a, createRoot as at, renderToString as b, useContext as bt, noop as c, getOwner as ct, HydrationScript as d, on$1 as dt, createContext as et, NoHydration as f, onCleanup as ft, getRequestEvent as g, sharedConfig as gt, escape as h, runWithOwner as ht, asArray as i, createResource as it, Q as j, M as k, Dynamic as l, lazy as lt, RequestContext as m, resetErrorBoundaries as mt, access as n, createMemo as nt, filterNonNullable as o, createSignal as ot, Portal as p, onMount as pt, Suspense as q, accessWith as r, createRenderEffect as rt, handleDiffArray as s, createUniqueId as st, createEventListener as t, createEffect as tt, Hydration as u, mergeProps as ut, notSup as v, startTransition as vt, ssrHydrationKey as w, ssr as x, renderToStream as y, untrack as yt, L as z };

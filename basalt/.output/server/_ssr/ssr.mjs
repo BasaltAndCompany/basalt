@@ -1,10 +1,29 @@
 import { l as FastURL, s as FastResponse } from "../_libs/h3+rou3+srvx.mjs";
-import { A as O, B as cu, C as ssrElement, D as useAssets, F as l, I as le, K as Show, L as oe, M as de, N as i, O as H, P as j, Q as createComponent, R as ye, S as ssrAttribute, U as ErrorBoundary, V as fu, X as catchError, Y as batch, Z as children, _t as startTransition, at as createSignal, b as renderToString, ct as lazy, d as HydrationScript, dt as onCleanup, et as createContext, f as NoHydration, g as getRequestEvent, h as escape, ht as sharedConfig, it as createRoot, j as Q, k as M, lt as mergeProps, mt as runWithOwner, nt as createMemo, ot as createUniqueId, pt as resetErrorBoundaries, q as Suspense, rt as createRenderEffect, st as getOwner, u as Hydration, ut as on, vt as untrack, w as ssrHydrationKey, x as ssr, y as renderToStream, yt as useContext, z as L } from "../_libs/@solid-primitives/event-listener+[...].mjs";
-import { t as provideRequestEvent } from "../_libs/solid-js.mjs";
+import { A as O, B as cu, C as ssrElement, D as useAssets, F as l, I as le, K as Show, L as oe, M as de, N as i, O as H, P as j, Q as createComponent, R as ye, S as ssrAttribute, U as ErrorBoundary, V as fu, X as catchError, Y as batch, Z as children, at as createRoot, b as renderToString, bt as useContext, ct as getOwner, d as HydrationScript, dt as on, et as createContext, f as NoHydration, ft as onCleanup, g as getRequestEvent, gt as sharedConfig, h as escape, ht as runWithOwner, j as Q, k as M, lt as lazy, mt as resetErrorBoundaries, nt as createMemo, ot as createSignal, q as Suspense, rt as createRenderEffect, st as createUniqueId, u as Hydration, ut as mergeProps, vt as startTransition, w as ssrHydrationKey, x as ssr, y as renderToStream, yt as untrack, z as L } from "../_libs/@solid-primitives/event-listener+[...].mjs";
 import { t as join } from "../_libs/pathe.mjs";
 import { t as createRouter } from "../_libs/radix3.mjs";
 import { i as findRoute, n as addRoute, r as createRouter$1, t as NullProtoObj } from "../_libs/rou3.mjs";
+import { r as provideRequestEvent } from "../_libs/solid-js.mjs";
+//#region \0rolldown/runtime.js
+var __defProp$1 = Object.defineProperty;
+var __exportAll$1 = (all, no_symbols) => {
+	let target = {};
+	for (var name in all) __defProp$1(target, name, {
+		get: all[name],
+		enumerable: true
+	});
+	if (!no_symbols) __defProp$1(target, Symbol.toStringTag, { value: "Module" });
+	return target;
+};
+//#endregion
 //#region node_modules/.nitro/vite/services/ssr/index.js
+var ssr_exports = /* @__PURE__ */ __exportAll$1({
+	default: () => entry_server_default,
+	i: () => Title,
+	n: () => setFunctionName,
+	r: () => Meta,
+	t: () => useParams
+});
 var __defProp = Object.defineProperty;
 var __exportAll = (all, no_symbols) => {
 	let target = {};
@@ -16,22 +35,82 @@ var __exportAll = (all, no_symbols) => {
 	return target;
 };
 var clientViteManifest = {
-	"_button-iDscz4pr.js": {
-		"file": "_build/assets/button-iDscz4pr.js",
+	"_button-CWxXtnJZ.js": {
+		"file": "_build/assets/button-CWxXtnJZ.js",
 		"name": "button",
-		"imports": ["_web-DbjINu9I.js"]
+		"imports": ["_web-DU4Gp69X.js"]
 	},
-	"_separator-CzDLK9Zz.js": {
-		"file": "_build/assets/separator-CzDLK9Zz.js",
+	"_card-BjtgarNM.js": {
+		"file": "_build/assets/card-BjtgarNM.js",
+		"name": "card",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_createAsync-BCjOoT3y.js": {
+		"file": "_build/assets/createAsync-BCjOoT3y.js",
+		"name": "createAsync",
+		"imports": ["_web-DU4Gp69X.js", "_utils-Cknh6hMT.js"]
+	},
+	"_dist-CGc5RHWl.js": {
+		"file": "_build/assets/dist-CGc5RHWl.js",
+		"name": "dist",
+		"imports": ["_web-DU4Gp69X.js"]
+	},
+	"_input-Cs60Fk2k.js": {
+		"file": "_build/assets/input-Cs60Fk2k.js",
+		"name": "input",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_label-KcUOiQ1x.js": {
+		"file": "_build/assets/label-KcUOiQ1x.js",
+		"name": "label",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_logo-BpNsO0Wp.js": {
+		"file": "_build/assets/logo-BpNsO0Wp.js",
+		"name": "logo",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_routing-BYj0FY3j.js": {
+		"file": "_build/assets/routing-BYj0FY3j.js",
+		"name": "routing",
+		"imports": ["_web-DU4Gp69X.js", "_utils-Cknh6hMT.js"]
+	},
+	"_select-DiG-IOSy.js": {
+		"file": "_build/assets/select-DiG-IOSy.js",
+		"name": "select",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_separator-DYvqRdYP.js": {
+		"file": "_build/assets/separator-DYvqRdYP.js",
 		"name": "separator",
-		"imports": ["_web-DbjINu9I.js", "_button-iDscz4pr.js"]
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_site-BbXNFyXA.js": {
+		"file": "_build/assets/site-BbXNFyXA.js",
+		"name": "site",
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_dist-CGc5RHWl.js",
+			"_button-CWxXtnJZ.js",
+			"_logo-BpNsO0Wp.js"
+		]
 	},
 	"_site-state-CIUA0Awq.js": {
 		"file": "_build/assets/site-state-CIUA0Awq.js",
 		"name": "site-state"
 	},
-	"_web-DbjINu9I.js": {
-		"file": "_build/assets/web-DbjINu9I.js",
+	"_textarea-o5itkUJb.js": {
+		"file": "_build/assets/textarea-o5itkUJb.js",
+		"name": "textarea",
+		"imports": ["_web-DU4Gp69X.js", "_button-CWxXtnJZ.js"]
+	},
+	"_utils-Cknh6hMT.js": {
+		"file": "_build/assets/utils-Cknh6hMT.js",
+		"name": "utils",
+		"imports": ["_web-DU4Gp69X.js"]
+	},
+	"_web-DU4Gp69X.js": {
+		"file": "_build/assets/web-DU4Gp69X.js",
 		"name": "web"
 	},
 	"node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-opsz-normal.woff2": {
@@ -71,17 +150,29 @@ var clientViteManifest = {
 		"src": "node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2"
 	},
 	"src/entry-client.tsx": {
-		"file": "_build/assets/entry-client-CtQ2Goy4.js",
+		"file": "_build/assets/entry-client-DiC9thVU.js",
 		"name": "entry-client",
 		"src": "src/entry-client.tsx",
 		"isEntry": true,
-		"imports": ["_web-DbjINu9I.js"],
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_dist-CGc5RHWl.js",
+			"_routing-BYj0FY3j.js",
+			"_utils-Cknh6hMT.js"
+		],
 		"dynamicImports": [
 			"src/routes/index.tsx?pick=Site&pick=default&pick=$css",
 			"src/routes/footage.tsx?pick=default&pick=$css",
-			"src/routes/ui.tsx?pick=default&pick=$css"
+			"src/routes/contact.tsx?pick=default&pick=$css",
+			"src/routes/brain.tsx?pick=default&pick=$css",
+			"src/routes/iu.tsx?pick=default&pick=$css",
+			"src/routes/writing.tsx?pick=default&pick=$css",
+			"src/routes/careers.tsx?pick=default&pick=$css",
+			"src/routes/ui.tsx?pick=default&pick=$css",
+			"src/routes/newsletter/index.tsx?pick=default&pick=$css",
+			"src/routes/newsletter/[id].tsx?pick=default&pick=$css"
 		],
-		"css": ["_build/assets/entry-client-v1jTo3s-.css"],
+		"css": ["_build/assets/entry-client-BvciR4nV.css"],
 		"assets": [
 			"_build/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
 			"_build/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
@@ -94,38 +185,137 @@ var clientViteManifest = {
 			"_build/assets/bodoni-moda-latin-opsz-normal-X2BzlAjV.woff2"
 		]
 	},
+	"src/routes/brain.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/brain-BYM1CTpm.js",
+		"name": "brain",
+		"src": "src/routes/brain.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_select-DiG-IOSy.js",
+			"_input-Cs60Fk2k.js",
+			"_label-KcUOiQ1x.js",
+			"_site-BbXNFyXA.js",
+			"_textarea-o5itkUJb.js"
+		]
+	},
+	"src/routes/careers.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/careers-CUeK0B96.js",
+		"name": "careers",
+		"src": "src/routes/careers.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_site-BbXNFyXA.js"
+		]
+	},
+	"src/routes/contact.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/contact-CRfUW_vp.js",
+		"name": "contact",
+		"src": "src/routes/contact.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_input-Cs60Fk2k.js",
+			"_label-KcUOiQ1x.js",
+			"_site-BbXNFyXA.js",
+			"_textarea-o5itkUJb.js"
+		]
+	},
 	"src/routes/footage.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/footage-DpgEofqR.js",
+		"file": "_build/assets/footage-C2As_7p2.js",
 		"name": "footage",
 		"src": "src/routes/footage.tsx?pick=default&pick=$css",
 		"isEntry": true,
 		"imports": [
-			"_web-DbjINu9I.js",
-			"_button-iDscz4pr.js",
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
 			"_site-state-CIUA0Awq.js",
-			"_separator-CzDLK9Zz.js"
+			"_card-BjtgarNM.js",
+			"_input-Cs60Fk2k.js",
+			"_label-KcUOiQ1x.js",
+			"_separator-DYvqRdYP.js"
 		]
 	},
 	"src/routes/index.tsx?pick=Site&pick=default&pick=$css": {
-		"file": "_build/assets/index-DeN27pWK.js",
+		"file": "_build/assets/index-nHMrONlk.js",
 		"name": "index",
 		"src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
 		"isEntry": true,
 		"imports": [
-			"_web-DbjINu9I.js",
-			"_button-iDscz4pr.js",
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_logo-BpNsO0Wp.js",
 			"_site-state-CIUA0Awq.js"
 		]
 	},
+	"src/routes/iu.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/iu-Cul0FKjM.js",
+		"name": "iu",
+		"src": "src/routes/iu.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_separator-DYvqRdYP.js",
+			"_site-BbXNFyXA.js"
+		]
+	},
+	"src/routes/newsletter/[id].tsx?pick=default&pick=$css": {
+		"file": "_build/assets/_id_-C49CnqwO.js",
+		"name": "_id_",
+		"src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_dist-CGc5RHWl.js",
+			"_routing-BYj0FY3j.js",
+			"_createAsync-BCjOoT3y.js",
+			"_button-CWxXtnJZ.js",
+			"_site-BbXNFyXA.js"
+		]
+	},
+	"src/routes/newsletter/index.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/index-BuHrW2mu.js",
+		"name": "index",
+		"src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_createAsync-BCjOoT3y.js",
+			"_button-CWxXtnJZ.js",
+			"_input-Cs60Fk2k.js",
+			"_site-BbXNFyXA.js"
+		]
+	},
 	"src/routes/ui.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/ui-BhZCkuPf.js",
+		"file": "_build/assets/ui-Du76xuPI.js",
 		"name": "ui",
 		"src": "src/routes/ui.tsx?pick=default&pick=$css",
 		"isEntry": true,
 		"imports": [
-			"_web-DbjINu9I.js",
-			"_button-iDscz4pr.js",
-			"_separator-CzDLK9Zz.js"
+			"_web-DU4Gp69X.js",
+			"_button-CWxXtnJZ.js",
+			"_select-DiG-IOSy.js",
+			"_card-BjtgarNM.js",
+			"_input-Cs60Fk2k.js",
+			"_label-KcUOiQ1x.js",
+			"_separator-DYvqRdYP.js",
+			"_textarea-o5itkUJb.js"
+		]
+	},
+	"src/routes/writing.tsx?pick=default&pick=$css": {
+		"file": "_build/assets/writing-BawAPm-F.js",
+		"name": "writing",
+		"src": "src/routes/writing.tsx?pick=default&pick=$css",
+		"isEntry": true,
+		"imports": [
+			"_web-DU4Gp69X.js",
+			"_createAsync-BCjOoT3y.js",
+			"_site-BbXNFyXA.js"
 		]
 	}
 };
@@ -358,6 +548,7 @@ var Title = (props) => MetaTag("title", props, {
 	escape: true,
 	close: true
 });
+var Meta = (props) => MetaTag("meta", props);
 function createBeforeLeave() {
 	let listeners = /* @__PURE__ */ new Set();
 	function subscribe(listener) {
@@ -412,6 +603,10 @@ function resolvePath(base, path, from) {
 	else if (fromPath.toLowerCase().indexOf(basePath.toLowerCase()) !== 0) result = basePath + fromPath;
 	else result = fromPath;
 	return (result || "/") + normalizePath(path, !result);
+}
+function invariant(value, message) {
+	if (value == null) throw new Error(message);
+	return value;
 }
 function joinPaths(from, to) {
 	return normalizePath(from).replace(/\/*(\*.*)?$/g, "") + normalizePath(to);
@@ -506,10 +701,31 @@ function expandOptionals(pattern) {
 	}
 	return expandOptionals(suffix).reduce((results, expansion) => [...results, ...prefixes.map((p) => p + expansion)], []);
 }
+function setFunctionName(obj, value) {
+	Object.defineProperty(obj, "name", {
+		value,
+		writable: false,
+		configurable: false
+	});
+	return obj;
+}
 var MAX_REDIRECTS = 100;
 /** Consider this API opaque and internal. It is likely to change in the future. */
 var RouterContextObj = createContext();
 var RouteContextObj = createContext();
+var useRouter = () => invariant(useContext(RouterContextObj), "<A> and 'use' router primitives can be only used inside a Route.");
+/**
+* Retrieves a reactive, store-like object containing the current route path parameters as defined in the Route.
+*
+* @example
+* ```js
+* const params = useParams();
+*
+* // fetch user based on the id path parameter
+* const [user] = createResource(() => params.id, fetchUser);
+* ```
+*/
+var useParams = () => useRouter().params;
 var encodeSegment = (s) => encodeURIComponent(s).replace(/%(2B|40|3A|24|26|2C|3B|3D)/g, (m) => decodeURIComponent(m));
 function createRoutes$1(routeDef, base = "") {
 	const { component, preload, load, children, info } = routeDef;
@@ -957,8 +1173,8 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
-			"build": () => import("./routes-V2YpIvxh.mjs"),
-			"import": () => import("./routes-V2YpIvxh.mjs")
+			"build": () => import("./routes-BglEzAeP.mjs"),
+			"import": () => import("./routes-BglEzAeP.mjs")
 		},
 		"path": "/"
 	},
@@ -966,19 +1182,96 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/footage.tsx?pick=default&pick=$css",
-			"build": () => import("./footage-7bjOmnV_.mjs"),
-			"import": () => import("./footage-7bjOmnV_.mjs")
+			"build": () => import("./footage-C3ClEA99.mjs"),
+			"import": () => import("./footage-C3ClEA99.mjs")
 		},
 		"path": "/footage"
 	},
 	{
 		"page": true,
 		"$component": {
+			"src": "src/routes/contact.tsx?pick=default&pick=$css",
+			"build": () => import("./contact-C9a1dDZU.mjs"),
+			"import": () => import("./contact-C9a1dDZU.mjs")
+		},
+		"path": "/contact"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/brain.tsx?pick=default&pick=$css",
+			"build": () => import("./brain-B-ZhX0Ul.mjs"),
+			"import": () => import("./brain-B-ZhX0Ul.mjs")
+		},
+		"path": "/brain"
+	},
+	{
+		"page": false,
+		"$GET": {
+			"src": "src/routes/scorecard.ts?pick=GET",
+			"build": () => import("./scorecard-DzP8s6E3.mjs"),
+			"import": () => import("./scorecard-DzP8s6E3.mjs")
+		},
+		"$HEAD": {
+			"src": "src/routes/scorecard.ts?pick=GET",
+			"build": () => import("./scorecard-DzP8s6E3.mjs"),
+			"import": () => import("./scorecard-DzP8s6E3.mjs")
+		},
+		"path": "/scorecard"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/iu.tsx?pick=default&pick=$css",
+			"build": () => import("./iu-C_gtC2gX.mjs"),
+			"import": () => import("./iu-C_gtC2gX.mjs")
+		},
+		"path": "/iu"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/writing.tsx?pick=default&pick=$css",
+			"build": () => import("./writing-BDG0BEGV.mjs"),
+			"import": () => import("./writing-BDG0BEGV.mjs")
+		},
+		"path": "/writing"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/careers.tsx?pick=default&pick=$css",
+			"build": () => import("./careers-BmhGoWNp.mjs"),
+			"import": () => import("./careers-BmhGoWNp.mjs")
+		},
+		"path": "/careers"
+	},
+	{
+		"page": true,
+		"$component": {
 			"src": "src/routes/ui.tsx?pick=default&pick=$css",
-			"build": () => import("./ui-DWRlyX_L.mjs"),
-			"import": () => import("./ui-DWRlyX_L.mjs")
+			"build": () => import("./ui-CnbisMVA.mjs"),
+			"import": () => import("./ui-CnbisMVA.mjs")
 		},
 		"path": "/ui"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
+			"build": () => import("./newsletter-DLVMrCVG.mjs"),
+			"import": () => import("./newsletter-DLVMrCVG.mjs")
+		},
+		"path": "/newsletter/"
+	},
+	{
+		"page": true,
+		"$component": {
+			"src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
+			"build": () => import("../_id_-DLIGv-8z.mjs"),
+			"import": () => import("../_id_-DLIGv-8z.mjs")
+		},
+		"path": "/newsletter/:id"
 	}
 ];
 var pageRoutes = defineRoutes(solid_start_routes_default.filter((o) => o.page));
@@ -2814,4 +3107,4 @@ var entry_server_default = createHandler(() => createComponent(StartServer, { do
 	return ssr(_tmpl$, escape(assets));
 } }), escape(children), escape(scripts)) }));
 //#endregion
-export { entry_server_default as default };
+export { useParams as a, ssr_exports as i, Title as n, setFunctionName as r, Meta as t };

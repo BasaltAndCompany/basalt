@@ -29,13 +29,13 @@ const MESSAGES = [
 ]
 
 // The approved text-link look, now a Button variant. dim passes /40 instead of /60.
-function LinkText(props: { dim?: boolean; children: string; onClick?: (e: MouseEvent) => void }) {
+function LinkText(props: { dim?: boolean; href?: string; children: string; onClick?: (e: MouseEvent) => void }) {
   return (
     <Button
       variant="link"
       size="link"
       as="a"
-      href="#"
+      href={props.href ?? "#"}
       onClick={props.onClick}
       class={props.dim ? "text-foreground/40" : undefined}
     >
@@ -113,9 +113,9 @@ export function Site(props: { heroVideo: string | null }) {
       <div class="fixed inset-x-0 top-0 z-20 flex items-start justify-between px-6 py-5">
         <Logo variant="word" redDot suffix="& Company" class="text-[24px]" />
         <nav class="flex flex-col items-end gap-2 pt-2">
-          <LinkText>Contact</LinkText>
-          <LinkText>Writing</LinkText>
-          <LinkText>Careers</LinkText>
+          <LinkText href="/contact">Contact</LinkText>
+          <LinkText href="/writing">Writing</LinkText>
+          <LinkText href="/careers">Careers</LinkText>
         </nav>
       </div>
       <div class="fixed right-0 bottom-0 z-20 px-6 pb-5 text-right">
@@ -156,8 +156,8 @@ export function Site(props: { heroVideo: string | null }) {
           )}
         </Show>
         <div class="pointer-events-auto mt-6 flex items-center gap-8">
-          <LinkText>Start a conversation</LinkText>
-          <LinkText dim>Read the thesis</LinkText>
+          <LinkText href="/contact">Start a conversation</LinkText>
+          <LinkText dim href="/writing">Read the thesis</LinkText>
         </div>
       </div>
 

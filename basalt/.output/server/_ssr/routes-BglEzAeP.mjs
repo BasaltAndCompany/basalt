@@ -1,87 +1,8 @@
-import { E as ssrStyleProperty, K as Show, Q as createComponent, S as ssrAttribute, at as createSignal, dt as onCleanup, ft as onMount, h as escape, w as ssrHydrationKey, x as ssr } from "../_libs/@solid-primitives/event-listener+[...].mjs";
-import { l as cn, t as Button } from "./button-DTuGqGhm.mjs";
+import { K as Show, Q as createComponent, S as ssrAttribute, ft as onCleanup, h as escape, ot as createSignal, pt as onMount, w as ssrHydrationKey, x as ssr } from "../_libs/@solid-primitives/event-listener+[...].mjs";
+import { t as Button } from "./button-DhSTr1ZL.mjs";
+import { t as Logo } from "./logo-XuhPsPFD.mjs";
 import { t as initHeroVideo } from "./site-state-ihm8ahx4.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-V2YpIvxh.js
-var _tmpl$$1 = [
-	"<svg",
-	" viewBox=\"0 0 32 32\"",
-	" fill=\"currentColor\"",
-	" aria-hidden=\"true\"><rect x=\"3\" y=\"9\" width=\"7\" height=\"23\"></rect><rect x=\"12.5\" y=\"2\" width=\"7\" height=\"30\"",
-	"></rect><rect x=\"22\" y=\"12\" width=\"7\" height=\"20\"></rect></svg>"
-];
-var _tmpl$2$1 = [
-	"<span",
-	"><span class=\"serif-display font-serif text-[1.6em] tracking-[-0.01em]\">Basalt<!--$-->",
-	"<!--/--></span><!--$-->",
-	"<!--/--></span>"
-];
-var _tmpl$3$1 = ["<span", " class=\"text-signal\">.</span>"];
-var _tmpl$4$1 = [
-	"<span",
-	" class=\"mt-[0.35em] font-sans text-[0.32em] font-medium uppercase tracking-[0.34em] text-muted-foreground\">",
-	"</span>"
-];
-var _tmpl$5$1 = [
-	"<span",
-	" style=\"",
-	"\"><!--$-->",
-	"<!--/--><!--$-->",
-	"<!--/--></span>"
-];
-/**
-* Basalt brand marks. One geometry: three basalt pillars, staggered tops.
-* Ink on paper, paper on ink. The middle pillar may take the signal red —
-* that is the only color the brand gets.
-*/
-var SIGNAL_RED = "#C8102E";
-function BasaltMark(props) {
-	return ssr(_tmpl$$1, ssrHydrationKey(), ssrAttribute("width", escape(props.size ?? 28, true), false) + ssrAttribute("height", escape(props.size ?? 28, true), false), ssrAttribute("class", escape(props.class, true), false), ssrAttribute("fill", props.redBar ? escape(SIGNAL_RED, true) : escape(void 0, true), false));
-}
-function Wordmark(props) {
-	return ssr(_tmpl$2$1, ssrHydrationKey() + ssrAttribute("class", escape(cn("flex flex-col items-start leading-none", props.class), true), false), props.redDot && _tmpl$3$1[0] + ssrHydrationKey() + _tmpl$3$1[1], props.suffix && ssr(_tmpl$4$1, ssrHydrationKey(), escape(props.suffix)));
-}
-/**
-* Full lockup scales with `size` via em units — mark, word, and suffix all move together.
-*/
-function Logo(props) {
-	if (props.variant === "mark") return createComponent(BasaltMark, {
-		get size() {
-			return props.size;
-		},
-		get redBar() {
-			return props.redBar;
-		},
-		get ["class"]() {
-			return props.class;
-		}
-	});
-	if (props.variant === "word") return createComponent(Wordmark, {
-		get suffix() {
-			return props.suffix;
-		},
-		get redDot() {
-			return props.redDot;
-		},
-		get ["class"]() {
-			return cn("text-[1em]", props.class);
-		}
-	});
-	return ssr(_tmpl$5$1, ssrHydrationKey() + ssrAttribute("class", escape(cn("inline-flex items-center gap-[0.55em] leading-none", props.class), true), false), ssrStyleProperty("font-size:", `${escape(props.size ?? 28, true)}px`), escape(createComponent(BasaltMark, {
-		get size() {
-			return props.size;
-		},
-		get redBar() {
-			return props.redBar;
-		}
-	})), escape(createComponent(Wordmark, {
-		get suffix() {
-			return props.suffix;
-		},
-		get redDot() {
-			return props.redDot;
-		}
-	})));
-}
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-BglEzAeP.js
 var _tmpl$ = ["<div", " class=\"lava-glow absolute inset-x-0 bottom-0 h-72\" aria-hidden=\"true\"></div>"];
 var _tmpl$2 = ["<svg", " class=\"absolute bottom-0 left-0 h-40 w-full\" viewBox=\"0 0 1200 160\" preserveAspectRatio=\"none\"><g fill=\"#050505\"><rect x=\"0\" y=\"148\" width=\"1200\" height=\"12\"></rect><rect x=\"170\" y=\"66\" width=\"170\" height=\"94\"></rect><rect x=\"515\" y=\"14\" width=\"190\" height=\"146\"></rect><rect x=\"880\" y=\"92\" width=\"165\" height=\"68\"></rect></g></svg>"];
 var _tmpl$3 = [
@@ -148,7 +69,9 @@ function LinkText(props) {
 		variant: "link",
 		size: "link",
 		as: "a",
-		href: "#",
+		get href() {
+			return props.href ?? "#";
+		},
 		get onClick() {
 			return props.onClick;
 		},
@@ -187,7 +110,16 @@ function Site(props) {
 		redDot: true,
 		suffix: "& Company",
 		"class": "text-[24px]"
-	})), escape(createComponent(LinkText, { children: "Contact" })), escape(createComponent(LinkText, { children: "Writing" })), escape(createComponent(LinkText, { children: "Careers" })), escape(MESSAGES.map(() => ssr(_tmpl$6, ssrHydrationKey()))), escape(createComponent(Show, {
+	})), escape(createComponent(LinkText, {
+		href: "/contact",
+		children: "Contact"
+	})), escape(createComponent(LinkText, {
+		href: "/writing",
+		children: "Writing"
+	})), escape(createComponent(LinkText, {
+		href: "/careers",
+		children: "Careers"
+	})), escape(MESSAGES.map(() => ssr(_tmpl$6, ssrHydrationKey()))), escape(createComponent(Show, {
 		get when() {
 			return MESSAGES[index()];
 		},
@@ -203,8 +135,12 @@ function Site(props) {
 				return ssr(_tmpl$7, ssrHydrationKey(), escape(msg.title));
 			}
 		})), escape(msg.body))
-	})), escape(createComponent(LinkText, { children: "Start a conversation" })), escape(createComponent(LinkText, {
+	})), escape(createComponent(LinkText, {
+		href: "/contact",
+		children: "Start a conversation"
+	})), escape(createComponent(LinkText, {
 		dim: true,
+		href: "/writing",
 		children: "Read the thesis"
 	})), ssrAttribute("aria-label", last() ? "Back to top" : "Scroll down", false), `h-7 w-7 ${last() ? "rotate-180" : ""} ${index() === 0 ? "chev-bob" : ""}`);
 }

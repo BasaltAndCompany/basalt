@@ -1,5 +1,10 @@
 import { m as RequestContext } from "./@solid-primitives/event-listener+[...].mjs";
 import { AsyncLocalStorage } from "node:async_hooks";
+//#region node_modules/solid-js/web/storage/dist/storage.js
+function provideRequestEvent(init, cb) {
+	return (globalThis[RequestContext] = globalThis[RequestContext] || new AsyncLocalStorage()).run(init, cb);
+}
+//#endregion
 //#region node_modules/solid-js/store/dist/server.js
 function isWrappable(obj) {
 	return obj != null && typeof obj === "object" && (Object.getPrototypeOf(obj) === Object.prototype || Array.isArray(obj));
@@ -79,9 +84,4 @@ function produce(fn) {
 	};
 }
 //#endregion
-//#region node_modules/solid-js/web/storage/dist/storage.js
-function provideRequestEvent(init, cb) {
-	return (globalThis[RequestContext] = globalThis[RequestContext] || new AsyncLocalStorage()).run(init, cb);
-}
-//#endregion
-export { createStore as n, produce as r, provideRequestEvent as t };
+export { produce as n, provideRequestEvent as r, createStore as t };
