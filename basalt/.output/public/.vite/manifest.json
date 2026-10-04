@@ -1,0 +1,123 @@
+{
+  "_button-iDscz4pr.js": {
+    "file": "_build/assets/button-iDscz4pr.js",
+    "name": "button",
+    "imports": [
+      "_web-DbjINu9I.js"
+    ]
+  },
+  "_separator-CzDLK9Zz.js": {
+    "file": "_build/assets/separator-CzDLK9Zz.js",
+    "name": "separator",
+    "imports": [
+      "_web-DbjINu9I.js",
+      "_button-iDscz4pr.js"
+    ]
+  },
+  "_site-state-CIUA0Awq.js": {
+    "file": "_build/assets/site-state-CIUA0Awq.js",
+    "name": "site-state"
+  },
+  "_web-DbjINu9I.js": {
+    "file": "_build/assets/web-DbjINu9I.js",
+    "name": "web"
+  },
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-latin-ext-opsz-normal-CoJBavOu.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-opsz-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-latin-opsz-normal-X2BzlAjV.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-math-opsz-normal-CbZAXtrh.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-opsz-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-symbols-opsz-normal-d21etpfE.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-opsz-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2": {
+    "file": "_build/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+    "src": "node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2": {
+    "file": "_build/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+    "src": "node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2": {
+    "file": "_build/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+    "src": "node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2": {
+    "file": "_build/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+    "src": "node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2": {
+    "file": "_build/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+    "src": "node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2"
+  },
+  "src/entry-client.tsx": {
+    "file": "_build/assets/entry-client-CtQ2Goy4.js",
+    "name": "entry-client",
+    "src": "src/entry-client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_web-DbjINu9I.js"
+    ],
+    "dynamicImports": [
+      "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
+      "src/routes/footage.tsx?pick=default&pick=$css",
+      "src/routes/ui.tsx?pick=default&pick=$css"
+    ],
+    "css": [
+      "_build/assets/entry-client-v1jTo3s-.css"
+    ],
+    "assets": [
+      "_build/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+      "_build/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+      "_build/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+      "_build/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+      "_build/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+      "_build/assets/bodoni-moda-math-opsz-normal-CbZAXtrh.woff2",
+      "_build/assets/bodoni-moda-symbols-opsz-normal-d21etpfE.woff2",
+      "_build/assets/bodoni-moda-latin-ext-opsz-normal-CoJBavOu.woff2",
+      "_build/assets/bodoni-moda-latin-opsz-normal-X2BzlAjV.woff2"
+    ]
+  },
+  "src/routes/footage.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/footage-DpgEofqR.js",
+    "name": "footage",
+    "src": "src/routes/footage.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-DbjINu9I.js",
+      "_button-iDscz4pr.js",
+      "_site-state-CIUA0Awq.js",
+      "_separator-CzDLK9Zz.js"
+    ]
+  },
+  "src/routes/index.tsx?pick=Site&pick=default&pick=$css": {
+    "file": "_build/assets/index-DeN27pWK.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-DbjINu9I.js",
+      "_button-iDscz4pr.js",
+      "_site-state-CIUA0Awq.js"
+    ]
+  },
+  "src/routes/ui.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/ui-BhZCkuPf.js",
+    "name": "ui",
+    "src": "src/routes/ui.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-DbjINu9I.js",
+      "_button-iDscz4pr.js",
+      "_separator-CzDLK9Zz.js"
+    ]
+  }
+}

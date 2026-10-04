@@ -1,0 +1,1 @@
+var e=`basalt.heroVideo`;function t(){return localStorage.getItem(`basalt.heroVideoMigrated`)||(localStorage.setItem(`basalt.heroVideoMigrated`,`1`),localStorage.removeItem(e)),localStorage.getItem(e)??`/hero-loop.mp4`}export{t};

@@ -7,9 +7,9 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator"
 // touches window at import time (delegateEvents).
 GlobalRegistrator.register()
 
-const [{ render }, { default: App }, { default: UiGallery }, ui] = await Promise.all([
+const [{ render }, { default: Home }, { default: UiGallery }, ui] = await Promise.all([
   import("solid-js/web"),
-  import("@/App"),
+  import("@/routes/index"),
   import("@/ui-gallery"),
   Promise.all([
     import("@/components/ui/button"),
@@ -186,10 +186,10 @@ for (const [name, check, hint] of galleryChecks) {
   if (!ok) failed++
 }
 
-// Full app mount: signals, keyed narrative swap, and Button-as-link integration.
+// Landing route mount: signals, keyed narrative swap, Button-as-link integration.
 const appHost = document.createElement("div")
 document.body.append(appHost)
-render(() => <App />, appHost)
+render(() => <Home />, appHost)
 console.log(
   `${((): boolean => {
     const ok =
