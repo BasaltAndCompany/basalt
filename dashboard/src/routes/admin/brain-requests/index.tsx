@@ -6,6 +6,7 @@ import { createAsync, useAction } from "@solidjs/router";
 import { For, Show } from "solid-js";
 import Layout from "~/components/Layout";
 import { getBrainRequestsQuery, setBrainRequestStatusAction, linkBrainRequestToProspectAction } from "~/lib/admin-queries";
+import { Button } from "@madcactus/ui";
 
 const STATUSES = ["new", "building", "delivered", "declined"] as const;
 
@@ -52,7 +53,7 @@ export default function BrainRequests() {
 									<select name="status" value={r.status} class="doc-sched-input" style={{ width: "120px" }}>
 										<For each={[...STATUSES]}>{(s) => <option value={s}>{s}</option>}</For>
 									</select>
-									<button type="submit" class="btn btn-sm">Set status</button>
+									<Button variant="outline" size="sm" type="submit">Set status</Button>
 								</form>
 								<Show when={!r.prospectId}>
 									<form
@@ -64,11 +65,11 @@ export default function BrainRequests() {
 									>
 										<input type="hidden" name="id" value={r.id} />
 										<input name="company" placeholder="Prospect company (defaults to request)" class="doc-sched-input" style={{ width: "240px" }} />
-										<button type="submit" class="btn btn-sm">Link to prospect</button>
+										<Button variant="outline" size="sm" type="submit">Link to prospect</Button>
 									</form>
 								</Show>
 								<Show when={r.prospectId}>
-									<a class="btn btn-sm" href="/admin/outreach">prospect linked ↗</a>
+									<Button as="a" variant="outline" size="sm" href="/admin/outreach">prospect linked ↗</Button>
 								</Show>
 							</div>
 						</div>

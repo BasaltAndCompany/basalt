@@ -10,6 +10,7 @@ import {
 	createAdminApiKeyAction,
 	revokeAdminApiKeyAction,
 } from "~/lib/admin-queries";
+import { Button } from "@madcactus/ui";
 
 /** Memberless API keys — server-to-server auth (e.g. the Anarlog publisher).
  *  Raw key is shown once at creation; only a hash is stored. */
@@ -95,9 +96,8 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 			</div>
 			<div style={{ display: "flex", gap: "8px", "align-items": "center" }}>
 				<code class="mono" style={{ "font-size": "13px", "word-break": "break-all", flex: "1" }}>{key()}</code>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => {
 						navigator.clipboard.writeText(key());
 						setCopied(true);
@@ -105,7 +105,7 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 					}}
 				>
 					{copied() ? "Copied" : "Copy"}
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

@@ -18,6 +18,7 @@ import {
 	publishMeetingAction,
 	type TranscriptBlock,
 } from "~/lib/admin-queries";
+import { Button } from "@madcactus/ui";
 
 interface EditableBlock extends TranscriptBlock {
 	cut: boolean;
@@ -254,12 +255,12 @@ export default function MeetingEditor() {
 								{msg()!.text}
 							</span>
 						</Show>
-						<button class="btn" onClick={handleSave} disabled={busy()}>
+						<Button variant="outline" onClick={handleSave} disabled={busy()}>
 							Save Draft
-						</button>
-						<button class="btn btn-primary" onClick={handlePublish} disabled={busy()}>
+						</Button>
+						<Button onClick={handlePublish} disabled={busy()}>
 							{busy() ? "Working…" : "Publish"}
-						</button>
+						</Button>
 					</div>
 				</Show>
 			</Suspense>

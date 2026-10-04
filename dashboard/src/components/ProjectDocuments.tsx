@@ -6,6 +6,7 @@ import {
 	createDocumentLinkAction,
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
+import { Button } from "@madcactus/ui";
 
 type FormMode = "link" | "file" | "transcript";
 
@@ -47,15 +48,15 @@ export default function ProjectDocuments(props: {
 					Documents
 				</span>
 				<div style={{ display: "flex", gap: "6px" }}>
-					<button class="btn btn-sm" onClick={() => toggle("link")}>
+					<Button variant="outline" size="sm" onClick={() => toggle("link")}>
 						Add Link
-					</button>
-					<button class="btn btn-sm" onClick={() => toggle("file")}>
+					</Button>
+					<Button variant="outline" size="sm" onClick={() => toggle("file")}>
 						Upload File
-					</button>
-					<button class="btn btn-sm" onClick={() => toggle("transcript")}>
+					</Button>
+					<Button variant="outline" size="sm" onClick={() => toggle("transcript")}>
 						Add Transcript
-					</button>
+					</Button>
 				</div>
 			</div>
 
@@ -113,9 +114,9 @@ export default function ProjectDocuments(props: {
 								placeholder="Paste key text to make searchable…"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Add
-						</button>
+						</Button>
 					</form>
 				</div>
 			</Show>
@@ -158,9 +159,9 @@ export default function ProjectDocuments(props: {
 								placeholder="Brief description"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Upload
-						</button>
+						</Button>
 					</form>
 				</div>
 			</Show>
@@ -214,9 +215,9 @@ export default function ProjectDocuments(props: {
 								placeholder="Brief description"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Add Transcript
-						</button>
+						</Button>
 					</form>
 				</div>
 			</Show>

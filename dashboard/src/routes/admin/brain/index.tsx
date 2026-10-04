@@ -10,6 +10,7 @@ import {
 	runBrainCycleAction,
 	closeLoopAction,
 } from "~/lib/brain/admin";
+import { Button } from "@madcactus/ui";
 
 const kindColor: Record<string, string> = {
 	lesson: "var(--accent, #a855f7)",
@@ -63,12 +64,12 @@ export default function AdminBrain() {
 				<Show when={status()}>
 					<span class="muted" style={{ "font-size": "13px" }}>{status()}</span>
 				</Show>
-				<button type="button" class="btn btn-sm" disabled={!!busy()} onClick={() => void refresh("slack")}>
+				<Button variant="outline" size="sm" type="button"  disabled={!!busy()} onClick={() => void refresh("slack")}>
 					{busy() === "slack" ? "running…" : "Run cycle"}
-				</button>
-				<button type="button" class="btn btn-sm" disabled={!!busy()} onClick={() => void refresh("reprocess", true)}>
+				</Button>
+				<Button variant="outline" size="sm" type="button"  disabled={!!busy()} onClick={() => void refresh("reprocess", true)}>
 					{busy() === "reprocess" ? "running…" : "Reprocess transcripts"}
-				</button>
+				</Button>
 			</div>
 			<p class="page-subtitle">Distilled knowledge — pages, facts, conclusions, open loops</p>
 
@@ -104,7 +105,7 @@ export default function AdminBrain() {
 										});
 									}}>
 										<input type="hidden" name="loopId" value={l.id} />
-										<button type="submit" class="btn btn-sm">close</button>
+										<Button variant="outline" size="sm" type="submit">close</Button>
 									</form>
 								</div>
 							)}

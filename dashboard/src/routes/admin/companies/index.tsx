@@ -13,6 +13,7 @@ import {
 	getSignedInEmailsQuery,
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
+import { Button } from "@madcactus/ui";
 
 export default function Companies() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -108,7 +109,7 @@ export default function Companies() {
 												</td>
 												<td class="muted">{new Date(c.createdAt).toLocaleDateString()}</td>
 												<td>
-													<A href={`/admin/companies/${c.id}`} class="btn btn-sm">Manage</A>
+													<Button as="a" variant="outline" size="sm" href={`/admin/companies/${c.id}`}>Manage</Button>
 												</td>
 											</tr>
 										)}
@@ -158,12 +159,12 @@ export default function Companies() {
 													<td>
 														<div style={{ display: "flex", gap: "8px" }}>
 															<Show when={invitePending(m.email)}>
-																<button class="btn btn-sm" onClick={() => handleResend(m.id)} disabled={resendingId() === m.id}>{resendingId() === m.id ? "Sending…" : "Resend Invite"}</button>
+																<Button variant="outline" size="sm" onClick={() => handleResend(m.id)} disabled={resendingId() === m.id}>{resendingId() === m.id ? "Sending…" : "Resend Invite"}</Button>
 															</Show>
 															<form method="post" action="/admin/companies/toggle-member">
 																<input type="hidden" name="id" value={m.id} />
 																<input type="hidden" name="is_active" value={String(m.isActive)} />
-																<button type="submit" class="btn btn-sm">{m.isActive ? "Disable" : "Enable"}</button>
+																<Button variant="outline" size="sm" type="submit">{m.isActive ? "Disable" : "Enable"}</Button>
 															</form>
 														</div>
 													</td>

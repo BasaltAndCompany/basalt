@@ -815,17 +815,6 @@
   color: var(--card);
 }
 
-.btn-primary {
-  background: var(--foreground);
-  color: #fff;
-  border-color: var(--foreground);
-}
-
-.btn-primary:hover {
-  background: var(--foreground);
-  border-color: var(--foreground);
-  color: #fff;
-}
 
 .btn-sm {
   padding: 6px 14px;

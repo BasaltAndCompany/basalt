@@ -14,6 +14,7 @@ import {
 	getOverviewQuery,
 	type ExternalResult,
 } from "~/lib/overview";
+import { Button } from "@madcactus/ui";
 
 /** Render an external-source metric, degrading to a muted "not connected" tile. */
 function SourceTile(props: {
@@ -375,9 +376,9 @@ export default function Home() {
 									<Show when={entryError()}>
 										<p class="login-error" style={{ "margin-bottom": "12px" }}>{entryError()}</p>
 									</Show>
-									<button type="submit" class="btn btn-primary" disabled={logging()}>
+									<Button type="submit"  disabled={logging()}>
 										{logging() ? "Logging…" : "Log Entry"}
-									</button>
+									</Button>
 								</form>
 							</div>
 

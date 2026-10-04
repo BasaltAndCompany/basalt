@@ -7,6 +7,7 @@ import { getUserQuery } from "~/lib/queries";
 import { getOutreachQuery, getVideosQuery, setOutreachVideoAction } from "~/lib/admin-queries";
 import { stageLabel } from "~/db/schema";
 import { videoSummary } from "~/lib/video-summary";
+import { Button } from "@madcactus/ui";
 
 // Mirrors the server's free-plan cap (dashboard/src/routes/api/upload-video.ts).
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -187,13 +188,12 @@ export default function AdminVideos() {
 								</Show>
 								<div style={{ "font-size": "12px", margin: "5px 0" }}>
 									<a href={v.url} target="_blank" rel="noreferrer">video ↗</a>{" "}
-									<button
-										type="button"
-										class="btn btn-sm"
+									<Button variant="outline" size="sm" type="button"
+										
 										onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${v.id}`)}
 									>
 										copy email link
-									</button>{" "}
+									</Button>{" "}
 									<a href={`/v/${v.id}?test=1`} target="_blank" rel="noreferrer">test ↗</a>
 								</div>
 								<Show

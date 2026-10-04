@@ -24,6 +24,7 @@ import {
 import { OUTREACH_STAGES, stageLabel, type OutreachProspect, type OutreachStage, type Video } from "~/db/schema";
 import type { ProspectEmailStatus } from "~/lib/admin-queries";
 import { fmtDate, fmtDur, videoSummary } from "~/lib/video-summary";
+import { Button } from "@madcactus/ui";
 
 const STAGE_COLOR: Record<string, string> = {
 	candidate: "var(--muted-foreground)",
@@ -142,9 +143,9 @@ function ActivityDetails(props: { prospect: OutreachProspect }) {
 						<ActivityMetrics activity={(a() as { activity: BrainActivity }).activity} />
 						<ActivityChart days={(a() as { activity: BrainActivity }).activity.days} />
 						<div style={{ display: "flex", gap: "8px", "align-items": "center", "margin-top": "6px", "flex-wrap": "wrap" }}>
-							<button type="button" class="btn btn-sm" onClick={handleReset}>
+							<Button variant="outline" size="sm" type="button"  onClick={handleReset}>
 								reset metrics
-							</button>
+							</Button>
 							<Show when={resetMsg()}>
 								<span class="muted" style={{ "font-size": "12px" }}>{resetMsg()}</span>
 							</Show>
@@ -305,9 +306,9 @@ function EmailSection(props: { prospect: OutreachProspect }) {
 								<span class="muted" style={{ "font-size": "12px", "align-self": "center" }}>link:</span>
 								<For each={(d() as { suggestions: { email: string; lastAt: Date }[] }).suggestions}>
 									{(s) => (
-										<button type="button" class="btn btn-sm" title={fmtDate(s.lastAt)} onClick={() => linkAddress(s.email)}>
+										<Button variant="outline" size="sm" type="button"  title={fmtDate(s.lastAt)} onClick={() => linkAddress(s.email)}>
 											{s.email}
-										</button>
+										</Button>
 									)}
 								</For>
 							</div>
@@ -341,21 +342,19 @@ function VideoSection(props: { videoUrl?: string | null; videoId: string; descri
 				<Show when={props.description}>
 					<div class="muted">{props.description}</div>
 				</Show>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${props.videoId}`)}
 				>
 					copy email link
-				</button>
-				<button
-					type="button"
-					class="btn btn-sm"
+				</Button>
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${props.videoId}?test=1`)}
 				>
 					copy test email link
-				</button>
-				<a class="btn btn-sm" href={props.videoUrl!} target="_blank" rel="noreferrer">cap ↗</a>
+				</Button>
+				<Button as="a" variant="outline" size="sm" href={props.videoUrl!} target="_blank" rel="noreferrer">cap ↗</Button>
 			</div>
 		</Show>
 	);
@@ -567,9 +566,9 @@ function BoardCard(props: {
 				</Show>
 			</div>
 			<Show when={p().stage === "candidate"}>
-				<button type="button" class="btn btn-sm" style={{ margin: "4px 0" }} onClick={() => void approveIcp()}>
+				<Button variant="outline" size="sm" type="button"  style={{ margin: "4px 0" }} onClick={() => void approveIcp()}>
 					{p().icpApproved ? "Un-approve" : "Approve fit"}
-				</button>
+				</Button>
 			</Show>
 			<Show when={p().contactName || p().email}>
 				<div class="muted" style={{ "font-size": "12px" }}>
@@ -613,20 +612,19 @@ function BoardCard(props: {
 						<h2 style={{ margin: "0", "font-size": "15px" }}>{p().company}</h2>
 						<div style={{ "margin-left": "auto", display: "flex", gap: "6px" }}>
 						<Show when={ADVANCE[p().stage as OutreachStage]}>
-							<button type="button" class="btn btn-primary btn-sm" onClick={() => void advance()}>
+							<Button size="sm" type="button"  onClick={() => void advance()}>
 								{ADVANCE[p().stage as OutreachStage]!.label}
-							</button>
+							</Button>
 						</Show>
-						<button
-							type="button"
-							class="btn btn-sm"
+						<Button variant="outline" size="sm" type="button"
+							
 							onClick={() => setEditing(!editing())}
 						>
 							{editing() ? "Close editor" : "Edit"}
-						</button>
-								<button type="button" class="btn btn-sm" onClick={() => dialogRef.close()}>
+						</Button>
+								<Button variant="outline" size="sm" type="button"  onClick={() => dialogRef.close()}>
 									Close
-								</button>
+								</Button>
 							</div>
 					</div>
 					<Show when={p().contactName || p().email}>
@@ -646,7 +644,7 @@ function BoardCard(props: {
 					</div>
 					<div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap", margin: "12px 0" }}>
 						<Show when={p().brainUrl}>
-							<a class="btn btn-sm" href={brainHref(p())} target="_blank" rel="noreferrer">brain ↗</a>
+							<Button as="a" variant="outline" size="sm" href={brainHref(p())} target="_blank" rel="noreferrer">brain ↗</Button>
 						</Show>
 						<VideoSection videoUrl={p().video?.url} videoId={p().video?.id ?? p().id} description={p().video?.description} />
 					</div>
@@ -701,7 +699,7 @@ function BoardCard(props: {
 								<option value="1">ICP: approved</option>
 							</select>
 						</div>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<Button size="sm" type="submit">Save</Button>
 					</form>
 				</Show>
 			</dialog>

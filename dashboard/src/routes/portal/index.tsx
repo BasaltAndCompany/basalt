@@ -7,6 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { DeliverableStatus } from "~/db/schema";
+import { Button } from "@madcactus/ui";
 
 const statusBadge: Record<DeliverableStatus, string> = {
 	planned: "badge-paused",
@@ -110,9 +111,9 @@ export default function PortalHome() {
 						</div>
 
 						<div style={{ "margin-top": "24px", display: "flex", gap: "12px" }}>
-							<A href="/portal/documents" class="btn">View Documents</A>
-							<A href="/portal/invoices" class="btn">View Invoices</A>
-							<A href="/portal/api-keys" class="btn">API Keys</A>
+							<Button as="a" variant="outline" href="/portal/documents">View Documents</Button>
+							<Button as="a" variant="outline" href="/portal/invoices">View Invoices</Button>
+							<Button as="a" variant="outline" href="/portal/api-keys">API Keys</Button>
 						</div>
 					</>
 				)}

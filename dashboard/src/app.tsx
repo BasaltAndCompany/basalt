@@ -3,6 +3,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { ErrorBoundary, Suspense } from "solid-js";
 import "./app.css";
+import { Button } from "@madcactus/ui";
 
 export default function App() {
 	return (
@@ -17,8 +18,8 @@ export default function App() {
 								<pre style={{ "white-space": "pre-wrap", "font-family": "monospace", "font-size": "13px", color: "#a33", "margin-bottom": "16px" }}>
 									{err instanceof Error ? (err.stack ?? err.message) : String(err)}
 								</pre>
-								<button type="button" class="btn btn-sm" onClick={() => reset()}>Retry</button>{" "}
-								<button type="button" class="btn btn-sm" onClick={() => window.location.reload()}>Reload</button>
+								<Button variant="outline" size="sm" type="button"  onClick={() => reset()}>Retry</Button>{" "}
+								<Button variant="outline" size="sm" type="button"  onClick={() => window.location.reload()}>Reload</Button>
 							</div>
 						)}
 					>

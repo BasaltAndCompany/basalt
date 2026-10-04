@@ -8,6 +8,7 @@ import {
 	searchDocumentsQuery,
 } from "~/lib/client-queries";
 import type { DocumentType } from "~/db/schema";
+import { Button } from "@madcactus/ui";
 
 const typeLabel: Record<DocumentType, string> = {
 	link: "Link",
@@ -96,15 +97,15 @@ export default function PortalDocuments() {
 											when={hit.type === "link" && hit.url}
 											fallback={
 												<Show when={hit.url}>
-													<a href={`/api/download?path=${encodeURIComponent(hit.url!)}`} class="btn btn-sm" download="">
+													<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(hit.url!)}`}  download="">
 														Download
-													</a>
+													</Button>
 												</Show>
 											}
 										>
-											<a href={hit.url!} target="_blank" rel="noopener noreferrer" class="btn btn-sm">
+											<Button as="a" variant="outline" size="sm" href={hit.url!} target="_blank" rel="noopener noreferrer">
 												Open
-											</a>
+											</Button>
 										</Show>
 									</div>
 								</div>
@@ -146,33 +147,26 @@ export default function PortalDocuments() {
 													when={doc.type === "link" && doc.url}
 													fallback={
 														<Show when={doc.url}>
-															<a
-																href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
-																class="btn btn-sm"
-																download=""
-															>
+															<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
+																
+																download="">
 																Download
-															</a>
+															</Button>
 														</Show>
 													}
 												>
-													<a
-														href={doc.url!}
+													<Button as="a" variant="outline" size="sm" href={doc.url!}
 														target="_blank"
-														rel="noopener noreferrer"
-														class="btn btn-sm"
-													>
+														rel="noopener noreferrer">
 														Open
-													</a>
+													</Button>
 												</Show>
 											<Show when={doc.audioPath}>
-												<a
-													href={`/api/download?path=${encodeURIComponent(doc.audioPath!)}`}
-													class="btn btn-sm"
-													download=""
-												>
+												<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(doc.audioPath!)}`}
+													
+													download="">
 													Audio
-												</a>
+												</Button>
 											</Show>
 											</div>
 										</div>

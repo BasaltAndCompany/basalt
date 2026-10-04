@@ -5,6 +5,7 @@ import ConfirmButton from "~/components/ConfirmButton";
 import CreateDialog from "~/components/CreateDialog";
 import Layout from "~/components/Layout";
 import { getUserQuery } from "~/lib/queries";
+import { Button } from "@madcactus/ui";
 
 type Link = { slug: string; target: string; clicks: number; docId: string | null; docTitle: string | null; docKind: string | null; createdAt: string };
 type Doc = { id: string; title: string; kind: string; publishedAt: string | null };
@@ -202,10 +203,10 @@ export default function AdminLinks() {
 								<td style={{ padding: "8px", "font-variant-numeric": "tabular-nums" }}>{l.clicks}</td>
 								<td style={{ padding: "8px" }}>
 									<span style={{ display: "inline-flex", gap: "6px", "align-items": "center" }}>
-									<button type="button" class="btn btn-sm" onClick={() => void copyLink(l)}>
+									<Button variant="outline" size="sm" type="button"  onClick={() => void copyLink(l)}>
 										{copied() === l.slug ? "Copied" : "Copy link"}
-									</button>
-									<button type="button" class="btn btn-sm" onClick={() => openEdit(l)}>Edit</button>
+									</Button>
+									<Button variant="outline" size="sm" type="button"  onClick={() => openEdit(l)}>Edit</Button>
 									<ConfirmButton label="Delete" danger onConfirm={() => remove(l.slug)} />
 								</span>
 								</td>
@@ -244,8 +245,8 @@ export default function AdminLinks() {
 							<p style={{ color: "#b91c1c" }}>{editError()}</p>
 						</Show>
 						<div style={{ display: "flex", gap: "8px", "justify-content": "flex-end", "margin-top": "4px" }}>
-							<button type="button" class="btn btn-sm" onClick={() => dialogRef?.close()}>Cancel</button>
-							<button type="submit" class="btn btn-sm btn-primary">Save</button>
+							<Button variant="outline" size="sm" type="button"  onClick={() => dialogRef?.close()}>Cancel</Button>
+							<Button size="sm" type="submit">Save</Button>
 						</div>
 					</form>
 				</Show>

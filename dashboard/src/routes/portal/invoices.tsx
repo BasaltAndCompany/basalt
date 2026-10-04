@@ -7,6 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { InvoiceStatus } from "~/db/schema";
+import { Button } from "@madcactus/ui";
 
 const statusBadge: Record<InvoiceStatus, string> = {
 	draft: "badge-paused",
@@ -63,23 +64,18 @@ export default function PortalInvoices() {
 												<td>
 													<div style={{ display: "flex", gap: "8px" }}>
 														<Show when={inv.paymentUrl && inv.status !== "paid"}>
-															<a
-																href={inv.paymentUrl!}
+															<Button as="a" size="sm" href={inv.paymentUrl!}
 																target="_blank"
-																rel="noopener noreferrer"
-																class="btn btn-sm btn-primary"
-															>
+																rel="noopener noreferrer">
 																Pay Now
-															</a>
+															</Button>
 														</Show>
 														<Show when={inv.storagePath}>
-															<a
-																href={`/api/download?path=${encodeURIComponent(inv.storagePath!)}`}
-																class="btn btn-sm"
-																download=""
-															>
+															<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(inv.storagePath!)}`}
+																
+																download="">
 																PDF
-															</a>
+															</Button>
 														</Show>
 														<Show when={inv.notes}>
 															<span class="muted" style={{ "font-size": "12px", "max-width": "200px", display: "block", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>

@@ -22,6 +22,7 @@ import {
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
 import type { InvoiceStatus } from "~/db/schema";
+import { Button } from "@madcactus/ui";
 
 export default function CompanyDetail() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -126,7 +127,7 @@ export default function CompanyDetail() {
 									value={(JSON.parse(c().aliases ?? "[]") as string[]).join(", ")}
 									style={{ flex: "1" }}
 								/>
-								<button type="submit" class="btn btn-sm">Save</button>
+								<Button variant="outline" size="sm" type="submit">Save</Button>
 							</form>
 						</div>
 
@@ -206,12 +207,10 @@ export default function CompanyDetail() {
 															</div>
 															<div style={{ display: "flex", gap: "8px" }}>
 																<Show when={invitePending(m.email)}>
-																	<button
-																		class="btn btn-sm"
-																		onClick={() => handleResendInvite(m.id, m.email)}
+																	<Button variant="outline" size="sm" onClick={() => handleResendInvite(m.id, m.email)}
 																	>
 																		Resend Invite
-																	</button>
+																	</Button>
 																</Show>
 																<ConfirmButton
 																	label="Remove"
@@ -288,7 +287,7 @@ function CompanyProjectSection(props: {
 			<div>
 				<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "8px" }}>
 					<span class="muted" style={{ "font-size": "13px" }}>Invoices</span>
-					<button class="btn btn-sm" onClick={props.toggleInvForm}>New Invoice</button>
+					<Button variant="outline" size="sm" onClick={props.toggleInvForm}>New Invoice</Button>
 				</div>
 				<Show when={props.showInvForm}>
 					<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
@@ -320,7 +319,7 @@ function CompanyProjectSection(props: {
 								<label for={`inv_due_${props.proj.id}`}>Due Date</label>
 								<input type="date" id={`inv_due_${props.proj.id}`} name="due_date" />
 							</div>
-							<button type="submit" class="btn btn-primary">Create</button>
+							<Button type="submit">Create</Button>
 						</form>
 					</div>
 				</Show>

@@ -10,6 +10,7 @@ import {
 	getClientUserQuery,
 	revokeApiKeyAction,
 } from "~/lib/client-queries";
+import { Button } from "@madcactus/ui";
 
 export default function PortalApiKeys() {
 	const user = createAsync(() => getClientUserQuery(), { deferStream: true });
@@ -126,9 +127,7 @@ export default function PortalApiKeys() {
 					Add this MCP server config to your AI agent (Claude Desktop, Cursor, etc.):
 				</p>
 				<div style={{ position: "relative" }}>
-					<button
-						class="btn btn-sm"
-						style={{ position: "absolute", top: "8px", right: "8px" }}
+					<Button variant="outline" size="sm" style={{ position: "absolute", top: "8px", right: "8px" }}
 						onClick={() => {
 							navigator.clipboard.writeText(claudeConfig);
 							setCopied(true);
@@ -136,7 +135,7 @@ export default function PortalApiKeys() {
 						}}
 					>
 						{copied() ? "Copied" : "Copy"}
-					</button>
+					</Button>
 					<pre
 						style={{
 							background: "var(--secondary)",
@@ -182,16 +181,14 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 				>
 					{key()}
 				</code>
-				<button
-					class="btn btn-primary"
-					onClick={() => {
+				<Button onClick={() => {
 						navigator.clipboard.writeText(key());
 						setCopied(true);
 						setTimeout(() => setCopied(false), 2000);
 					}}
 				>
 					{copied() ? "Copied" : "Copy"}
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

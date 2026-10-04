@@ -14,6 +14,7 @@ import {
 } from "~/lib/queries";
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
+import { Button } from "@madcactus/ui";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
 	"planned",
@@ -171,17 +172,17 @@ export default function ProjectDetail() {
 																<Show
 																	when={updateDeliverableId() === delv.id}
 																	fallback={
-																		<button class="btn btn-sm" onClick={() => setUpdateDeliverableId(delv.id)}>
+																		<Button variant="outline" size="sm" onClick={() => setUpdateDeliverableId(delv.id)}>
 																			Add Update
-																		</button>
+																		</Button>
 																	}
 																>
 																	<form method="post" action="/admin/projects/add-update" style={{ flex: "1", display: "flex", gap: "8px" }}>
 																		<input type="hidden" name="deliverable_id" value={delv.id} />
 																		<input type="hidden" name="_referer" value={`/admin/projects/${params.id}`} />
 																		<input type="text" name="body" placeholder="Progress update…" required style={{ flex: "1", "padding": "8px 14px", "font-size": "13px" }} />
-																		<button type="submit" class="btn btn-sm btn-primary">Post</button>
-																		<button type="button" class="btn btn-sm" onClick={() => setUpdateDeliverableId(null)}>Cancel</button>
+																		<Button size="sm" type="submit">Post</Button>
+																		<Button variant="outline" size="sm" type="button"  onClick={() => setUpdateDeliverableId(null)}>Cancel</Button>
 																	</form>
 																</Show>
 																<ConfirmButton
@@ -238,9 +239,9 @@ export default function ProjectDetail() {
 									<Show when={error()}>
 										<p class="login-error" style={{ "margin-bottom": "12px" }}>{error()}</p>
 									</Show>
-									<button type="submit" class="btn btn-primary" disabled={logging()}>
+									<Button type="submit"  disabled={logging()}>
 							{logging() ? "Logging…" : "Log Entry"}
-						</button>
+						</Button>
 								</form>
 							</div>
 

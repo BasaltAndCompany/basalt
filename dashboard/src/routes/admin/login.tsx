@@ -2,6 +2,7 @@ import { Title } from "@solidjs/meta";
 import { createAsync, useAction } from "@solidjs/router";
 import { Show, createSignal } from "solid-js";
 import { getUserQuery, loginAction } from "~/lib/queries";
+import { Button } from "@madcactus/ui";
 
 export default function Login() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -72,9 +73,9 @@ export default function Login() {
 							<Show when={error()}>
 								<p class="login-error">{error()}</p>
 							</Show>
-							<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }} disabled={loading()}>
+							<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }} disabled={loading()}>
 								{loading() ? "Signing in…" : "Sign in"}
-							</button>
+							</Button>
 						</form>
 					</div>
 				</div>

@@ -5,6 +5,7 @@ import {
 	clientLoginAction,
 	setInvitePasswordAction,
 } from "~/lib/client-queries";
+import { Button } from "@madcactus/ui";
 
 export default function ClientLogin() {
 	const login = useAction(clientLoginAction);
@@ -108,9 +109,9 @@ export default function ClientLogin() {
 						<Show when={error()}>
 							<p class="login-error">{error()}</p>
 						</Show>
-						<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }}>
+						<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }}>
 							Set password & continue
-						</button>
+						</Button>
 					</form>
 				</Show>
 
@@ -156,9 +157,9 @@ export default function ClientLogin() {
 						<Show when={error()}>
 							<p class="login-error">{error()}</p>
 						</Show>
-						<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }}>
+						<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }}>
 							Sign in
-						</button>
+						</Button>
 					</form>
 				</Show>
 			</div>

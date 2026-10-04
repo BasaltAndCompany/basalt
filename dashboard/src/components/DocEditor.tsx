@@ -8,6 +8,7 @@ import { getDocQuery, getDocStatsQuery } from "~/lib/docs-queries";
 import { computeBreaks } from "~/lib/doc-pages";
 import { VoiceLintPanel } from "~/components/VoiceLintPanel";
 import { docSurface, type LintResult } from "~/lib/voice-lint";
+import { Button } from "@madcactus/ui";
 
 type VersionRow = {
 	id: string;
@@ -348,21 +349,21 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 					<option value="casual" />
 				</datalist>
 				<Show when={kind() === "post"}>
-					<button type="button" class="btn btn-sm" classList={{ active: preview() === "linkedin" }} onClick={() => setPreview(preview() === "linkedin" ? null : "linkedin")}>
+					<Button variant="outline" size="sm" type="button"  classList={{ active: preview() === "linkedin" }} onClick={() => setPreview(preview() === "linkedin" ? null : "linkedin")}>
 						Preview
-					</button>
+					</Button>
 				</Show>
 				<Show when={kind() === "newsletter"}>
-					<button type="button" class="btn btn-sm" classList={{ active: preview() === "email" }} onClick={() => setPreview(preview() === "email" ? null : "email")}>
+					<Button variant="outline" size="sm" type="button"  classList={{ active: preview() === "email" }} onClick={() => setPreview(preview() === "email" ? null : "email")}>
 						Email
-					</button>
-					<button type="button" class="btn btn-sm" classList={{ active: preview() === "web" }} onClick={() => setPreview(preview() === "web" ? null : "web")}>
+					</Button>
+					<Button variant="outline" size="sm" type="button"  classList={{ active: preview() === "web" }} onClick={() => setPreview(preview() === "web" ? null : "web")}>
 						Web
-					</button>
+					</Button>
 				</Show>
-				<button type="button" class="btn btn-sm" classList={{ active: showHistory() }} onClick={toggleHistory}>
+				<Button variant="outline" size="sm" type="button"  classList={{ active: showHistory() }} onClick={toggleHistory}>
 					History
-				</button>
+				</Button>
 				<Show when={docStatus() !== "publishing"}>
 					<ConfirmButton
 						label="Delete"
@@ -370,12 +371,12 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 						onConfirm={remove}
 					/>
 				</Show>
-				<button type="button" class="btn btn-sm" onClick={async () => {
+				<Button variant="outline" size="sm" type="button"  onClick={async () => {
 					const r = await post(props.id, { op: "share", enabled: !shareUrl() });
 					setShareUrl(r.shareToken ? `${location.origin}/share/${r.shareToken}` : "");
 				}}>
 					{shareUrl() ? "Unshare" : "Share"}
-				</button>
+				</Button>
 				<details class="doc-export" ref={(el) => {
 				// close on any click outside the menu
 				const close = (e: MouseEvent) => {
@@ -407,13 +408,13 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 				<Show
 					when={kind()}
 					fallback={
-						<button type="button" class="btn btn-primary btn-sm" onClick={async () => {
+						<Button size="sm" type="button"  onClick={async () => {
 							await save(props.id, markdown());
 							const r = await post(props.id, { op: "finalize" });
 							setStatus(r.ok ? "marked final" : (r.error ?? "finalize failed"));
 						}}>
 							Finalize
-						</button>
+						</Button>
 					}
 				>
 					<Show when={kind() === "post" && liConnected() !== true} fallback={
@@ -429,9 +430,9 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 									<option value="web">Web only</option>
 								</select>
 							</Show>
-							<button type="button" class="btn btn-primary btn-sm" onClick={() => void publishNow()}>
+							<Button size="sm" type="button"  onClick={() => void publishNow()}>
 								Publish now
-							</button>
+							</Button>
 							<input
 								type="datetime-local"
 								class="doc-sched-input"
@@ -439,39 +440,39 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 								value={schedInput()}
 								onChange={(e) => setSchedInput(e.currentTarget.value)}
 							/>
-							<button type="button" class="btn btn-primary btn-sm" onClick={() => void schedule()}>
+							<Button size="sm" type="button"  onClick={() => void schedule()}>
 								{docStatus() === "scheduled" ? "Reschedule" : "Schedule"}
-							</button>
+							</Button>
 							<Show when={docStatus() === "scheduled"}>
-								<button type="button" class="btn btn-sm" onClick={() => void unschedule()}>
+								<Button variant="outline" size="sm" type="button"  onClick={() => void unschedule()}>
 									Unschedule
-								</button>
+								</Button>
 							</Show>
 						</>
 					}>
-						<a class="btn btn-sm" target="_top" href="/api/social/linkedin?start=1">Connect LinkedIn to schedule</a>
+						<Button as="a" variant="outline" size="sm" target="_top" href="/api/social/linkedin?start=1">Connect LinkedIn to schedule</Button>
 					</Show>
 					<Show when={docStatus() === "published"}>
 						<Show when={kind() === "newsletter"}>
 							{/* live page renders the published snapshot — editing changes
 							    nothing until Republish snapshots the new version */}
-							<a class="btn btn-sm" target="_blank" href={`/newsletter/${props.id}`}>
+							<Button as="a" variant="outline" size="sm" target="_blank" href={`/newsletter/${props.id}`}>
 								View live page ↗
-							</a>
+							</Button>
 							<Show when={hasUnpublishedEdits()}>
-								<button type="button" class="btn btn-primary btn-sm" onClick={() => void republishWeb()}>
+								<Button size="sm" type="button"  onClick={() => void republishWeb()}>
 									Republish to web
-								</button>
+								</Button>
 							</Show>
 						</Show>
-						<button type="button" class="btn btn-sm" onClick={() => void setPublishStateState("final")}>
+						<Button variant="outline" size="sm" type="button"  onClick={() => void setPublishStateState("final")}>
 							{kind() === "newsletter" ? "Hide from site" : "Mark as unposted"}
-						</button>
+						</Button>
 					</Show>
 					<Show when={docStatus() === "final" || docStatus() === "failed"}>
-						<button type="button" class="btn btn-sm" onClick={() => void setPublishStateState("published")}>
+						<Button variant="outline" size="sm" type="button"  onClick={() => void setPublishStateState("published")}>
 							{kind() === "newsletter" ? "Mark as sent" : "Mark as posted"}
-						</button>
+						</Button>
 					</Show>
 				</Show>
 			</div>
