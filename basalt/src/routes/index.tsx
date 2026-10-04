@@ -116,6 +116,7 @@ export function Site(props: { heroVideo: string | null }) {
           <LinkText href="/contact">Contact</LinkText>
           <LinkText href="/writing">Writing</LinkText>
           <LinkText href="/careers">Careers</LinkText>
+          <LinkText href="https://madcactus.org/portal/login">Clients</LinkText>
         </nav>
       </div>
       <div class="fixed right-0 bottom-0 z-20 px-6 pb-5 text-right">
