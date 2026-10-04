@@ -2,6 +2,7 @@ import { createSignal, onCleanup, onMount, Show } from "solid-js"
 import { Logo } from "@/brand/logo"
 import { VideoPicker } from "@/brand/video-picker"
 import { Button } from "@/components/ui/button"
+import UiGallery from "@/ui-gallery"
 
 const HERO_KEY = "basalt.heroVideo"
 
@@ -183,12 +184,16 @@ function Site(props: { heroVideo: string | null }) {
 }
 
 export default function App() {
-  const [view, setView] = createSignal<"site" | "footage">("site")
+  const [view, setView] = createSignal<"site" | "footage" | "ui">("site")
   const [heroVideo, setHeroVideo] = createSignal<string | null>(initHeroVideo())
 
-  // The footage picker lives off-stage at #footage — no link on the page.
+  // The footage picker lives off-stage at #footage and the component gallery
+  // at #ui — no links on the page.
   onMount(() => {
-    const sync = () => setView(window.location.hash === "#footage" ? "footage" : "site")
+    const sync = () => {
+      const h = window.location.hash
+      setView(h === "#footage" ? "footage" : h === "#ui" ? "ui" : "site")
+    }
     sync()
     window.addEventListener("hashchange", sync)
     onCleanup(() => window.removeEventListener("hashchange", sync))
@@ -196,16 +201,20 @@ export default function App() {
 
   return (
     <Show
-      when={view() === "footage"}
-      fallback={<Site heroVideo={heroVideo()} />}
+      when={view() !== "footage"}
+      fallback={
+        <VideoPicker
+          heroVideo={heroVideo()}
+          onSetHero={setHeroVideo}
+          onBack={() => {
+            window.location.hash = ""
+          }}
+        />
+      }
     >
-      <VideoPicker
-        heroVideo={heroVideo()}
-        onSetHero={setHeroVideo}
-        onBack={() => {
-          window.location.hash = ""
-        }}
-      />
+      <Show when={view() === "ui"} fallback={<Site heroVideo={heroVideo()} />}>
+        <UiGallery />
+      </Show>
     </Show>
   )
 }
