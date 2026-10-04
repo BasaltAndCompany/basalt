@@ -1,50 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/bodoni-moda/opsz.css";
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* feedback-widget ships pre-bundled zinc utilities — v4 needs an explicit source */
+@source "../node_modules/@aspectrr/feedback-widget/dist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+}
 
 @layer base {
   :root {
-    /* Light vellum theme — Franco Maria Ricci editorial (matches marketing) */
-    --background: 0 0% 96.5%; /* vellum #f6f6f6 */
-    --foreground: 0 0% 0%; /* letterpress black */
-    --card: 0 0% 100%; /* paper #ffffff */
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 40 42% 55%; /* burnished gold #bc9c5c */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 35%; /* dark enough to read on vellum */
-    --accent: 0 0% 90%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 0%; /* FMR: black hairlines */
-    --input: 0 0% 85%;
-    --ring: 40 42% 55%;
-    --radius: 0px; /* Art Déco: sharp corners */
+    /* Basalt ink — dark-first, one theme. Paper text on ink surface, one
+       signal red. Radius zero: basalt is columnar. Matches basalt/src/index.css. */
+    --background: #0A0A0A;
+    --foreground: #FAFAFA;
+    --card: #111113;
+    --card-foreground: #FAFAFA;
+    --popover: #111113;
+    --popover-foreground: #FAFAFA;
+    --primary: #FAFAFA;
+    --primary-foreground: #0A0A0A;
+    --secondary: #1A1A1C;
+    --secondary-foreground: #FAFAFA;
+    --muted: #1A1A1C;
+    --muted-foreground: rgba(250, 250, 250, 0.55);
+    --accent: #1A1A1C;
+    --accent-foreground: #FAFAFA;
+    --destructive: #C8102E;
+    --destructive-foreground: #ffffff;
+    --border: rgba(250, 250, 250, 0.12);
+    --input: rgba(250, 250, 250, 0.12);
+    --ring: rgba(250, 250, 250, 0.3);
+    --radius: 0rem;
 
-    /* Legacy aliases for dashboard custom classes */
-    --bg: #f6f6f6; /* vellum */
-    --bg-elevated: #0a0a0a; /* gallery ink — sidebar */
-    --bg-card: #ffffff; /* paper */
-    --text: #000000; /* letterpress black */
-    --text-muted: #707070;
-    --text-subtle: #999999;
-    --gold: #bc9c5c; /* burnished gold */
-    --gold-light: #cdb372;
-    --gold-border: rgba(188, 156, 92, 0.3);
+    /* Legacy aliases — hand-rolled classes still read these. Same ink values;
+       delete at the end of the library adoption (Phase 3c). */
+    --bg: #0A0A0A;
+    --bg-elevated: #111113; /* sidebar band */
+    --bg-card: #111113;
+    --text: #FAFAFA;
+    --text-muted: rgba(250, 250, 250, 0.55);
+    --text-subtle: rgba(250, 250, 250, 0.4);
+    --gold: #FAFAFA; /* was burnished gold — ink theme has paper, not gold */
+    --gold-light: #FAFAFA;
+    --gold-border: rgba(250, 250, 250, 0.3);
     --green: #3d9970;
     --orange: #c4862a;
-    --red: #c0392b;
+    --red: #C8102E; /* the one red */
 
-    /* Typography */
-    --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    --font-sans: Arial, Helvetica, -apple-system, 'Segoe UI', sans-serif;
+    /* Typography — Bodoni display + Geist sans (fontsource, was Google Playfair) */
+    --font-serif: 'Bodoni Moda Variable', 'Bodoni MT', Georgia, serif;
+    --font-sans: 'Geist Variable', sans-serif;
   }
 }
 
