@@ -12,8 +12,8 @@ export default defineConfig({
 	// feedback-widget ships a pre-bundled dist; left external it gets a second
 	// copy of solid-js/web in dev → hydration throws "create new DOM elements".
 	// noExternal (SSR) + exclude (client pre-bundle) keep one shared copy.
-	ssr: { noExternal: ["@aspectrr/feedback-widget"] },
-	optimizeDeps: { exclude: ["@aspectrr/feedback-widget"] },
+	ssr: { noExternal: ["@aspectrr/feedback-widget", "@madcactus/ui"] },
+	optimizeDeps: { exclude: ["@aspectrr/feedback-widget", "@madcactus/ui"] },
 	plugins: [
 		solidStart(),
 		// static marketing pages — prerendered at build. Requires the build to

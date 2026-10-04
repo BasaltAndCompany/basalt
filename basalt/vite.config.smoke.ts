@@ -19,7 +19,10 @@ export default defineConfig({
       input: "smoke.tsx",
       // happy-dom is a Node lib — keep it out of the browser bundle; rtk bun resolves it at runtime.
       external: [/@happy-dom\//, /^happy-dom$/],
-      output: { entryFileNames: "smoke.js", format: "es" },
+      // Single-entry test bundle: inline dynamic imports so module evaluation
+      // order can't TDZ across chunks (barrel re-exports + cmdk-solid tripped
+      // this when the library moved to node_modules).
+      output: { entryFileNames: "smoke.js", format: "es", inlineDynamicImports: true },
     },
   },
 })

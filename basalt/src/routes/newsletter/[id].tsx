@@ -5,7 +5,7 @@ import { createAsync } from "@solidjs/router"
 import { Show } from "solid-js"
 import { Title } from "@solidjs/meta"
 import { Page } from "@/components/site"
-import { Button } from "@/components/ui/button"
+import { Button } from "@madcactus/ui"
 
 type Issue = {
   id: string

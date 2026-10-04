@@ -5,18 +5,16 @@
 import type { JSX } from "solid-js"
 import { createSignal, Show } from "solid-js"
 import { Page } from "@/components/site"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
+import { Button } from "@madcactus/ui"
+import { Input } from "@madcactus/ui"
+import { Label } from "@madcactus/ui"
+import { Textarea } from "@madcactus/ui"
+import { Select,
   SelectContent,
   SelectHiddenSelect,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  SelectValue, } from "@madcactus/ui"
 
 function Field(props: { id: string; label: string; required?: boolean; children: JSX.Element }) {
   return (

@@ -2,10 +2,10 @@
 // gallery. Posts to the dashboard's /api/contact (Resend deliverable email).
 import { createSignal, Show } from "solid-js"
 import { Page } from "@/components/site"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@madcactus/ui"
+import { Input } from "@madcactus/ui"
+import { Label } from "@madcactus/ui"
+import { Textarea } from "@madcactus/ui"
 
 export default function Contact() {
   const [sending, setSending] = createSignal(false)

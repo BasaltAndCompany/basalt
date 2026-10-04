@@ -1,4 +1,4 @@
-//#region node_modules/srvx/dist/_chunks/_url.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/_chunks/_url.mjs
 function lazyInherit(target, source, sourceKey) {
 	for (const key of [...Object.getOwnPropertyNames(source), ...Object.getOwnPropertySymbols(source)]) {
 		if (key === "constructor") continue;
@@ -133,7 +133,7 @@ var FastURL = /* @__PURE__ */ (() => {
 	return FastURL;
 })();
 //#endregion
-//#region node_modules/srvx/dist/_chunks/_utils2.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/_chunks/_utils2.mjs
 function resolvePortAndHost(opts) {
 	const _port = opts.port ?? globalThis.process?.env.PORT ?? 3e3;
 	const port = typeof _port === "number" ? _port : Number.parseInt(_port, 10);
@@ -209,7 +209,7 @@ function createWaitUntil() {
 	};
 }
 //#endregion
-//#region node_modules/srvx/dist/_chunks/_utils.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/_chunks/_utils.mjs
 var noColor = /* @__PURE__ */ (() => {
 	const env = globalThis.process?.env ?? {};
 	return env.NO_COLOR === "1" || env.TERM === "dumb";
@@ -220,7 +220,7 @@ var red = /* @__PURE__ */ _c(31);
 var green = /* @__PURE__ */ _c(32);
 var gray = /* @__PURE__ */ _c(90);
 //#endregion
-//#region node_modules/srvx/dist/_chunks/_plugins.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/_chunks/_plugins.mjs
 function wrapFetch(server) {
 	const fetchHandler = server.options.fetch;
 	const middleware = server.options.middleware || [];
@@ -264,7 +264,7 @@ var gracefulShutdownPlugin = (server) => {
 	for (const sig of ["SIGINT", "SIGTERM"]) globalThis.process.on(sig, shutdown);
 };
 //#endregion
-//#region node_modules/srvx/dist/_chunks/_trust-proxy.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/_chunks/_trust-proxy.mjs
 function isTrustedProxy(trustProxy, remoteAddress) {
 	if (trustProxy === void 0 || trustProxy === false) return false;
 	if (trustProxy === true) return true;
@@ -323,7 +323,7 @@ function applyTrustedProxy(request, trustProxy) {
 	});
 }
 //#endregion
-//#region node_modules/srvx/dist/adapters/bun.mjs
+//#region ../node_modules/.bun/srvx@0.11.22/node_modules/srvx/dist/adapters/bun.mjs
 var FastResponse = Response;
 function serve(options) {
 	return new BunServer(options);
@@ -410,13 +410,13 @@ var BunServer = class {
 	}
 };
 //#endregion
-//#region node_modules/nitro/node_modules/h3/node_modules/rou3/dist/index.mjs
+//#region ../node_modules/.bun/rou3@0.8.1/node_modules/rou3/dist/index.mjs
 var NullProtoObj = /* @__PURE__ */ (() => {
 	const e = function() {};
 	return e.prototype = Object.create(null), Object.freeze(e.prototype), e;
 })();
 //#endregion
-//#region node_modules/nitro/node_modules/h3/dist/h3.mjs
+//#region ../node_modules/.bun/h3@2.0.1-rc.22+d6c88ba60e8966d9/node_modules/h3/dist/h3.mjs
 function decodePathname(pathname) {
 	return decodeURI(pathname.includes("%25") ? pathname.replace(/%25/g, "%2525") : pathname);
 }
@@ -816,4 +816,4 @@ var H3Core = class {
 	}
 };
 //#endregion
-export { toEventHandler as a, serve as c, defineLazyEventHandler as i, FastURL as l, HTTPError as n, toRequest as o, defineHandler as r, FastResponse as s, H3Core as t };
+export { toEventHandler as a, serve as c, defineLazyEventHandler as i, HTTPError as n, toRequest as o, defineHandler as r, FastResponse as s, H3Core as t };

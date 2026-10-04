@@ -1,7 +1,7 @@
 // /careers — honest page, no open roles yet. The firm is two people and a
 // fleet of agents; when that changes, this page changes.
 import { Page } from "@/components/site"
-import { Button } from "@/components/ui/button"
+import { Button } from "@madcactus/ui"
 
 export default function Careers() {
   return (

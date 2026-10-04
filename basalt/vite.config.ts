@@ -22,4 +22,8 @@ export default defineConfig({
       "@": resolve(__dirname, "./src"),
     },
   },
+  // @madcactus/ui ships .tsx source — keep it out of esbuild pre-bundling and
+  // SSR externals so the solid plugin compiles the JSX.
+  optimizeDeps: { exclude: ["@madcactus/ui"] },
+  ssr: { noExternal: ["@madcactus/ui"] },
 })

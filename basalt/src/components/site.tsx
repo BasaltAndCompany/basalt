@@ -4,7 +4,7 @@
 import { Meta, Title } from "@solidjs/meta"
 import type { JSX } from "solid-js"
 import { Logo } from "@/brand/logo"
-import { Button } from "@/components/ui/button"
+import { Button } from "@madcactus/ui"
 
 // The approved text-link look (same as the landing nav).
 function NavLink(props: { href: string; children: string }) {

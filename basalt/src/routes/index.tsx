@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, onMount, Show } from "solid-js"
 import { Logo } from "@/brand/logo"
-import { Button } from "@/components/ui/button"
+import { Button } from "@madcactus/ui"
 import { initHeroVideo } from "@/routes/site-state"
 
 

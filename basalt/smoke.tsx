@@ -12,13 +12,13 @@ const [{ render }, { default: Home }, { default: UiGallery }, ui] = await Promis
   import("@/routes/index"),
   import("@/ui-gallery"),
   Promise.all([
-    import("@/components/ui/button"),
-    import("@/components/ui/badge"),
-    import("@/components/ui/card"),
-    import("@/components/ui/input"),
-    import("@/components/ui/label"),
-    import("@/components/ui/separator"),
-    import("@/components/ui/textarea"),
+    import("@madcactus/ui/button"),
+    import("@madcactus/ui/badge"),
+    import("@madcactus/ui/card"),
+    import("@madcactus/ui/input"),
+    import("@madcactus/ui/label"),
+    import("@madcactus/ui/separator"),
+    import("@madcactus/ui/textarea"),
   ]),
 ])
 const [{ Button }, { Badge }, { Card, CardContent }, { Input }, { Label }, { Separator }, { Textarea }] = ui
@@ -195,10 +195,10 @@ console.log(
     const ok =
       appHost.querySelector("video[autoplay]") !== null &&
       appHost.querySelector("h1")?.textContent === "The rock under everything." &&
-      appHost.querySelectorAll("nav a").length === 3
+      appHost.querySelectorAll("nav a").length === 4
     if (!ok) failed++
     return ok
-  })() ? "✓" : "✗"} App mounts: hero video + h1 narrative + nav links render`,
+  })() ? "✓" : "✗"} App mounts: hero video + h1 narrative + 4 nav links render`,
 )
 
 for (const [name, check, hint] of checks) {
