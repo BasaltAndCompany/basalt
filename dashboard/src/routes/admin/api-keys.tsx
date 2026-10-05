@@ -10,7 +10,7 @@ import {
 	createAdminApiKeyAction,
 	revokeAdminApiKeyAction,
 } from "~/lib/admin-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 
 /** Memberless API keys — server-to-server auth (e.g. the Anarlog publisher).
  *  Raw key is shown once at creation; only a hash is stored. */
@@ -60,7 +60,7 @@ export default function AdminApiKeys() {
 					<div style={{ display: "flex", "flex-direction": "column", gap: "8px" }}>
 						<For each={keys()}>
 							{(k) => (
-								<div class="card" style={{ padding: "14px 20px", display: "flex", "align-items": "center", gap: "12px" }}>
+								<Card style={{ padding: "14px 20px", display: "flex", "align-items": "center", gap: "12px" }}>
 									<div style={{ flex: "1" }}>
 										<span style={{ "font-weight": "600", "font-size": "14px" }}>{k.label}</span>
 										<span class="mono muted" style={{ "font-size": "12px", "margin-left": "8px" }}>{k.keyPrefix}</span>
@@ -75,7 +75,7 @@ export default function AdminApiKeys() {
 									>
 										<ConfirmButton label="Revoke" danger onConfirm={() => handleRevoke(k.id)} />
 									</Show>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>

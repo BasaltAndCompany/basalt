@@ -13,7 +13,7 @@ import {
 	getSignedInEmailsQuery,
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 export default function Companies() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -83,7 +83,7 @@ export default function Companies() {
 				<Show when={companies()} fallback={<p class="muted">Loading…</p>}>
 					{(list) => (
 						<Show when={list().length > 0} fallback={
-							<div class="card empty">No companies yet. Create one above.</div>
+							<Card class="empty">No companies yet. Create one above.</Card>
 						}>
 							<Table class="table">
 								<TableHeader>
@@ -134,7 +134,7 @@ export default function Companies() {
 					<Show when={members()} fallback={<p class="muted">Loading…</p>}>
 						{(list) => (
 							<Show when={list().length > 0} fallback={
-								<div class="card empty">No members yet. Add them from a company detail page.</div>
+								<Card class="empty">No members yet. Add them from a company detail page.</Card>
 							}>
 								<Table class="table">
 									<TableHeader>

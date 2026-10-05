@@ -14,7 +14,7 @@ import {
 	getOverviewQuery,
 	type ExternalResult,
 } from "~/lib/overview";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 /** Render an external-source metric, degrading to a muted "not connected" tile. */
@@ -305,7 +305,7 @@ export default function Home() {
 							{/* Retainer caps */}
 							<Show when={d().caps.length > 0}>
 								<div class="section-heading">Monthly Retainer Caps</div>
-								<div class="card">
+								<Card>
 									<For each={d().caps}>
 										{(cap) => {
 											const pct = Math.min((cap.used / cap.cap) * 100, 100);
@@ -332,12 +332,12 @@ export default function Home() {
 											);
 										}}
 									</For>
-								</div>
+								</Card>
 							</Show>
 
 							{/* Quick log */}
 							<div class="section-heading">Log Time</div>
-							<div class="card">
+							<Card>
 								<form onSubmit={handleLog}>
 									<div class="form-row">
 										<div class="form-group">
@@ -383,7 +383,7 @@ export default function Home() {
 										{logging() ? "Logging…" : "Log Entry"}
 									</Button>
 								</form>
-							</div>
+							</Card>
 
 							{/* Recent entries */}
 							<div class="section-heading">Recent Entries</div>

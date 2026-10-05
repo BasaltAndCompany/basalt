@@ -6,7 +6,7 @@ import { createAsync, useAction } from "@solidjs/router";
 import { For, Show } from "solid-js";
 import Layout from "~/components/Layout";
 import { getBrainRequestsQuery, setBrainRequestStatusAction, linkBrainRequestToProspectAction } from "~/lib/admin-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 const STATUSES = ["new", "building", "delivered", "declined"] as const;
@@ -24,7 +24,7 @@ export default function BrainRequests() {
 			<Show when={requests()?.length} fallback={<p class="muted">No requests yet.</p>}>
 				<For each={requests()}>
 					{(r) => (
-						<div class="card" style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
+						<Card style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
 							<div style={{ display: "flex", gap: "10px", "align-items": "baseline", "flex-wrap": "wrap" }}>
 								<strong style={{ "font-size": "15px" }}>{r.company}</strong>
 								<span class="muted" style={{ "font-size": "13px" }}>
@@ -77,7 +77,7 @@ export default function BrainRequests() {
 									<Button as="a" variant="outline" size="sm" href="/admin/outreach">prospect linked ↗</Button>
 								</Show>
 							</div>
-						</div>
+						</Card>
 					)}
 				</For>
 			</Show>

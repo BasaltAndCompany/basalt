@@ -7,7 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { InvoiceStatus } from "~/db/schema";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 
 const statusBadge: Record<InvoiceStatus, string> = {
 	draft: "badge-paused",
@@ -33,7 +33,7 @@ export default function PortalInvoices() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No invoices yet.</div>}
+							fallback={<Card class="empty">No invoices yet.</Card>}
 						>
 							<Table class="table">
 								<TableHeader>

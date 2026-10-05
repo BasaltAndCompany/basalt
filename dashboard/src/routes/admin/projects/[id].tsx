@@ -14,7 +14,7 @@ import {
 } from "~/lib/queries";
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
@@ -89,10 +89,10 @@ export default function ProjectDetail() {
 							</p>
 
 							<Show when={p().notes}>
-								<div class="card" style={{ "margin-bottom": "32px" }}>
+								<Card style={{ "margin-bottom": "32px" }}>
 									<div class="section-heading" style={{ "margin-top": "0" }}>Scope</div>
 									<p class="muted" style={{ "white-space": "pre-wrap" }}>{p().notes}</p>
-								</div>
+								</Card>
 							</Show>
 
 							{/* Deliverables — client-visible */}
@@ -122,11 +122,11 @@ export default function ProjectDetail() {
 							<Suspense fallback={<p class="muted">Loading…</p>}>
 								<Show when={deliverables()} fallback={<p class="muted">Loading…</p>}>
 									{(list) => (
-										<Show when={list().length > 0} fallback={<div class="card empty">No deliverables yet.</div>}>
+										<Show when={list().length > 0} fallback={<Card class="empty">No deliverables yet.</Card>}>
 											<div style={{ display: "flex", "flex-direction": "column", gap: "12px", "margin-bottom": "40px" }}>
 												<For each={list()}>
 													{(delv) => (
-														<div class="card" style={{ padding: "20px" }}>
+														<Card style={{ padding: "20px" }}>
 															<div style={{ display: "flex", "justify-content": "space-between", "align-items": "flex-start", gap: "12px" }}>
 																<div style={{ flex: "1" }}>
 																	<span style={{ "font-size": "15px", "font-weight": "500" }}>{delv.title}</span>
@@ -196,7 +196,7 @@ export default function ProjectDetail() {
 																}}
 															/>
 															</div>
-														</div>
+														</Card>
 													)}
 												</For>
 											</div>
@@ -213,7 +213,7 @@ export default function ProjectDetail() {
 
 							{/* Log form — admin only */}
 							<div class="section-heading">Log Time</div>
-							<div class="card" style={{ "margin-bottom": "32px" }}>
+							<Card style={{ "margin-bottom": "32px" }}>
 								<form onSubmit={handleLog}>
 									<input type="hidden" name="project_id" value={p().id} />
 									<div class="form-row">
@@ -243,7 +243,7 @@ export default function ProjectDetail() {
 							{logging() ? "Logging…" : "Log Entry"}
 						</Button>
 								</form>
-							</div>
+							</Card>
 
 							{/* Entries */}
 							<div style={{ display: "flex", "justify-content": "space-between", "align-items": "baseline" }}>

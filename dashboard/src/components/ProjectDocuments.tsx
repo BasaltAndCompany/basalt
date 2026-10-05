@@ -6,7 +6,7 @@ import {
 	createDocumentLinkAction,
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 type FormMode = "link" | "file" | "transcript";
@@ -63,7 +63,7 @@ export default function ProjectDocuments(props: {
 
 			{/* ── Link form ── */}
 			<Show when={activeForm() === "link"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form onSubmit={handleDocLink}>
 						<div class="form-row">
 							<div class="form-group">
@@ -123,12 +123,12 @@ export default function ProjectDocuments(props: {
 							Add
 						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── File upload form ── */}
 			<Show when={activeForm() === "file"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form
 						method="post"
 						action="/api/upload"
@@ -168,12 +168,12 @@ export default function ProjectDocuments(props: {
 							Upload
 						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── Transcript form ── */}
 			<Show when={activeForm() === "transcript"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form
 						method="post"
 						action="/api/upload-transcript"
@@ -224,7 +224,7 @@ export default function ProjectDocuments(props: {
 							Add Transcript
 						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── Document list ── */}

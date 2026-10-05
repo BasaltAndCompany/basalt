@@ -8,7 +8,7 @@ import {
 	searchDocumentsQuery,
 } from "~/lib/client-queries";
 import type { DocumentType } from "~/db/schema";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 
 const typeLabel: Record<DocumentType, string> = {
 	link: "Link",
@@ -73,7 +73,7 @@ export default function PortalDocuments() {
 						</div>
 						<For each={searchResults() ?? []}>
 							{(hit) => (
-								<div class="card" style={{ display: "flex", "align-items": "flex-start", gap: "16px", padding: "20px" }}>
+								<Card style={{ display: "flex", "align-items": "flex-start", gap: "16px", padding: "20px" }}>
 									<div style={{ flex: "1" }}>
 										<div style={{ "font-size": "15px", "font-weight": "500" }}>
 											{hit.title}
@@ -108,7 +108,7 @@ export default function PortalDocuments() {
 											</Button>
 										</Show>
 									</div>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>
@@ -118,12 +118,12 @@ export default function PortalDocuments() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No documents shared yet.</div>}
+							fallback={<Card class="empty">No documents shared yet.</Card>}
 						>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
 								<For each={list()}>
 									{(doc) => (
-										<div class="card" style={{ display: "flex", "align-items": "center", gap: "16px", padding: "20px" }}>
+										<Card style={{ display: "flex", "align-items": "center", gap: "16px", padding: "20px" }}>
 											<div style={{ flex: "1" }}>
 												<div style={{ "font-size": "15px", "font-weight": "500" }}>
 													{doc.title}
@@ -169,7 +169,7 @@ export default function PortalDocuments() {
 												</Button>
 											</Show>
 											</div>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>

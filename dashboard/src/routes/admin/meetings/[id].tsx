@@ -18,7 +18,7 @@ import {
 	publishMeetingAction,
 	type TranscriptBlock,
 } from "~/lib/admin-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 interface EditableBlock extends TranscriptBlock {
@@ -162,7 +162,7 @@ export default function MeetingEditor() {
 
 			<Suspense fallback={<p class="muted">Loading…</p>}>
 				<Show when={loaded()}>
-					<div class="card" style={{ padding: "16px", "margin-bottom": "16px", display: "flex", "flex-direction": "column", gap: "12px" }}>
+					<Card style={{ padding: "16px", "margin-bottom": "16px", display: "flex", "flex-direction": "column", gap: "12px" }}>
 						<div class="form-group" style={{ "margin-bottom": "0" }}>
 							<label for="mt_title">Title</label>
 							<input
@@ -192,19 +192,16 @@ export default function MeetingEditor() {
 						<div class="muted" style={{ "font-size": "12px" }}>
 							Unchecked blocks are cut from the transcript <Show when={audioUrl()}>and spliced out of the audio</Show>.
 						</div>
-					</div>
+					</Card>
 
 					<div style={{ display: "flex", "flex-direction": "column", gap: "8px", "margin-bottom": "16px" }}>
 						<For each={blocks()}>
 							{(b, i) => (
-								<div
-									class="card"
-									style={{
+								<Card style={{
 										padding: "12px",
 										opacity: b.cut ? "0.45" : "1",
 										border: b.cut ? "1px dashed var(--border, #ccc)" : undefined,
-									}}
-								>
+									}}>
 									<div style={{ display: "flex", "align-items": "center", gap: "8px", "margin-bottom": "6px" }}>
 										<input
 											type="checkbox"
@@ -230,12 +227,12 @@ export default function MeetingEditor() {
 										disabled={b.cut}
 										style={{ width: "100%", "font-size": "13px" }}
 									/>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>
 
-					<div class="card" style={{ padding: "16px", display: "flex", "flex-wrap": "wrap", gap: "12px", "align-items": "center", position: "sticky", bottom: "0" }}>
+					<Card style={{ padding: "16px", display: "flex", "flex-wrap": "wrap", gap: "12px", "align-items": "center", position: "sticky", bottom: "0" }}>
 						<div class="form-group" style={{ "margin-bottom": "0", "flex": "1", "min-width": "220px" }}>
 							<label for="mt_project">Project</label>
 							<SelectField
@@ -262,7 +259,7 @@ export default function MeetingEditor() {
 						<Button onClick={handlePublish} disabled={busy()}>
 							{busy() ? "Working…" : "Publish"}
 						</Button>
-					</div>
+					</Card>
 				</Show>
 			</Suspense>
 		</Layout>

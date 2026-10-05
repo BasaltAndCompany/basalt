@@ -8,6 +8,7 @@ import {
 	getMeetingDraftsQuery,
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
+import { Card } from "@madcactus/ui";
 
 /** Meeting drafts pushed by the Anarlog publisher — edit + publish at [id]. */
 export default function MeetingDrafts() {
@@ -35,7 +36,7 @@ export default function MeetingDrafts() {
 					<div style={{ display: "flex", "flex-direction": "column", gap: "8px" }}>
 						<For each={drafts()}>
 							{(d) => (
-								<div class="card" style={{ padding: "16px", display: "flex", "align-items": "center", gap: "12px" }}>
+								<Card style={{ padding: "16px", display: "flex", "align-items": "center", gap: "12px" }}>
 									<div style={{ flex: "1" }}>
 										<A class="gold" href={`/admin/meetings/${d.id}`} style={{ "font-weight": "600" }}>
 											{d.title}
@@ -55,7 +56,7 @@ export default function MeetingDrafts() {
 											return deleteDoc(fd);
 										}}
 									/>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>

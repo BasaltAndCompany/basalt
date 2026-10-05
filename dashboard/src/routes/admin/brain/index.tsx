@@ -10,7 +10,7 @@ import {
 	runBrainCycleAction,
 	closeLoopAction,
 } from "~/lib/brain/admin";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 
 const kindColor: Record<string, string> = {
 	lesson: "var(--accent, #a855f7)",
@@ -49,10 +49,10 @@ export default function AdminBrain() {
 	};
 
 	const statCard = (label: string, value: () => number | string | undefined | null) => (
-		<div class="card" style={{ padding: "14px 18px", flex: 1 }}>
+		<Card style={{ padding: "14px 18px", flex: 1 }}>
 			<div class="muted" style={{ "font-size": "12px" }}>{label}</div>
 			<div style={{ "font-size": "22px", "font-weight": 600 }}>{value() ?? "—"}</div>
-		</div>
+		</Card>
 	);
 
 	return (
@@ -85,7 +85,7 @@ export default function AdminBrain() {
 					})}
 				</div>
 
-				<div class="card" style={{ padding: "14px 18px", "margin-bottom": "16px" }}>
+				<Card style={{ padding: "14px 18px", "margin-bottom": "16px" }}>
 					<strong style={{ "font-size": "13px" }}>Open loops</strong>
 					<Show when={loops()?.length} fallback={<div class="muted" style={{ "font-size": "13px", "margin-top": "6px" }}>Nothing waiting.</div>}>
 						<For each={loops()}>
@@ -111,10 +111,10 @@ export default function AdminBrain() {
 							)}
 						</For>
 					</Show>
-				</div>
+				</Card>
 
 				<div style={{ display: "flex", gap: "16px", "align-items": "flex-start" }}>
-					<div class="card" style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
+					<Card style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
 						<strong style={{ "font-size": "13px" }}>Recent facts</strong>
 						<For each={facts()}>
 							{(f) => (
@@ -133,9 +133,9 @@ export default function AdminBrain() {
 								No facts yet — set OPENROUTER_API_KEY and run a cycle.
 							</div>
 						</Show>
-					</div>
+					</Card>
 
-					<div class="card" style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
+					<Card style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
 						<strong style={{ "font-size": "13px" }}>Pages (by salience)</strong>
 						<For each={pages()}>
 							{(p) => (
@@ -147,7 +147,7 @@ export default function AdminBrain() {
 								</div>
 							)}
 						</For>
-					</div>
+					</Card>
 				</div>
 			</Suspense>
 		</Layout>

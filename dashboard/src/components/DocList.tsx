@@ -2,7 +2,7 @@ import { A, createAsync, useAction, useNavigate } from "@solidjs/router";
 import { For, Show, Suspense, createSignal } from "solid-js";
 import CreateDialog from "~/components/CreateDialog";
 import { getDocsQuery, createDocAction, getIssueStatsQuery, addIssueLearningAction } from "~/lib/docs-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 /** Shared list for the three doc tabs — same table, filtered by kind. */
@@ -72,7 +72,7 @@ export default function DocList(props: {
 				>
 					<For each={docs()?.filter((d) => d.kind === props.kind)}>
 						{(d) => (
-							<div class="card" style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
+							<Card style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
 								<A href={`/admin/${props.kind ? `${props.kind}s` : "docs"}/${d.id}`} style={{ display: "block", "text-decoration": "none" }}>
 									<div style={{ "font-size": "15px", "font-weight": 500, color: "var(--foreground)" }}>{d.title}</div>
 								<div class="muted" style={{ "font-size": "13px", "margin-top": "4px" }}>
@@ -92,7 +92,7 @@ export default function DocList(props: {
 									</div>
 									<AddLearning docId={d.id} />
 								</Show>
-							</div>
+							</Card>
 						)}
 					</For>
 				</Show>

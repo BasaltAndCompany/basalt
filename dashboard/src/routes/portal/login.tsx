@@ -5,7 +5,7 @@ import {
 	clientLoginAction,
 	setInvitePasswordAction,
 } from "~/lib/client-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 
 export default function ClientLogin() {
 	const login = useAction(clientLoginAction);
@@ -57,15 +57,12 @@ export default function ClientLogin() {
 	return (
 		<div class="login-shell">
 			<Title>Client Login — Mad Cactus</Title>
-			<div
-				class="card"
-				style={{
+			<Card style={{
 					width: "100%",
 					"max-width": "400px",
 					padding: "40px",
 					"margin": "20px",
-				}}
-			>
+				}}>
 				<div style={{ display: "flex", "align-items": "center", gap: "12px", "margin-bottom": "32px" }}>
 					<img src="/cactus-seal.svg" alt="Mad Cactus" style={{ width: "40px", height: "40px" }} />
 					<div>
@@ -162,7 +159,7 @@ export default function ClientLogin() {
 						</Button>
 					</form>
 				</Show>
-			</div>
+			</Card>
 		</div>
 	);
 }

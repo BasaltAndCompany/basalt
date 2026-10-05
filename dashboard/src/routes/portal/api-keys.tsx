@@ -10,7 +10,7 @@ import {
 	getClientUserQuery,
 	revokeApiKeyAction,
 } from "~/lib/client-queries";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 
 export default function PortalApiKeys() {
 	const user = createAsync(() => getClientUserQuery(), { deferStream: true });
@@ -79,12 +79,12 @@ export default function PortalApiKeys() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No API keys yet.</div>}
+							fallback={<Card class="empty">No API keys yet.</Card>}
 						>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
 								<For each={list()}>
 									{(key) => (
-										<div class="card" style={{ display: "flex", "align-items": "center", gap: "16px", padding: "16px 20px" }}>
+										<Card style={{ display: "flex", "align-items": "center", gap: "16px", padding: "16px 20px" }}>
 											<div style={{ flex: "1" }}>
 												<div style={{ "font-weight": "500", "font-size": "14px" }}>
 													{key.label}
@@ -111,7 +111,7 @@ export default function PortalApiKeys() {
 											>
 												<span class="badge badge-paused">Revoked</span>
 											</Show>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>
@@ -121,7 +121,7 @@ export default function PortalApiKeys() {
 			</div>
 
 			{/* MCP setup instructions */}
-			<div class="card" style={{ "margin-top": "32px" }}>
+			<Card style={{ "margin-top": "32px" }}>
 				<h3 style={{ "margin-bottom": "8px" }}>How to Connect Your Agent</h3>
 				<p class="muted" style={{ "font-size": "13px", "margin-bottom": "16px" }}>
 					Add this MCP server config to your AI agent (Claude Desktop, Cursor, etc.):
@@ -154,7 +154,7 @@ export default function PortalApiKeys() {
 				<p class="muted" style={{ "font-size": "12px", "margin-top": "12px" }}>
 					Once connected, ask your agent: "What's the status of my project with Mad Cactus?"
 				</p>
-			</div>
+			</Card>
 		</PortalLayout>
 	);
 }

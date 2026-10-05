@@ -22,7 +22,7 @@ import {
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
 import type { InvoiceStatus } from "~/db/schema";
-import { Button } from "@madcactus/ui";
+import { Button, Card } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 export default function CompanyDetail() {
@@ -106,7 +106,7 @@ export default function CompanyDetail() {
 						<h1 class="page-title">{c().name}</h1>
 
 						{/* ── Meeting pseudonyms (Anarlog publisher) ── */}
-						<div class="card" style={{ padding: "16px", "margin-top": "16px" }}>
+						<Card style={{ padding: "16px", "margin-top": "16px" }}>
 							<div class="muted" style={{ "font-size": "13px", "margin-bottom": "6px" }}>
 								Meeting pseudonyms — Anarlog meetings whose title contains one of these push to the dashboard as drafts
 							</div>
@@ -130,7 +130,7 @@ export default function CompanyDetail() {
 								/>
 								<Button variant="outline" size="sm" type="submit">Save</Button>
 							</form>
-						</div>
+						</Card>
 
 						{/* ── Members ─────────────────────────────────── */}
 						<div style={{ "margin-top": "32px" }}>
@@ -200,11 +200,11 @@ export default function CompanyDetail() {
 							<Suspense fallback={<p class="muted">Loading…</p>}>
 								<Show when={companyMembers()}>
 									{(list) => (
-										<Show when={list().length > 0} fallback={<div class="card empty">No members yet.</div>}>
+										<Show when={list().length > 0} fallback={<Card class="empty">No members yet.</Card>}>
 											<div style={{ display: "flex", "flex-direction": "column", gap: "8px" }}>
 												<For each={list()}>
 													{(m) => (
-														<div class="card" style={{ display: "flex", "align-items": "center", gap: "12px", padding: "14px 20px" }}>
+														<Card style={{ display: "flex", "align-items": "center", gap: "12px", padding: "14px 20px" }}>
 															<div style={{ flex: "1" }}>
 																<span style={{ "font-size": "14px" }}>{m.name}</span>
 																<span class="muted" style={{ "font-size": "12px", "margin-left": "8px" }}>{m.email}</span>
@@ -230,7 +230,7 @@ export default function CompanyDetail() {
 																		}}
 																	/>
 															</div>
-														</div>
+														</Card>
 													)}
 												</For>
 											</div>
@@ -244,7 +244,7 @@ export default function CompanyDetail() {
 						<Suspense fallback={<p class="muted">Loading…</p>}>
 							<div style={{ "margin-top": "40px" }}>
 								<div class="section-heading">Projects</div>
-								<Show when={companyProjects().length > 0} fallback={<div class="card empty">No projects yet for this company.</div>}>
+								<Show when={companyProjects().length > 0} fallback={<Card class="empty">No projects yet for this company.</Card>}>
 									<For each={companyProjects()}>
 										{(proj) => (
 											<CompanyProjectSection
@@ -281,7 +281,7 @@ function CompanyProjectSection(props: {
 	const deleteInvoice = useAction(deleteInvoiceAction);
 
 	return (
-		<div class="card" style={{ "margin-bottom": "16px", padding: "24px" }}>
+		<Card style={{ "margin-bottom": "16px", padding: "24px" }}>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "16px" }}>
 				<A href={`/admin/projects/${props.proj.id}`} class="gold" style={{ "font-size": "16px", "font-weight": "500" }}>
 					{props.proj.name}
@@ -297,7 +297,7 @@ function CompanyProjectSection(props: {
 					<Button variant="outline" size="sm" onClick={props.toggleInvForm}>New Invoice</Button>
 				</div>
 				<Show when={props.showInvForm}>
-					<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+					<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 						<form onSubmit={props.onInvoice}>
 							<div class="form-row">
 								<div class="form-group">
@@ -333,7 +333,7 @@ function CompanyProjectSection(props: {
 							</div>
 							<Button type="submit">Create</Button>
 						</form>
-					</div>
+					</Card>
 				</Show>
 				<Suspense fallback={<p class="muted" style={{ "font-size": "12px" }}>Loading…</p>}>
 					<Show when={invoices()}>
@@ -370,6 +370,6 @@ function CompanyProjectSection(props: {
 					</Show>
 				</Suspense>
 			</div>
-		</div>
+		</Card>
 	);
 }

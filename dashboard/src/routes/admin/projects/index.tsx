@@ -9,7 +9,7 @@ import {
 	getUserQuery,
 } from "~/lib/queries";
 import { getCompaniesForSelectQuery } from "~/lib/admin-queries";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
 import SelectField from "~/components/select-field";
 
 const statusBadge: Record<string, string> = {
@@ -105,7 +105,7 @@ export default function Projects() {
 				<Show when={projects()} fallback={<p class="muted">Loading…</p>}>
 					{(list) => (
 						<Show when={list().length > 0} fallback={
-							<div class="card empty">No projects yet. Create your first one above.</div>
+							<Card class="empty">No projects yet. Create your first one above.</Card>
 						}>
 							<Table class="table">
 								<TableHeader>
