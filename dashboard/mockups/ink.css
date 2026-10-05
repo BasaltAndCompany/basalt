@@ -97,13 +97,14 @@ a:hover { color: var(--foreground); }
   overflow-y: auto;
 }
 
-.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px; }
-.sidebar-logo svg { width: 26px; height: 26px; color: var(--foreground); flex-shrink: 0; }
+/* Brand: serif wordmark "Basalt." — red dot is the brand's one color.
+   Matches the marketing site (Logo variant="word" redDot) and favicon. */
+.sidebar-logo { padding: 4px 8px; }
 .sidebar-logo-text {
   font-family: var(--font-serif);
   font-variation-settings: "opsz" 15;
   font-weight: 560;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.1;
 }
 .sidebar-logo-text small {
@@ -286,9 +287,8 @@ select option { background: var(--card); }
   background: var(--background);
 }
 .login-card { width: 100%; max-width: 400px; padding: 40px; margin: 20px; }
-.login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
-.login-brand svg { width: 40px; height: 40px; color: var(--foreground); }
-.login-brand-name { font-family: var(--font-serif); font-variation-settings: "opsz" 15; font-weight: 560; font-size: 22px; line-height: 1; }
+.login-brand { margin-bottom: 32px; }
+.login-brand-name { font-family: var(--font-serif); font-variation-settings: "opsz" 15; font-weight: 560; font-size: 24px; line-height: 1; }
 .login-brand-sub { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted-foreground); margin-top: 4px; }
 .login-title { font-family: var(--font-serif); font-variation-settings: "opsz" 15; font-weight: 560; font-size: 24px; margin: 0 0 8px; }
 .login-error { color: var(--signal); font-size: 13px; margin: 0 0 12px; }
@@ -302,6 +302,9 @@ select option { background: var(--card); }
   display: flex; align-items: center; gap: 10px;
 }
 .toast-dot { width: 6px; height: 6px; background: var(--paper); }
+
+/* Wordmark period: the one signal-red brand element */
+.dot { color: var(--signal); }
 
 /* Empty state */
 .empty { color: var(--muted-foreground); font-size: 13px; margin: 0; }
