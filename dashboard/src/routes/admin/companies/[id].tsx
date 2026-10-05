@@ -23,6 +23,7 @@ import {
 import { getUserQuery } from "~/lib/queries";
 import type { InvoiceStatus } from "~/db/schema";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 export default function CompanyDetail() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -150,12 +151,18 @@ export default function CompanyDetail() {
 									>
 										<div class="form-group">
 											<label for="member_id">Select Member</label>
-											<select id="member_id" name="member_id" required>
-												<option value="" disabled selected>Choose…</option>
-												<For each={unlinkedMembers()}>
-													{(m) => <option value={m.id}>{m.name} ({m.email})</option>}
-												</For>
-											</select>
+											<SelectField
+												id="member_id"
+												name="member_id"
+												required
+												placeholder="Choose…"
+												options={() =>
+													(unlinkedMembers() ?? []).map((m) => ({
+														value: m.id,
+														label: `${m.name} (${m.email})`,
+													}))
+												}
+											/>
 										</div>
 									</CreateDialog>
 									<CreateDialog
@@ -305,10 +312,15 @@ function CompanyProjectSection(props: {
 							<div class="form-row">
 								<div class="form-group">
 									<label for={`inv_st_${props.proj.id}`}>Status</label>
-									<select id={`inv_st_${props.proj.id}`} name="status">
-										<option value="draft">Draft</option>
-										<option value="sent">Sent</option>
-									</select>
+									<SelectField
+										id={`inv_st_${props.proj.id}`}
+										name="status"
+										value="draft"
+										options={[
+											{ value: "draft", label: "Draft" },
+											{ value: "sent", label: "Sent" },
+										]}
+									/>
 								</div>
 								<div class="form-group">
 									<label for={`inv_iss_${props.proj.id}`}>Issue Date</label>

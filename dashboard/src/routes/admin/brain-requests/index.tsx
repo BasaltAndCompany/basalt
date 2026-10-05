@@ -7,6 +7,7 @@ import { For, Show } from "solid-js";
 import Layout from "~/components/Layout";
 import { getBrainRequestsQuery, setBrainRequestStatusAction, linkBrainRequestToProspectAction } from "~/lib/admin-queries";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 const STATUSES = ["new", "building", "delivered", "declined"] as const;
 
@@ -50,9 +51,13 @@ export default function BrainRequests() {
 									}}
 								>
 									<input type="hidden" name="id" value={r.id} />
-									<select name="status" value={r.status} class="doc-sched-input" style={{ width: "120px" }}>
-										<For each={[...STATUSES]}>{(s) => <option value={s}>{s}</option>}</For>
-									</select>
+									<SelectField
+										name="status"
+										value={r.status}
+										class="doc-sched-input"
+										style={{ width: "120px" }}
+										options={[...STATUSES].map((s) => ({ value: s, label: s }))}
+									/>
 									<Button variant="outline" size="sm" type="submit">Set status</Button>
 								</form>
 								<Show when={!r.prospectId}>

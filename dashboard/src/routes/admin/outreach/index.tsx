@@ -25,6 +25,7 @@ import { OUTREACH_STAGES, stageLabel, type OutreachProspect, type OutreachStage,
 import type { ProspectEmailStatus } from "~/lib/admin-queries";
 import { fmtDate, fmtDur, videoSummary } from "~/lib/video-summary";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 const STAGE_COLOR: Record<string, string> = {
 	candidate: "var(--muted-foreground)",
@@ -667,37 +668,55 @@ function BoardCard(props: {
 						<input type="hidden" name="id" value={p().id} />
 						<input type="text" name="contact_name" placeholder="Contact name" value={p().contactName ?? ""} />
 						<input type="email" name="email" placeholder="Email (sent-to address)" value={p().email ?? ""} spellcheck={false} />
-						<select name="stage" value={p().stage}>
-							<For each={OUTREACH_STAGES}>{(s) => <option value={s}>{stageLabel(s)}</option>}</For>
-						</select>
+						<SelectField
+							name="stage"
+							value={p().stage}
+							options={OUTREACH_STAGES.map((s) => ({ value: s, label: stageLabel(s) }))}
+						/>
 						<input type="datetime-local" name="next_action_at" value={toInputValue(p().nextActionAt)} />
 						<input type="url" name="video_url" placeholder="Video URL (cap.so share link)" value={p().video?.url ?? ""} spellcheck={false} />
 						<input type="text" name="video_description" placeholder="Video description (what it shows / why)" value={p().video?.description ?? ""} />
 						<input type="text" name="next_action_note" placeholder="Next action note" value={p().nextActionNote ?? ""} />
 						<input type="url" name="brain_url" placeholder="Brain URL (https://….madcactus.org)" value={p().brainUrl ?? ""} spellcheck={false} />
 						<input type="text" name="brain_activity_key" placeholder="Brain activity key" value={p().brainActivityKey ?? ""} spellcheck={false} />
-						<select name="campaign_id" value={p().campaignId ?? ""}>
-							<option value="">— no campaign —</option>
-							<For each={props.campaigns ?? []}>{(c) => <option value={c.id}>{c.name}</option>}</For>
-						</select>
+						<SelectField
+							name="campaign_id"
+							value={p().campaignId ?? ""}
+							options={() => [
+								{ value: "", label: "— no campaign —" },
+								...(props.campaigns ?? []).map((c) => ({ value: c.id, label: c.name })),
+							]}
+						/>
 						{/* ICP fields — researched, never asked of the lead */}
 						<div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap" }}>
-							<select name="region" value={p().region}>
-								<For each={["unknown", "Midwest", "other"]}>{(v) => <option value={v}>region: {v}</option>}</For>
-							</select>
-							<select name="revenue_band" value={p().revenueBand}>
-								<For each={["unknown", "low", "mid", "high"]}>{(v) => <option value={v}>revenue: {v}</option>}</For>
-							</select>
-							<select name="tech_team" value={p().techTeam}>
-								<For each={["unknown", "none", "small", "large"]}>{(v) => <option value={v}>tech team: {v}</option>}</For>
-							</select>
-							<select name="ai_interest" value={p().aiInterest}>
-								<For each={["unknown", "none", "some", "high"]}>{(v) => <option value={v}>AI interest: {v}</option>}</For>
-							</select>
-							<select name="icp_approved" value={p().icpApproved ? "1" : "0"}>
-								<option value="0">ICP: not approved</option>
-								<option value="1">ICP: approved</option>
-							</select>
+							<SelectField
+								name="region"
+								value={p().region}
+								options={["unknown", "Midwest", "other"].map((v) => ({ value: v, label: "region: " + v }))}
+							/>
+							<SelectField
+								name="revenue_band"
+								value={p().revenueBand}
+								options={["unknown", "low", "mid", "high"].map((v) => ({ value: v, label: "revenue: " + v }))}
+							/>
+							<SelectField
+								name="tech_team"
+								value={p().techTeam}
+								options={["unknown", "none", "small", "large"].map((v) => ({ value: v, label: "tech team: " + v }))}
+							/>
+							<SelectField
+								name="ai_interest"
+								value={p().aiInterest}
+								options={["unknown", "none", "some", "high"].map((v) => ({ value: v, label: "AI interest: " + v }))}
+							/>
+							<SelectField
+								name="icp_approved"
+								value={p().icpApproved ? "1" : "0"}
+								options={[
+									{ value: "0", label: "ICP: not approved" },
+									{ value: "1", label: "ICP: approved" },
+								]}
+							/>
 						</div>
 						<Button size="sm" type="submit">Save</Button>
 					</form>
@@ -874,9 +893,12 @@ export default function AdminOutreach() {
 						</div>
 						<div class="form-group">
 							<label for="prospect_stage">Stage</label>
-							<select id="prospect_stage" name="stage">
-								<For each={OUTREACH_STAGES}>{(s) => <option value={s}>{stageLabel(s)}</option>}</For>
-							</select>
+							<SelectField
+								id="prospect_stage"
+								name="stage"
+								value={OUTREACH_STAGES[0]}
+								options={OUTREACH_STAGES.map((s) => ({ value: s, label: stageLabel(s) }))}
+							/>
 						</div>
 					</div>
 					<div class="form-group">

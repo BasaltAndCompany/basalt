@@ -19,6 +19,7 @@ import {
 	type TranscriptBlock,
 } from "~/lib/admin-queries";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 interface EditableBlock extends TranscriptBlock {
 	cut: boolean;
@@ -237,18 +238,18 @@ export default function MeetingEditor() {
 					<div class="card" style={{ padding: "16px", display: "flex", "flex-wrap": "wrap", gap: "12px", "align-items": "center", position: "sticky", bottom: "0" }}>
 						<div class="form-group" style={{ "margin-bottom": "0", "flex": "1", "min-width": "220px" }}>
 							<label for="mt_project">Project</label>
-							<select id="mt_project" value={projectId()} onChange={(e) => setProjectId(e.currentTarget.value)}>
-								<option value="" disabled>
-									Assign to project…
-								</option>
-								<For each={projects() ?? []}>
-									{(p) => (
-										<option value={p.id}>
-											{p.companyName} — {p.name}
-										</option>
-									)}
-								</For>
-							</select>
+							<SelectField
+								id="mt_project"
+								value={projectId()}
+								onChange={setProjectId}
+								placeholder="Assign to project…"
+								options={() =>
+									(projects() ?? []).map((p) => ({
+										value: p.id,
+										label: `${p.companyName} — ${p.name}`,
+									}))
+								}
+							/>
 						</div>
 						<Show when={msg()}>
 							<span class={msg()!.ok ? "muted" : "badge badge-paused"} style={{ "font-size": "12px" }}>

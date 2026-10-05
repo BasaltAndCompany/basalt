@@ -8,6 +8,7 @@ import { getOutreachQuery, getVideosQuery, setOutreachVideoAction } from "~/lib/
 import { stageLabel } from "~/db/schema";
 import { videoSummary } from "~/lib/video-summary";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 // Mirrors the server's free-plan cap (dashboard/src/routes/api/upload-video.ts).
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -144,16 +145,17 @@ export default function AdminVideos() {
 				>
 					<div class="form-group">
 						<label for="video_prospect">Prospect</label>
-						<select id="video_prospect" name="id" required>
-							<For each={outreach()?.all ?? []}>
-								{(p) => (
-									<option value={p.id}>
-										{p.company}
-										{p.video ? " (replaces current)" : ""}
-									</option>
-								)}
-							</For>
-						</select>
+						<SelectField
+							id="video_prospect"
+							name="id"
+							required
+							options={() =>
+								(outreach()?.all ?? []).map((p) => ({
+									value: p.id,
+									label: `${p.company}${p.video ? " (replaces current)" : ""}`,
+								}))
+							}
+						/>
 					</div>
 					<div class="form-group">
 						<label for="video_file">Video file</label>

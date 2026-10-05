@@ -15,6 +15,7 @@ import {
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
 	"planned",
@@ -43,6 +44,7 @@ export default function ProjectDetail() {
 	const deleteEntry = useAction(deleteTimeEntryAction);
 	const deleteDeliverable = useAction(deleteDeliverableAction);
 	const createDeliverable = useAction(createDeliverableAction);
+	const statusForms: Record<string, HTMLFormElement> = {};
 	const [error, setError] = createSignal("");
 	// Guard + in-flight indicator: a second click while the action runs must
 	// not submit a duplicate entry.
@@ -133,18 +135,16 @@ export default function ProjectDetail() {
 																	</span>
 																</div>
 																{/* Status changer */}
-																<form method="post" action="/admin/projects/update-deliverable" style={{ display: "inline-flex", gap: "0" }}>
+																<form method="post" action="/admin/projects/update-deliverable" style={{ display: "inline-flex", gap: "0" }} ref={(f) => (statusForms[delv.id] = f)}>
 																	<input type="hidden" name="id" value={delv.id} />
 																	<input type="hidden" name="_referer" value={`/admin/projects/${params.id}`} />
-																	<select name="status" onchange={(e) => e.currentTarget.form?.submit()} style={{ "padding": "6px 12px", "font-size": "13px", "border-radius": "6px", "cursor": "pointer" }}>
-																		<For each={STATUS_OPTIONS}>
-																			{(opt) => (
-																				<option value={opt} selected={opt === delv.status}>
-																					{opt.replace("_", " ")}
-																				</option>
-																			)}
-																		</For>
-																	</select>
+																	<SelectField
+																		name="status"
+																		value={delv.status}
+																		style={{ padding: "6px 12px", "font-size": "13px" }}
+																		options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt.replace("_", " ") }))}
+																		onChange={() => statusForms[delv.id]?.requestSubmit()}
+																	/>
 																</form>
 															</div>
 															<Show when={delv.description}>

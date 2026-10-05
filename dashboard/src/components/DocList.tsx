@@ -3,6 +3,7 @@ import { For, Show, Suspense, createSignal } from "solid-js";
 import CreateDialog from "~/components/CreateDialog";
 import { getDocsQuery, createDocAction, getIssueStatsQuery, addIssueLearningAction } from "~/lib/docs-queries";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 /** Shared list for the three doc tabs — same table, filtered by kind. */
 export default function DocList(props: {
@@ -121,10 +122,15 @@ function AddLearning(props: { docId: string }) {
 					}
 				}}
 			>
-				<select name="topic" class="doc-sched-input" style={{ width: "90px" }}>
-					<option value="subject">subject</option>
-					<option value="cta">cta</option>
-				</select>
+				<SelectField
+					name="topic"
+					options={[
+						{ value: "subject", label: "subject" },
+						{ value: "cta", label: "cta" },
+					]}
+					class="doc-sched-input"
+					style={{ width: "90px" }}
+				/>
 				<input type="hidden" name="doc_id" value={props.docId} />
 				<input name="fact" placeholder="e.g. question subjects beat statement subjects, 41% vs 28% opens" style={{ flex: 1, "min-width": "260px" }} />
 				<Button variant="outline" size="sm" type="submit">Save</Button>

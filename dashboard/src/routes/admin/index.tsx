@@ -15,6 +15,7 @@ import {
 	type ExternalResult,
 } from "~/lib/overview";
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 /** Render an external-source metric, degrading to a muted "not connected" tile. */
 function SourceTile(props: {
@@ -341,15 +342,17 @@ export default function Home() {
 									<div class="form-row">
 										<div class="form-group">
 											<label for="project_id">Project</label>
-											<select id="project_id" name="project_id" required>
-												<For each={d().projects}>
-													{(p) => (
-														<option value={p.id}>
-															{p.name} — {p.companyName}
-														</option>
-													)}
-												</For>
-											</select>
+											<SelectField
+												id="project_id"
+												name="project_id"
+												required
+												options={() =>
+													(d()?.projects ?? []).map((p) => ({
+														value: p.id,
+														label: `${p.name} — ${p.companyName}`,
+													}))
+												}
+											/>
 										</div>
 										<div class="form-group">
 											<label for="entry_date">Date</label>

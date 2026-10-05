@@ -9,6 +9,7 @@ import { computeBreaks } from "~/lib/doc-pages";
 import { VoiceLintPanel } from "~/components/VoiceLintPanel";
 import { docSurface, type LintResult } from "~/lib/voice-lint";
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 type VersionRow = {
 	id: string;
@@ -420,15 +421,16 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 					<Show when={kind() === "post" && liConnected() !== true} fallback={
 						<>
 							<Show when={kind() === "newsletter"}>
-								<select
+								<SelectField
 									class="doc-sched-input"
 									aria-label="Publish to"
 									value={channel()}
-									onChange={(e) => setChannel(e.currentTarget.value as "email+web" | "web")}
-								>
-									<option value="email+web">Email + web</option>
-									<option value="web">Web only</option>
-								</select>
+									onChange={(v) => setChannel(v as "email+web" | "web")}
+									options={[
+										{ value: "email+web", label: "Email + web" },
+										{ value: "web", label: "Web only" },
+									]}
+								/>
 							</Show>
 							<Button size="sm" type="button"  onClick={() => void publishNow()}>
 								Publish now
@@ -560,16 +562,17 @@ export const DocEditor = (props: { id: string; doc: NonNullable<Awaited<ReturnTy
 				<div class="doc-firstcomment">
 					<label for="channel-appendix">After the body</label>
 					<div style={{ display: "flex", gap: "8px", "align-items": "center" }}>
-						<select
+						<SelectField
 							class="doc-sched-input"
 							style={{ width: "110px" }}
 							aria-label="Appendix channel"
 							value={appendixChannel()}
-							onChange={(e) => setAppendixChannel(e.currentTarget.value as "email" | "web")}
-						>
-							<option value="email">Email</option>
-							<option value="web">Web</option>
-						</select>
+							onChange={(v) => setAppendixChannel(v as "email" | "web")}
+							options={[
+								{ value: "email", label: "Email" },
+								{ value: "web", label: "Web" },
+							]}
+						/>
 						<textarea
 							rows={3}
 							class="doc-sched-input"

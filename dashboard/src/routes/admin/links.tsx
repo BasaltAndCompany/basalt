@@ -6,6 +6,7 @@ import CreateDialog from "~/components/CreateDialog";
 import Layout from "~/components/Layout";
 import { getUserQuery } from "~/lib/queries";
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 type Link = { slug: string; target: string; clicks: number; docId: string | null; docTitle: string | null; docKind: string | null; createdAt: string };
 type Doc = { id: string; title: string; kind: string; publishedAt: string | null };
@@ -157,16 +158,12 @@ export default function AdminLinks() {
 					</details>
 					<div class="form-group">
 						<label for="link_doc">Attached post / newsletter</label>
-						<select id="link_doc" name="docId">
-							<option value="">— none (standalone link) —</option>
-							<For each={docOptions()}>
-								{(d) => (
-									<option value={d.id}>
-										{d.kind}: {d.title}
-									</option>
-								)}
-							</For>
-						</select>
+						<SelectField
+							id="link_doc"
+							name="docId"
+							value=""
+							options={() => [{ value: "", label: "— none (standalone link) —" }, ...docOptions().map((d) => ({ value: d.id, label: d.kind + ": " + d.title }))]}
+						/>
 					</div>
 				</CreateDialog>
 			</h1>
@@ -230,16 +227,11 @@ export default function AdminLinks() {
 						</label>
 						<label style={{ display: "grid", gap: "4px" }}>
 							Attached post / newsletter
-							<select name="docId" >
-								<option value="">— none (standalone link) —</option>
-								<For each={docOptions()}>
-									{(d) => (
-										<option value={d.id} selected={d.id === editing()!.docId}>
-											{d.kind}: {d.title}
-										</option>
-									)}
-								</For>
-							</select>
+							<SelectField
+								name="docId"
+								value={editing()?.docId ?? ""}
+								options={() => [{ value: "", label: "— none (standalone link) —" }, ...docOptions().map((d) => ({ value: d.id, label: d.kind + ": " + d.title }))]}
+							/>
 						</label>
 						<Show when={editError()}>
 							<p style={{ color: "#b91c1c" }}>{editError()}</p>

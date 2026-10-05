@@ -19,6 +19,7 @@ import type { CompanySendStats } from "~/lib/campaign-stats";
 import { fillTemplate, templateSlots } from "~/lib/campaign-fill";
 import { fmtDate } from "~/lib/video-summary";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 /** getCampaignsQuery row: company + its Gmail-grounded send/reply state. */
 type CampaignCompanyWithStats = CampaignCompany & { sendStats: CompanySendStats | null };
@@ -108,12 +109,14 @@ function TemplatesPanel(props: {
 				<Show when={props.campaign.companies.length}>
 					<label class="muted" style={{ "font-size": "12px", "margin-left": "auto" }}>
 						preview fill:{" "}
-						<select value={previewCompany()} onChange={(e) => setPreviewCompany(e.currentTarget.value)}>
-							<option value="">sample company</option>
-							<For each={props.campaign.companies}>
-								{(c) => <option value={c.id}>{c.companyName}</option>}
-							</For>
-						</select>
+						<SelectField
+							value={previewCompany()}
+							onChange={setPreviewCompany}
+							placeholder="sample company"
+							options={() =>
+								props.campaign.companies.map((c) => ({ value: c.id, label: c.companyName }))
+							}
+						/>
 					</label>
 				</Show>
 			</div>

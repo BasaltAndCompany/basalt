@@ -10,6 +10,7 @@ import {
 } from "~/lib/queries";
 import { getCompaniesForSelectQuery } from "~/lib/admin-queries";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 const statusBadge: Record<string, string> = {
 	active: "badge-active",
@@ -50,28 +51,29 @@ export default function Projects() {
 							</div>
 						<div class="form-group">
 							<label for="company_id">Company</label>
-							<select id="company_id" name="company_id" required>
-								<option value="" disabled selected>Select a company…</option>
-								<Show when={companies()}>
-									<For each={companies()}>
-										{(c) => <option value={c.id}>{c.name}</option>}
-									</For>
-								</Show>
-							</select>
+							<SelectField
+								id="company_id"
+								name="company_id"
+								required
+								placeholder="Select a company…"
+								options={() => (companies() ?? []).map((c) => ({ value: c.id, label: c.name }))}
+							/>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group">
 							<label for="engagement_type">Engagement Type</label>
-							<select
+							<SelectField
 								id="engagement_type"
 								name="engagement_type"
-								onChange={(e) => setEngagementType(e.currentTarget.value)}
-							>
-								<option value="hourly">Hourly</option>
-								<option value="retainer">Retainer (monthly cap)</option>
-								<option value="project">Project (fixed price)</option>
-							</select>
+								value="hourly"
+								onChange={setEngagementType}
+								options={[
+									{ value: "hourly", label: "Hourly" },
+									{ value: "retainer", label: "Retainer (monthly cap)" },
+									{ value: "project", label: "Project (fixed price)" },
+								]}
+							/>
 						</div>
 						<Show when={isHourly()}>
 							<div class="form-group">

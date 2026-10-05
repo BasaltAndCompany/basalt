@@ -7,6 +7,7 @@ import {
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
 import { Button } from "@madcactus/ui";
+import SelectField from "~/components/select-field";
 
 type FormMode = "link" | "file" | "transcript";
 
@@ -77,10 +78,14 @@ export default function ProjectDocuments(props: {
 							</div>
 							<div class="form-group">
 								<label for={`lnk_ty_${props.projectId}`}>Type</label>
-								<select id={`lnk_ty_${props.projectId}`} name="type">
-									<option value="link">Link</option>
-									<option value="transcript">Transcript Link</option>
-								</select>
+								<SelectField
+									id={`lnk_ty_${props.projectId}`}
+									name="type"
+									options={[
+										{ value: "link", label: "Link" },
+										{ value: "transcript", label: "Transcript Link" },
+									]}
+								/>
 							</div>
 						</div>
 						<div class="form-group">
