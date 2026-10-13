@@ -64,6 +64,9 @@ export type ComponentDefinition<T extends PgTable = PgTable> = {
 	/** ILIKE columns searched by searchAll / search_components */
 	search?: { columns: PgColumn[] };
 	ownerLinks?: OwnerLink[];
+	/** max children returned per ownerLink in linksFor (default 10) —
+	 *  wide owners like funnel-item (a run's full roster) raise this. */
+	ownerQueryLimit?: number;
 };
 
 /** Registry-internal view — definitions are stored heterogeneous. */

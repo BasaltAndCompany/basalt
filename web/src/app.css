@@ -6,6 +6,10 @@
 /* feedback-widget ships pre-bundled zinc utilities — v4 needs an explicit source */
 @source "../node_modules/@aspectrr/feedback-widget/dist";
 
+/* @basalt/ui utilities (size-4, h-10, …) live outside web/src — without this
+   source, every class used only in the ui package is missing from the build */
+@source "../../packages/ui/src";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -29,6 +33,7 @@
     --color-popover-foreground: var(--popover-foreground);
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
+	--color-signal: #C8102E;
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -1731,4 +1736,80 @@ a.component-mention-link:hover {
 }
 .mention-popover-meta a:hover {
 	text-decoration: underline;
+}
+
+/* ── Basalt marketing port ──────────────────────────────────────────
+   Ported from basalt/src/index.css at the cutover (53d1a8e) — the
+   app.css replacement dropped these marketing-only rules. */
+
+/* Lava glow under the home hero: red radial that slowly breathes. */
+.lava-glow {
+    background: radial-gradient(
+        60% 90% at 50% 100%,
+        rgba(200, 16, 46, 0.32),
+        rgba(200, 16, 46, 0.09) 45%,
+        transparent 72%
+    );
+    transform-origin: 50% 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .lava-glow {
+        animation: lava-breathe 16s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes lava-breathe {
+    from {
+        opacity: 0.55;
+        transform: scaleY(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1.06);
+    }
+}
+
+/* Display serif: cap the optical size so Bodoni's hairlines keep meat at 96px+.
+   Knobs: raise "opsz" for thinner/more fashion, raise weight for sturdier stems. */
+.serif-display {
+    font-variation-settings: "opsz" 15;
+    font-weight: 560;
+}
+
+/* Home scroll narrative: snap per screen. Scoped via :has() so portal/admin
+   scrolling never snaps; unsupported browsers just lose the snap (enhancement). */
+html:has(.home-narrative) {
+    scroll-snap-type: y mandatory;
+}
+
+.msg-in {
+    animation: msg-in 0.45s ease both;
+}
+
+@keyframes msg-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .chev-bob {
+        animation: chev-bob 2.4s ease-in-out infinite;
+    }
+}
+
+@keyframes chev-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(5px);
+    }
 }

@@ -10,7 +10,7 @@ export default function App() {
 		<Router
 			root={(props) => (
 				<MetaProvider>
-					<Title>Basalt Portal</Title>
+					<Title>Basalt & Company</Title>
 					<ErrorBoundary
 						fallback={(err, reset) => (
 							<div style={{ padding: "48px", "max-width": "640px" }}>
