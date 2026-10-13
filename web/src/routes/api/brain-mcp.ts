@@ -2,7 +2,7 @@ import type { APIEvent } from "@solidjs/start/server";
 import { eq, and, desc, inArray, sql, ilike, lte, isNotNull } from "drizzle-orm";
 import { hashKey } from "~/lib/crypto";
 import { db } from "~/db";
-import { apiKeys, companies, outreachProspects, OUTREACH_STAGES, campaigns, campaignCompanies, videos, funnels, funnelRuns, funnelItems, funnelStageResults } from "~/db/schema";
+import { apiKeys, companies, outreachProspects, OUTREACH_STAGES, campaigns, campaignCompanies, videos } from "~/db/schema";
 import { brainQuery, entityFacts } from "~/lib/brain/search";
 import { brainJobs, docs, shortLinks } from "~/db/schema";
 import { agentWrite, createDoc, getDoc, getDocVersionDiff, listDocVersions, listDocs, renameDoc, setDocAppendix } from "~/lib/docs";
@@ -677,32 +677,6 @@ chat_uuid: { type: "string" },
 				prospect_id: { type: "string", description: "outreach_prospects id, alternative to prospect" },
 			},
 			required: ["url"],
-		},
-	},
-	// ── Funnels (read-only stage aggregates + verdict-filtered worklists) ──
-	{
-		name: "funnel_stats",
-		description:
-			"Per-stage pass/fail/unreached counts for one funnel run (defaults to the latest run). THE drop-off table: where ICP companies die between pull and promotion. Pair with list_funnel_items to pull the survivors or fails at any stage.",
-		inputSchema: {
-			type: "object",
-			properties: { run_id: { type: "string", description: "funnel_runs id; omit for the latest run" } },
-		},
-	},
-	{
-		name: "list_funnel_items",
-		description:
-			"Funnel items for one run, filtered by stage verdict — e.g. stage=ai_signal&verdict=fail for the fail pile, verdict=unreached for what hasn't been scored yet. Returns each item's full verdict list with notes. Paginated (limit ≤ 100).",
-		inputSchema: {
-			type: "object",
-			properties: {
-				run_id: { type: "string", description: "funnel_runs id; omit for the latest run" },
-				stage: { type: "string", description: "stage key (funnel_stats has them)" },
-				verdict: { type: "string", enum: ["pass", "fail", "unreached"], description: "unreached = no verdict row for that stage yet" },
-				q: { type: "string", description: "case-insensitive company substring" },
-				limit: { type: "number", description: "default 50, max 100" },
-				offset: { type: "number" },
-			},
 		},
 	},
 ] as const;
@@ -1602,119 +1576,6 @@ export async function POST(event: APIEvent) {
 							prospectId,
 						});
 						result = { id: v.id, url: v.url, prospectId: v.prospectId, watchLink: `/v/${v.id}`, fullWatchLink: `https://basalt.ac/v/${v.id}` };
-						break;
-					}
-					case "funnel_stats": {
-						const runCols = { id: funnelRuns.id, funnelId: funnelRuns.funnelId, source: funnelRuns.source, status: funnelRuns.status, createdAt: funnelRuns.createdAt };
-						const [run] = toolArgs.run_id
-							? await db.select(runCols).from(funnelRuns).where(eq(funnelRuns.id, String(toolArgs.run_id))).limit(1)
-							: await db.select(runCols).from(funnelRuns).orderBy(desc(funnelRuns.createdAt)).limit(1);
-						if (!run) {
-							result = { error: toolArgs.run_id ? "run_id not found — call with no args for the latest run" : "no funnel runs exist yet" };
-							break;
-						}
-						const [funnel] = await db.select().from(funnels).where(eq(funnels.id, run.funnelId)).limit(1);
-						if (!funnel) {
-							result = { error: "funnel row missing for this run" };
-							break;
-						}
-						const [{ count: items }] = await db
-							.select({ count: sql<number>`count(*)::int` })
-							.from(funnelItems)
-							.where(eq(funnelItems.runId, run.id));
-						const [{ count: promoted }] = await db
-							.select({ count: sql<number>`count(*)::int` })
-							.from(funnelItems)
-							.where(and(eq(funnelItems.runId, run.id), isNotNull(funnelItems.prospectId)));
-						const verdicts = await db
-							.select({ stage: funnelStageResults.stage, verdict: funnelStageResults.verdict, count: sql<number>`count(*)::int` })
-							.from(funnelStageResults)
-							.innerJoin(funnelItems, eq(funnelStageResults.itemId, funnelItems.id))
-							.where(eq(funnelItems.runId, run.id))
-							.groupBy(funnelStageResults.stage, funnelStageResults.verdict);
-						const vmap = new Map(verdicts.map((v) => [`${v.stage}:${v.verdict}`, v.count]));
-						result = {
-							funnel: { id: funnel.id, name: funnel.name, stages: funnel.stages },
-							run: { id: run.id, source: run.source, status: run.status, createdAt: run.createdAt },
-							totals: { items, promoted },
-							stages: funnel.stages.map((s) => {
-								const pass = vmap.get(`${s.key}:pass`) ?? 0;
-								const fail = vmap.get(`${s.key}:fail`) ?? 0;
-								return { key: s.key, label: s.label, gate: s.gate, method: s.method, soft: !!s.soft, pass, fail, unreached: Math.max(items - pass - fail, 0) };
-							}),
-						};
-						break;
-					}
-					case "list_funnel_items": {
-						const runCols = { id: funnelRuns.id, funnelId: funnelRuns.funnelId, source: funnelRuns.source, status: funnelRuns.status, createdAt: funnelRuns.createdAt };
-						const [run] = toolArgs.run_id
-							? await db.select(runCols).from(funnelRuns).where(eq(funnelRuns.id, String(toolArgs.run_id))).limit(1)
-							: await db.select(runCols).from(funnelRuns).orderBy(desc(funnelRuns.createdAt)).limit(1);
-						if (!run) {
-							result = { error: toolArgs.run_id ? "run_id not found — call with no args for the latest run" : "no funnel runs exist yet" };
-							break;
-						}
-						const [funnel] = await db.select().from(funnels).where(eq(funnels.id, run.funnelId)).limit(1);
-						const stageKeys = (funnel?.stages ?? []).map((s) => s.key);
-						const stage = toolArgs.stage ? String(toolArgs.stage) : null;
-						const verdict = toolArgs.verdict ? String(toolArgs.verdict) : null;
-						if (stage && !stageKeys.includes(stage)) {
-							result = { error: `unknown stage "${stage}" — stages: ${stageKeys.join(", ")}` };
-							break;
-						}
-						if (verdict && !["pass", "fail", "unreached"].includes(verdict)) {
-							result = { error: "verdict must be pass | fail | unreached" };
-							break;
-						}
-						if (verdict && !stage) {
-							result = { error: "verdict requires stage" };
-							break;
-						}
-						const limit = Math.min(Math.max(Number(toolArgs.limit ?? 50) || 50, 1), 100);
-						const offset = Math.max(Number(toolArgs.offset ?? 0) || 0, 0);
-						const filters = [eq(funnelItems.runId, run.id)];
-						if (toolArgs.q) filters.push(ilike(funnelItems.companyName, `%${String(toolArgs.q)}%`));
-						if (stage && verdict && verdict !== "unreached") {
-							filters.push(sql`exists (select 1 from ${funnelStageResults} fsr where fsr.item_id = ${funnelItems.id} and fsr.stage = ${stage} and fsr.verdict = ${verdict})`);
-						}
-						if (stage && verdict === "unreached") {
-							filters.push(sql`not exists (select 1 from ${funnelStageResults} fsr where fsr.item_id = ${funnelItems.id} and fsr.stage = ${stage})`);
-						}
-						const rows = await db
-							.select({ id: funnelItems.id, company: funnelItems.companyName, city: funnelItems.city, state: funnelItems.state, prospectId: funnelItems.prospectId, createdAt: funnelItems.createdAt })
-							.from(funnelItems)
-							.where(and(...filters))
-							.orderBy(funnelItems.companyName)
-							.limit(limit)
-							.offset(offset);
-						const [{ count: matched }] = await db
-							.select({ count: sql<number>`count(*)::int` })
-							.from(funnelItems)
-							.where(and(...filters));
-						const ids = rows.map((r) => r.id);
-						const vs = ids.length
-							? await db.select({ itemId: funnelStageResults.itemId, stage: funnelStageResults.stage, verdict: funnelStageResults.verdict, method: funnelStageResults.method, note: funnelStageResults.note, checkedAt: funnelStageResults.checkedAt }).from(funnelStageResults).where(inArray(funnelStageResults.itemId, ids)).orderBy(funnelStageResults.checkedAt)
-							: [];
-						const byItem = new Map<string, typeof vs>();
-						for (const v of vs) {
-							const list = byItem.get(v.itemId) ?? [];
-							list.push(v);
-							byItem.set(v.itemId, list);
-						}
-						result = {
-							run: { id: run.id, funnel: funnel?.name ?? "unknown" },
-							matched,
-							limit,
-							offset,
-							items: rows.map((r) => ({
-								id: r.id,
-								company: r.company,
-								city: r.city,
-								state: r.state,
-								promoted: !!r.prospectId,
-								verdicts: (byItem.get(r.id) ?? []).map(({ itemId: _omit, ...v }) => v),
-							})),
-						};
 						break;
 					}
 					default:
