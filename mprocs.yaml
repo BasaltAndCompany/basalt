@@ -3,9 +3,6 @@ procs:
     # Local Supabase stack: Postgres :54322, auth+storage :54321, Studio :54323.
     # One-shot — containers daemonize under Docker (OrbStack); re-run anytime.
     shell: supabase start
-  dashboard:
-    shell: cd dashboard && bun run dev
   web:
-    # The marketing site (SolidStart). :3000 stays the dashboard until the
-    # domain flip retires the dashboard's marketing routes.
+    # The one app: marketing site + admin + client portal + API. :3001 locally.
     shell: cd web && bun run dev

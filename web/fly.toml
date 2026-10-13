@@ -1,9 +1,8 @@
-# fly.toml — Basalt & Company marketing site (web/)
-# Deploys via .github/workflows/fly.yml after CI on main. The dashboard
-# (madcactus-dashboard) stays up for admin/api/portal; madcactus.org points
-# here after the domain flip.
+# fly.toml — the one app: marketing site + admin + client portal + API.
+# Basalt brand, madcactus-dashboard fly app name (kept — renaming the fly app
+# would force a domain migration for zero user-visible benefit).
 
-app = "basalt-web"
+app = "madcactus-dashboard"
 primary_region = "iad"
 
 [build]
@@ -21,7 +20,7 @@ interval = "10s"
 timeout = "5s"
 grace_period = "30s"
 method = "GET"
-path = "/contact"
+path = "/admin/login"
 
 [[vm]]
 size = "shared-cpu-1x"

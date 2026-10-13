@@ -5,8 +5,8 @@ on:
     branches: [main]
   push:
     branches: [main]
-    # deploy gate: Fly Deploy (dashboard + web) fires only after this succeeds
-    paths: ['dashboard/**', 'web/**']
+    # deploy gate: Fly Deploy fires only after this succeeds
+    paths: ['web/**', 'packages/ui/**']
 
 jobs:
   test:
@@ -16,9 +16,9 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1
-      # install at the workspace root: dashboard imports @basalt/ui from packages/ui
+      # install at the workspace root: web imports @basalt/ui from packages/ui
       - run: bun install
-      - working-directory: dashboard
+      - working-directory: web
         run: bun run test
 
   typecheck:
@@ -29,35 +29,10 @@ jobs:
         with:
           bun-version: 1
       - run: bun install
-      - working-directory: dashboard
+      - working-directory: web
         run: bun run typecheck
 
-  typecheck-web:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1
-      - run: bun install
-      - working-directory: web
-        run: bunx tsc -b
-
   docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
-        with:
-          # repo-root context: dashboard/Dockerfile copies the workspace packages
-          context: .
-          file: dashboard/Dockerfile
-          push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  docker-build-web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,32 +1,50 @@
-# React + TypeScript + Vite
+# Mad Cactus Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+SolidStart + Nitro + Postgres (Drizzle) + Supabase auth. Deployed to fly as
+`madcactus-dashboard`.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Auth runs against the local Supabase stack. One command from the repo root sets
+everything up:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+./scripts/dev-setup.sh               # env + shared local Supabase stack (Postgres :54322) + schema + seed
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The stack is machine-global: auth, storage and the app Postgres all live in it,
+every worktree shares its data by design, and `supabase stop` stops it for the
+whole machine. `bun run dev` logs in as admin@madcactus.org / cactus-local-dev.
+Studio (storage bucket, auth users, table editor): http://localhost:54323.
+
+`dashboard/.env` must exist with at least `DATABASE_URL` (dev-setup writes it)
+and the `SUPABASE_*` keys. Copy values from fly secrets
+(`fly ssh console -a madcactus-dashboard -C "printenv SUPABASE_URL"`).
+
+**Every day**
+
+```bash
+bun run dev        # hot-reload dev server (uses dashboard/.env)
+```
+
+Log in with a Supabase user from the hosted project.
+
+**Test the production artifact** (the same image fly runs):
+
+```bash
+docker compose up --build app     # http://localhost:3001
+```
+
+**Tests / typecheck**
+
+```bash
+bun run test        # pure-function tests; no real DB needed
+bun run typecheck
+```
+
+## Notes
+
+- `supabase/seed.sql` is stale relative to the current schema — don't apply it
+  to a fresh DB without reviewing.
+- Schema changes: edit `src/db/schema.ts`, then `bun run db:generate` to add a
+  migration under `supabase/migrations/`.

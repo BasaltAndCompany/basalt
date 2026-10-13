@@ -1,112 +1,154 @@
-// /newsletter — hero + signup + archive. The archive SSRs from the
-// dashboard's public issues API so newly published issues appear without a
-// rebuild (same DB, one render pipeline).
-import { createAsync } from "@solidjs/router"
-import { For, Show } from "solid-js"
-import { Page } from "@/components/site"
-import { Button } from "@basalt/ui"
-import { Input } from "@basalt/ui"
-
-type Issue = { id: string; issueNumber: number; title: string; publishedAt: string | null }
-
-import { DASHBOARD } from "@/lib/dashboard"
+// Newsletter landing — SSR (not prerendered) so the archive always lists
+// freshly published issues straight from the DB.
+import { createAsync } from "@solidjs/router";
+import { For, Show, onMount } from "solid-js";
+import MarketingPage from "~/components/marketing/MarketingPage";
+import { Header } from "~/components/marketing/Header";
+import { Footer } from "~/components/marketing/Footer";
+import { subscribeToNewsletter } from "~/components/marketing/subscribe";
+import { getDispatchIssuesQuery } from "~/lib/dispatch-queries";
+import "~/styles/marketing-newsletter.css";
 
 export default function Newsletter() {
-  const issues = createAsync(async () => {
-    const res = await fetch(`${DASHBOARD}/api/newsletter-issues`)
-    if (!res.ok) return []
-    const data = (await res.json()) as { issues: Issue[] }
-    return data.issues
-  })
+	const issues = createAsync(() => getDispatchIssuesQuery());
 
-  return (
-    <Page
-      title="The Cactus Dispatch | Basalt & Company"
-      description="Weekly AI teardowns for business owners. Real deployments, real numbers, and the blueprint your team needs to build the same thing."
-    >
-      {/* hero */}
-      <section class="mx-auto max-w-3xl px-6 pb-20 pt-14 text-center">
-        <h1 class="font-serif text-5xl leading-[1.05] tracking-[-0.01em] md:text-6xl">
-          AI teardowns
-          <br />
-          <em>from our real clients.</em>
-        </h1>
-        <p class="mx-auto mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
-          Weekly breakdowns of real AI deployments. What we built, what it cost, and the blueprint
-          to do the same thing. Higher margins, more revenue, no new headcount.
-        </p>
-        <form
-          class="mx-auto mt-8 flex max-w-md items-center gap-2"
-          onSubmit={async (e) => {
-            e.preventDefault()
-            const form = e.currentTarget as HTMLFormElement
-            const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim()
-            const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!
-            btn.textContent = "{ SUBSCRIBING }"
-            btn.disabled = true
-            const res = await fetch(`${DASHBOARD}/api/newsletter`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email }),
-            })
-            if (res.ok) {
-              form.innerHTML = '<p class="font-serif text-base">You\'re in. Check your inbox.</p>'
-            } else {
-              btn.textContent = "{ SUBSCRIBE }"
-              btn.disabled = false
-            }
-          }}
-        >
-          <Input type="email" name="email" placeholder="your@email.com" required autocomplete="email" spellcheck={false} />
-          <Button type="submit" class="shrink-0">{"{ SUBSCRIBE }"}</Button>
-        </form>
-      </section>
+	onMount(() => {
+		// traffic source on newsletter landing (marketing PostHog project)
+		const ph = window.posthog;
+		if (ph) {
+			const ref = document.referrer;
+			const params = new URLSearchParams(window.location.search);
+			ph.capture("newsletter_landed", {
+				source: params.get("utm_source") || (ref ? new URL(ref).hostname : "direct"),
+				campaign: params.get("utm_campaign") || "none",
+				referrer: ref,
+				path: window.location.pathname,
+			});
+		}
 
-      {/* what you get */}
-      <section class="mx-auto max-w-6xl px-6 pb-20">
-        <div class="grid gap-10 md:grid-cols-3">
-          {[
-            ["01", "The story", "The company, the problem, why it mattered. What we deployed and where it moved the needle."],
-            ["02", "The blueprint", "The full agent lifecycle. The tools, the prompts, the evals. Forward it to your team each week for a quick AI win."],
-            ["03", "The numbers", "Real cost, real hours saved, real revenue. No hypotheticals — what actually happened when it shipped."],
-          ].map(([num, title, body]) => (
-            <div>
-              <div class="font-serif text-2xl text-signal">{num}</div>
-              <h3 class="mt-2 font-serif text-xl">{title}</h3>
-              <p class="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">{body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+		const form = document.getElementById("signupForm") as HTMLFormElement | null;
+		if (!form) return;
+		form.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const email = form.email.value.trim();
+			const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+			btn.textContent = "Subscribing...";
+			btn.disabled = true;
+			const res = await subscribeToNewsletter(email);
+			if (res.ok) {
+				// conversion signal per post: /l/<key> redirect carries utm_campaign
+				const qp = new URLSearchParams(window.location.search);
+				window.posthog?.capture("newsletter_signed_up", {
+					campaign: qp.get("utm_campaign") || "none",
+					source: qp.get("utm_source") || "direct",
+				});
+				form.innerHTML = '<p class="signup-success">You\'re in. Check your inbox.</p>';
+			} else {
+				btn.textContent = "{ SUBSCRIBE }";
+				btn.disabled = false;
+			}
+		});
+	});
 
-      {/* past issues */}
-      <section class="mx-auto max-w-3xl px-6 pb-24">
-        <h2 class="font-serif text-3xl">Past issues</h2>
-        <div class="mt-8 divide-y divide-border">
-          <Show when={issues()} fallback={<p class="font-sans text-sm text-muted-foreground">Loading…</p>} keyed>
-            {(list) => (
-              <For each={list}>
-                {(i) => (
-                  <a href={`/newsletter/${i.id}`} class="group block py-6">
-                    <div class="flex items-baseline justify-between gap-4">
-                      <span class="font-sans text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                        Issue {String(i.issueNumber).padStart(2, "0")}
-                        {i.publishedAt
-                          ? ` · ${new Date(i.publishedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}`
-                          : ""}
-                      </span>
-                      <span class="font-serif text-sm text-foreground/60 transition-colors group-hover:text-foreground">
-                        {"{ READ THE TEARDOWN }"}
-                      </span>
-                    </div>
-                    <h3 class="mt-2 font-serif text-2xl">{i.title}</h3>
-                  </a>
-                )}
-              </For>
-            )}
-          </Show>
-        </div>
-      </section>
-    </Page>
-  )
+	return (
+		<MarketingPage
+			title="The Basalt Dispatch | Basalt"
+			description="Weekly AI teardowns for business owners. Real deployments, real numbers, and the blueprint your team needs to build the same thing."
+		>
+			<Header />
+
+			{/* ════════ HERO ════════ */}
+			<section class="hero">
+				<div class="hero-inner">
+					<div class="hero-text">
+						<h1 class="hero-headline">
+							AI teardowns
+							<br />
+							<em>from our real clients.</em>
+						</h1>
+						<p class="hero-body">
+							Weekly breakdowns of real AI deployments. What we built, what it cost, and the blueprint to do the
+							same thing. Higher margins, more revenue, no new headcount.
+						</p>
+
+						<form class="signup-form" id="signupForm">
+							<input type="email" name="email" placeholder="your@email.com" required autocomplete="email" spellcheck={false} />
+							<button type="submit" class="cta-bracketed cta-hero" data-ph-event="newsletter_signup">
+								&#123; SUBSCRIBE &#125;
+							</button>
+						</form>
+					</div>
+				</div>
+			</section>
+
+			{/* ════════ WHAT YOU GET ════════ */}
+			<section id="what-you-get">
+				<div class="section-header">
+					<h2 class="section-title">What you get</h2>
+					<hr class="section-rule" />
+				</div>
+				<div class="features-grid">
+					<div class="feature-col">
+						<div class="feature-num">01</div>
+						<h3>The story</h3>
+						<p>
+							The company, the problem, why it mattered. What we deployed and where it moved the needle.
+						</p>
+					</div>
+					<div class="feature-col">
+						<div class="feature-num">02</div>
+						<h3>The blueprint</h3>
+						<p>
+							The full agent lifecycle. The tools, the prompts, the evals. Forward it to your team each week for a
+							quick AI win.
+						</p>
+					</div>
+					<div class="feature-col">
+						<div class="feature-num">03</div>
+						<h3>The numbers</h3>
+						<p>Real cost, real hours saved, real revenue. No hypotheticals — what actually happened when it shipped.</p>
+					</div>
+				</div>
+			</section>
+
+			{/* ════════ PAST ISSUES — server-rendered from the DB, SEO-complete ════════ */}
+			<section id="past-issues">
+				<div class="archive-inner">
+					<For each={issues()}>
+						{(i) => (
+							<a href={`/newsletter/${i.id}`} class="archive-card">
+								<div class="archive-meta">
+									<span class="archive-num">Issue {String(i.issueNumber).padStart(2, "0")}</span>
+									<span class="archive-date">
+										{i.publishedAt ? new Date(i.publishedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : ""}
+									</span>
+								</div>
+								<h3 class="archive-title">{i.title}</h3>
+								<span class="archive-link">&#123; READ THE TEARDOWN &#125;</span>
+							</a>
+						)}
+					</For>
+				</div>
+			</section>
+
+			{/* ════════ CTA BAND ════════ */}
+			<div class="dark-band">
+				<div class="dark-band-inner">
+					<h2 class="dark-band-headline">
+						What could your team do with a
+						<br />
+						<em>company brain?</em>
+					</h2>
+					<p class="dark-band-body">
+						Your data, docs, and institutional knowledge: one intelligence layer your team actually uses. One built free every week, in the order requests arrive.
+					</p>
+					<a href="/brain" class="cta-bracketed cta-hero" style={{ "color": "var(--color-letterpress-black)" }}>
+						&#123; GET A FREE COMPANY BRAIN &#125;
+					</a>
+				</div>
+			</div>
+
+			<Footer />
+		</MarketingPage>
+	);
 }

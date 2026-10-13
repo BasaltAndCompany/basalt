@@ -1,75 +1,61 @@
-// /newsletter/[id] — one Dispatch issue. The dashboard API returns the exact
-// published render (same pipeline the email send uses); we display it.
-import { useParams } from "@solidjs/router"
-import { DASHBOARD } from "@/lib/dashboard"
-import { createAsync } from "@solidjs/router"
-import { Show } from "solid-js"
-import { Title } from "@solidjs/meta"
-import { Page } from "@/components/site"
-import { Button } from "@basalt/ui"
-
-type Issue = {
-  id: string
-  issueNumber: number
-  subject: string
-  html: string
-}
+// Live Dispatch issue — SSR straight from the DB. The moment the scheduler
+// publishes a newsletter it appears here (and in the /newsletter archive),
+// no rebuild, no redeploy.
+import { Title } from "@solidjs/meta";
+import { useParams } from "@solidjs/router";
+import { Show, Suspense, createResource } from "solid-js";
+import MarketingPage from "~/components/marketing/MarketingPage";
+import { Header } from "~/components/marketing/Header";
+import { Footer } from "~/components/marketing/Footer";
+import { getDispatchIssueQuery } from "~/lib/dispatch-queries";
+import { newsletterSubject, renderIssueBody } from "~/lib/publish-core";
+import { renderMentionsInMarkdown } from "~/lib/mention-render-server";
+import "~/styles/marketing-issue.css";
 
 export default function DispatchIssuePage() {
-  const params = useParams()
-  const issue = createAsync(async () => {
-    const res = await fetch(`${DASHBOARD}/api/newsletter-issues/${params.id}`)
-    if (!res.ok) return null
-    return (await res.json()) as Issue
-  })
-
-  return (
-    <Show
-      when={issue() !== undefined}
-      fallback={
-        <Page title="The Cactus Dispatch" description="">
-          <div class="mx-auto max-w-2xl px-6 py-24 text-center">
-            <p class="font-sans text-muted-foreground">Loading…</p>
-          </div>
-        </Page>
-      }
-    >
-      <Show
-        when={issue()}
-        fallback={
-          <Page title="Issue not found — The Cactus Dispatch" description="">
-            <div class="mx-auto max-w-2xl px-6 py-24 text-center">
-              <p class="font-sans text-muted-foreground">That issue doesn't exist.</p>
-            </div>
-          </Page>
-        }
-      >
-        {(i) => (
-          <Page title={`${i().subject} — The Cactus Dispatch`} description={i().subject}>
-            <Title>{i().subject} — The Cactus Dispatch</Title>
-            <article class="issue-body mx-auto max-w-2xl px-6 pb-16 pt-10">
-              <p class="font-sans text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                <a href="/newsletter" class="hover:text-foreground">The Cactus Dispatch</a>
-                {" / "}
-                Issue {String(i().issueNumber).padStart(2, "0")}
-              </p>
-              <h1 class="mt-4 font-serif text-4xl leading-tight md:text-5xl">{i().subject}</h1>
-              {/* published issue html — the exact render the email send uses */}
-              <div class="mt-8" innerHTML={i().html} />
-            </article>
-            <section class="mx-auto max-w-2xl px-6 pb-24 text-center">
-              <h3 class="font-serif text-2xl">Want to start turning your company AI-native?</h3>
-              <p class="mx-auto mt-3 max-w-md font-sans text-sm text-muted-foreground">
-                I build a custom company brain for one reader every week, completely free. All you
-                have to do is click below.
-              </p>
-              <Button as="a" href={`/brain?ref=${i().id}`} class="mt-6">
-                {"{ GET YOUR COMPANY BRAIN }"}
-              </Button>
-            </section>
-          </Page>
-        )}
-      </Show>
-    </Show>
-  )
+	const params = useParams();
+	const [issue] = createResource(() =>
+		getDispatchIssueQuery(params.id ?? "").then(async (i) => {
+			if (!i) return null;
+			// the snapshot published/republished to the web — edits after publish
+			// keep rendering the old version here until republished. The web
+			// appendix renders after the body; /brain links carry ?ref= so the
+			// request attributes itself to this issue.
+			const md = i.webMarkdown ?? i.markdown;
+			const html = renderIssueBody(await renderMentionsInMarkdown(md), i.webAppendix, "web")
+				.replaceAll('href="/brain"', `href="/brain?ref=${i.id}"`)
+				.replaceAll('href="https://basalt.ac/brain"', `href="/brain?ref=${i.id}"`);
+			return { ...i, subject: newsletterSubject({ markdown: md, title: i.title }), html };
+		}),
+	);
+	return (
+		<Suspense fallback={<div style={{ "min-height": "60vh", display: "grid", "place-items": "center" }}>Loading…</div>}>
+			<Show when={issue()}>
+				{(i) => (
+					<MarketingPage title={`${i().subject} — The Basalt Dispatch`} description={i().subject}>
+						<Title>{i().subject} — The Basalt Dispatch</Title>
+						<Header />
+						<article class="issue">
+							<div class="issue-inner">
+								<p class="issue-eyebrow">
+									<a href="/newsletter">The Basalt Dispatch</a> &nbsp;/&nbsp; Issue {String(i().issueNumber).padStart(2, "0")}
+								</p>
+								<h1 class="issue-title">{i().subject}</h1>
+								{/* published issue html — the exact render the email send uses */}
+								<div class="issue-body" innerHTML={i().html} />
+								<div class="issue-cta">
+									<h3>Want to start turning your company AI-native?</h3>
+									<p>I build a custom company brain for one reader every week, completely free. All you have to do is click below.</p>
+									<a href={`/brain?ref=${i().id}`} class="cta-bracketed">
+										&#123; GET YOUR COMPANY BRAIN &#125;
+									</a>
+								</div>
+							</div>
+						</article>
+						<Footer />
+					</MarketingPage>
+				)}
+			</Show>
+		</Suspense>
+	);
 }
