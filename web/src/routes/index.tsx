@@ -20,7 +20,7 @@ const MESSAGES = [
   },
   {
     title: "Proven in production.",
-    body: "Indiana University to Customs Data Lock. We taught them to use AI agents to build small software for their outbound operations — growing their response rate, saving 1/3 of their time, and automating manual back-end and administrative work. Same hours, an estimated 2.75x more revenue per hour worked.",
+    body: "Indiana University to Customs Data Lock. We taught them to use AI agents to build small software for their outbound operations, growing their response rate, saving 1/3 of their time, and automating manual back-end and administrative work. 2.75x more revenue per hour worked.",
   },
   {
     title: "Hand tasks to agents, or don't pay.",
