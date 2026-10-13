@@ -16,7 +16,9 @@ export const db = drizzle(client, { schema });
 
 /** Typed raw SQL. Drizzle's bun-sql driver pins its result HKT to
  *  Record<string, any>[] so db.execute<T>() silently loses the row type —
- *  this wrapper restores it. */
-export async function raw<T extends Record<string, unknown>>(query: SQLWrapper | string): Promise<T[]> {
+ *  this wrapper restores it. SQLWrapper-only on purpose: a plain string can
+ *  never reach the driver, so SQL must go through the parameterized sql``
+ *  template (hand-built strings are a compile error, not an injection risk). */
+export async function raw<T extends Record<string, unknown>>(query: SQLWrapper): Promise<T[]> {
 	return db.execute(query) as Promise<T[]>;
 }

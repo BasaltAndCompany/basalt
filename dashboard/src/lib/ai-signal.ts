@@ -4,7 +4,7 @@
 // disqualifier. The website scan corroborates only (upgrades some→high); a
 // vendor hint (brand-matched .ai product domain, AI-product marketing) is
 // note-only intelligence and never changes a verdict.
-import type { ProspeoPerson } from "./enrich-prospeo";
+import type { ProspeoPerson, ProspeoRoster } from "./enrich-prospeo";
 
 // Case-sensitive token on purpose: "AIR", "said", "Kai" must never match.
 // Every other term goes through the case-insensitive phrases regex.
@@ -16,19 +16,42 @@ export function aiHit(text: string): boolean {
 	return AI_TOKEN.test(text) || AI_PHRASES.test(text);
 }
 
-export type AiMatch = { name: string; title: string | null; evidence: string };
+export type AiMatch = { name: string; title: string | null; evidence: string; linkedinUrl: string | null };
 
-/** People whose headline or current title self-labels AI, with role verbatim
- *  for slot-time eyeballing. Capped at 3 examples — ≥1 is the rule; the full
- *  roster stays cached on the item. */
+/** Where the CURRENT self-label hits: headline, current title, or a listed
+ *  skill. Returns the evidence source string, or null. Past titles never
+ *  count here — they are note-only (pastMatches). */
+function currentHit(p: ProspeoPerson): string | null {
+	if (p.headline && aiHit(p.headline)) return `headline: ${p.headline}`;
+	if (p.title && aiHit(p.title)) return `title: ${p.title}`;
+	const skills = p.skills.filter(aiHit);
+	if (skills.length) return `skills: ${skills.join(", ")}`;
+	return null;
+}
+
+/** People whose headline, current title, or skills self-label AI, with the
+ *  evidence verbatim for slot-time eyeballing. Capped at 3 examples — ≥1 is
+ *  the rule; the full roster stays cached on the item. */
 export function scoreRoster(people: ProspeoPerson[]): AiMatch[] {
 	const out: AiMatch[] = [];
 	for (const p of people) {
-		const inHeadline = p.headline ? aiHit(p.headline) : false;
-		const inTitle = p.title ? aiHit(p.title) : false;
-		if (!inHeadline && !inTitle) continue;
-		const source = inHeadline ? `headline: ${p.headline}` : `title: ${p.title}`;
-		out.push({ name: p.name, title: p.title, evidence: `${p.name} — ${p.title ?? "role n/a"} (${source})` });
+		const src = currentHit(p);
+		if (!src) continue;
+		out.push({ name: p.name, title: p.title, linkedinUrl: p.linkedinUrl, evidence: `${p.name} — ${p.title ?? "role n/a"} (${src})` });
+	}
+	return out.slice(0, 3);
+}
+
+/** Past AI job titles ("was \"ML Analyst\"") — never passes, note-only:
+ *  still a good signal they could be doing something here now. Only people
+ *  with NO current hit, else they'd already be in scoreRoster. */
+export function pastMatches(people: ProspeoPerson[]): AiMatch[] {
+	const out: AiMatch[] = [];
+	for (const p of people) {
+		if (currentHit(p)) continue;
+		const was = p.historyTitles.find(aiHit);
+		if (!was) continue;
+		out.push({ name: p.name, title: p.title, linkedinUrl: p.linkedinUrl, evidence: `${p.name} (was "${was}")` });
 	}
 	return out.slice(0, 3);
 }
@@ -109,10 +132,11 @@ export function scanSite(html: string, url: string, companyName: string): SiteSc
 
 export type TierInput = {
 	employeeMatches: AiMatch[];
+	pastMatches: AiMatch[]; // past-AI titles: note-only, never passes
 	siteEvidence: string[]; // merged evidence across pages (weak tags included)
 	vendorHints: string[];
-	rosterTotal: number; // Prospeo's total_count (pagination-aware)
-	rosterPeople: number; // people actually on the cached page (≤25)
+	roster: ProspeoRoster; // full (or partial) roster the scan ran over
+	maxPages: number; // roster page cap — the "P" in the partial-roster caveat
 	siteAttempted: boolean; // had a domain and fetched pages
 };
 export type TierResult = {
@@ -143,7 +167,7 @@ export function scoreAiSignal(input: TierInput): TierResult {
 	} else if (input.siteEvidence.length >= 1) {
 		tier = 2;
 		verdict = "fail"; // site-only evidence — note for manual rescue
-	} else if (input.rosterTotal > 0 || input.siteAttempted) {
+	} else if (input.roster.total > 0 || input.siteAttempted) {
 		tier = 3;
 		verdict = "fail";
 	} else {
@@ -152,11 +176,40 @@ export function scoreAiSignal(input: TierInput): TierResult {
 	}
 
 	const parts = input.employeeMatches.map((m) => m.evidence);
-	if (input.rosterTotal > 25) parts.push(`roster: ${input.rosterTotal}>25`);
+	parts.push(...input.pastMatches.map((m) => `past-AI: ${m.evidence}`));
+	if (!input.roster.complete) parts.push(`roster: ${input.roster.total}, scanned ${input.roster.pagesPulled} of ${input.maxPages} pages`);
 	if (input.siteEvidence.length) parts.push(`site: ${[...new Set(input.siteEvidence)].join(",")}`);
 	if (!parts.length)
-		parts.push(`roster ${input.rosterPeople}, zero AI signal${input.siteAttempted ? "" : ", no site"}`);
+		parts.push(`roster ${input.roster.people.length}, zero AI signal${input.siteAttempted ? "" : ", no site"}`);
 	const hints = [...new Set(input.vendorHints)].join("; ");
 	const note = `tier${tier}|${parts.join("; ")}${hints ? `; vendor-hint: ${hints}` : ""}`;
 	return { tier, verdict, aiInterest, note: note.slice(0, 300) };
+}
+
+/** Plain-English decode of a stage note for humans. Returns null for notes it
+ *  doesn't own (any other stage's format passes through untouched). */
+export function humanizeAiSignalNote(note: string): string | null {
+	const m = /^tier([1-4])\|/.exec(note);
+	if (!m) return null;
+	const tier = Number(m[1]);
+	const body = note.slice(m[0].length);
+	// tier2 splits by who carries the evidence: an employee part passes, only
+	// past-AI/site/roster parts = the site-only manual-rescue fail
+	const hasEmployee = body
+		.split("; ")
+		.some((p) => p && !/^(past-AI:|site:|roster:|vendor-hint:)/.test(p));
+	let out =
+		tier === 1
+			? "PASS (high): employee self-labels AI + site corroborates"
+			: tier === 2 && hasEmployee
+				? "PASS (some): employee self-labels AI"
+				: tier === 2
+					? "FAIL — site-only evidence, worth a manual look"
+					: tier === 3
+						? "FAIL — visible, zero AI signal"
+						: "FAIL — no site, no roster (barely have a phone)";
+	const pages = /scanned (\d+) of (\d+) pages/.exec(body);
+	if (pages) out += ` · scanned ${pages[1]} of ${pages[2]} pages`;
+	if (body.includes("past-AI:")) out += " · past-AI experience (note only)";
+	return out;
 }

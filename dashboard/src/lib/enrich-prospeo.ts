@@ -7,16 +7,20 @@
 export const cleanName = (n: string) => n.replace(/\s+(LLC|L\.L\.C|INC|INC\.|CORP|CORPORATION|LTD|CO\.)\s*$/i, "").trim();
 
 // Prospeo rate-limits per minute (429) — space calls out and back off on 429.
-const MIN_INTERVAL = 10_000;
+let MIN_INTERVAL = 10_000;
 let lastCall = 0;
 async function throttle() {
 	const wait = MIN_INTERVAL - (Date.now() - lastCall);
 	if (wait > 0) await Bun.sleep(wait);
 	lastCall = Date.now();
 }
-/** Test hook: clear the rate-limit spacing between mocked calls. */
+/** Test hooks: clear the rate-limit spacing between mocked calls, or zero it
+ *  for multi-page roster fetches (pagination would otherwise sleep 10s/page). */
 export function _resetThrottle() {
 	lastCall = 0;
+}
+export function _setMinInterval(ms: number) {
+	MIN_INTERVAL = ms;
 }
 
 export function prospeoConfigured() {
@@ -134,10 +138,14 @@ export type ProspeoPerson = {
 	name: string;
 	title: string | null;
 	headline: string | null;
+	skills: string[];
 	historyTitles: string[];
+	linkedinUrl: string | null;
 };
 
-export type ProspeoRoster = { people: ProspeoPerson[]; total: number };
+/** pagesPulled/complete: pagination state of this cache — a legacy page-1
+ *  cache has no `complete` key, so it reads as partial and gets backfilled. */
+export type ProspeoRoster = { people: ProspeoPerson[]; total: number; pagesPulled: number; complete: boolean };
 
 export type RosterRefs = { companyId?: string | null; domain?: string | null; name: string };
 
@@ -153,46 +161,73 @@ function rosterCompanyFilter(refs: RosterRefs) {
 	return { names: { include: [refs.name] } };
 }
 
-/** Page 1 (25 people) of everyone at the company. NO_RESULTS → empty roster,
- *  not an error. 429/quota throws — the route's error path surfaces it. */
-export async function prospeoCompanyRoster(refs: RosterRefs): Promise<ProspeoRoster> {
-	let body = "";
-	for (let attempt = 0; ; attempt++) {
-		await throttle();
-		const r = await fetch("https://api.prospeo.io/search-person", {
-			method: "POST",
-			headers: { "Content-Type": "application/json", "X-KEY": process.env.PROSPEO_API_KEY! },
-			body: JSON.stringify({ page: 1, filters: { company: rosterCompanyFilter(refs) } }),
-		});
-		if (r.status === 429 && attempt < 4) {
-			await Bun.sleep(15_000 * (attempt + 1));
-			continue;
-		}
-		body = await r.text();
-		if (r.status === 400) {
+/** Everyone at the company, 25/page: 1 credit per page that returns ≥1 person
+ *  (identical pages deduped free for 30d), capped at maxPages (10 pages = 250
+ *  people ≥ the funnel's 250-headcount ceiling). Stops early on a short page
+ *  or the API's total_page. Mid-run failure keeps what's paid for — partial
+ *  beats throwing; a page-1 failure rethrows (nothing to keep). NO_RESULTS →
+ *  empty roster, complete, not an error. */
+export async function prospeoCompanyRoster(refs: RosterRefs, { maxPages = 10 }: { maxPages?: number } = {}): Promise<ProspeoRoster> {
+	// One page = one throttled request; 429 backs off, other errors throw.
+	const fetchPage = async (page: number): Promise<string> => {
+		for (let attempt = 0; ; attempt++) {
+			await throttle();
+			const r = await fetch("https://api.prospeo.io/search-person", {
+				method: "POST",
+				headers: { "Content-Type": "application/json", "X-KEY": process.env.PROSPEO_API_KEY! },
+				body: JSON.stringify({ page, filters: { company: rosterCompanyFilter(refs) } }),
+			});
+			if (r.status === 429 && attempt < 4) {
+				await Bun.sleep(15_000 * (attempt + 1));
+				continue;
+			}
+			const body = await r.text();
+			if (r.ok) return body;
 			const d = JSON.parse(body || "{}") as { error_code?: string };
-			if (d.error_code === "NO_RESULTS") return { people: [], total: 0 };
-			throw new Error(`prospeo search-person: ${d.error_code ?? "bad request"}`);
+			if (r.status === 400) {
+				// NO_RESULTS = the company has no people on file: empty-but-complete
+				if (d.error_code === "NO_RESULTS") return "";
+				throw new Error(`prospeo search-person: ${d.error_code ?? "bad request"}`);
+			}
+			throw new Error(`prospeo search-person HTTP ${r.status}: ${body.slice(0, 120)}`);
 		}
-		if (!r.ok) throw new Error(`prospeo search-person HTTP ${r.status}: ${body.slice(0, 120)}`);
-		break;
-	}
-	const d = JSON.parse(body) as {
-		results?: { person?: Record<string, unknown> }[];
-		pagination?: { total_count?: number };
 	};
-	const people = (d.results ?? [])
-		.map((res) => res.person)
-		.filter((p): p is Record<string, unknown> => Boolean(p))
-		.map((p) => ({
-			name: (p.full_name as string | undefined) ?? "",
-			title: (p.current_job_title as string | null) ?? null,
-			headline: (p.headline as string | null) ?? null,
-			historyTitles: [...new Set(((p.job_history as { title?: string; current?: boolean }[] | undefined) ?? [])
-				.filter((j) => !j.current && j.title)
-				.map((j) => j.title!))].slice(0, 5),
-		}));
-	return { people, total: d.pagination?.total_count ?? people.length };
+	const people: ProspeoPerson[] = [];
+	let total = 0;
+	for (let page = 1; page <= maxPages; page++) {
+		let raw = "";
+		try {
+			raw = await fetchPage(page);
+		} catch (e) {
+			// mid-roster failure (quota, network): keep the pages already paid for
+			if (people.length) return { people, total, pagesPulled: page - 1, complete: false };
+			throw e;
+		}
+		if (raw === "") return { people, total: 0, pagesPulled: page - 1, complete: true };
+		const d = JSON.parse(raw) as {
+			results?: { person?: Record<string, unknown> }[];
+			pagination?: { total_count?: number; total_page?: number };
+		};
+		const batch = (d.results ?? [])
+			.map((res) => res.person)
+			.filter((p): p is Record<string, unknown> => Boolean(p))
+			.map((p) => ({
+				name: (p.full_name as string | undefined) ?? "",
+				title: (p.current_job_title as string | null) ?? null,
+				headline: (p.headline as string | null) ?? null,
+				skills: Array.isArray(p.skills) ? (p.skills as unknown[]).filter((s): s is string => typeof s === "string") : [],
+				linkedinUrl: (p.linkedin_url as string | null) ?? null,
+				historyTitles: [...new Set(((p.job_history as { title?: string; current?: boolean }[] | undefined) ?? [])
+					.filter((j) => !j.current && j.title)
+					.map((j) => j.title!))].slice(0, 5),
+			}));
+		// short/empty page = end of the company's people, even if total_page lied
+		if (batch.length === 0) return { people, total, pagesPulled: page - 1, complete: true };
+		people.push(...batch);
+		total = d.pagination?.total_count || people.length;
+		if (page >= (d.pagination?.total_page ?? page)) return { people, total, pagesPulled: page, complete: true };
+	}
+	return { people, total, pagesPulled: maxPages, complete: false };
 }
 
 /** "11-50" → 30 (midpoint). Falls back when employee_count is null. */

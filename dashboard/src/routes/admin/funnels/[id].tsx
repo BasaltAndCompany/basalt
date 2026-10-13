@@ -2,6 +2,7 @@ import { Title } from "@solidjs/meta";
 import { A, createAsync } from "@solidjs/router";
 import { For, Show, createSignal, onMount } from "solid-js";
 import Layout from "~/components/Layout"
+import { humanizeAiSignalNote } from "~/lib/ai-signal";
 import { toast } from "~/lib/toast";
 
 const errT = (m: string) => toast(m, "error");
@@ -10,9 +11,18 @@ import { getUserQuery } from "~/lib/queries";
 
 type Stage = { key: string; label: string; gate: string; method: string; params?: Record<string, number> | null; soft?: boolean };
 type Run = { id: string; funnelId: string; source: string; status: string; note: string | null; createdAt: string; closedAt: string | null };
-type Item = { id: string; companyName: string; city: string | null; state: string | null; sourceUrl: string | null; sourceKind: string | null; prospectId: string | null; promotedAt: string | null };
+type AiMatchRow = { name: string; title: string | null; evidence: string; linkedinUrl: string | null };
+type Item = { id: string; companyName: string; city: string | null; state: string | null; sourceUrl: string | null; sourceKind: string | null; prospectId: string | null; promotedAt: string | null; rawData?: { prospeo?: { domain?: string | null }; aiMatches?: { matches: AiMatchRow[]; pastMatches: AiMatchRow[] } } | null };
 type Result = { id: string; itemId: string; stage: string; verdict: "pass" | "fail"; evidenceUrl: string | null; note: string | null; method: string; checkedAt: string };
 type Summary = { total: number; byStage: { stage: string; label: string; passed: number; failed: number; awaiting: number }[] };
+
+// Company name always opens the local detail modal — external links live in
+// the modal as explicit buttons (no accidental new tabs from the table).
+const noteTitle = (note: string | null) => {
+	if (!note) return "failed";
+	const h = humanizeAiSignalNote(note);
+	return h ? `${h}\n${note}` : note;
+};
 
 const post = async (url: string, body: unknown) => {
 	const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -332,7 +342,7 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 							{(it) => (
 								<tr>
 									<td>
-										<a href={it.sourceUrl ?? "#"} target={it.sourceUrl ? "_blank" : undefined} rel="noreferrer" title="Open company detail" onClick={(e) => { if (!it.sourceUrl) e.preventDefault(); setDetailItem(it); }}>{it.companyName}</a>
+										<a href="#" title="Open company detail" onClick={(e) => { e.preventDefault(); setDetailItem(it); }}>{it.companyName}</a>
 										<Show when={it.promotedAt}> ★</Show>
 										<Show when={it.city || it.state}>
 											<div class="muted" style={{ "font-size": "12px" }}>{[it.city, it.state].filter(Boolean).join(", ")}</div>
@@ -346,7 +356,7 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 													<Show when={r()} fallback={<span class="muted">–</span>}>
 														{(res) => (
 															<>
-																<Show when={res().verdict === "pass"} fallback={<span class="muted" title={res().note ?? "failed"}>✗ {res().note ?? ""}</span>}>
+																<Show when={res().verdict === "pass"} fallback={<span class="muted" title={noteTitle(res().note)}>✗ {res().note ?? ""}</span>}>
 																	<span title={res().note ?? ""} style={{ "font-size": "13px" }}>
 																		✓ <Show when={res().evidenceUrl} fallback={<span>{res().note ?? ""}</span>}>
 																			<a href={res().evidenceUrl!} target="_blank" rel="noreferrer" style={{ color: "inherit" }}>{res().note ?? ""}</a>
@@ -469,10 +479,18 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 							{it().companyName}
 							<Show when={it().promotedAt}> ★</Show>
 						</h3>
-						<p class="muted" style={{ margin: "0 0 12px", "font-size": "13px" }}>
+						<p class="muted" style={{ margin: "0 0 8px", "font-size": "13px" }}>
 							{[it().city, it().state].filter(Boolean).join(", ")} · {it().sourceKind ?? "manual"}
-							<Show when={it().sourceUrl}>{" · "}<a href={it().sourceUrl!} target="_blank" rel="noreferrer">source</a></Show>
 						</p>
+						<div class="form-row" style={{ margin: "0 0 12px" }}>
+							<Show when={it().sourceUrl}>
+								<a class="btn btn-sm" href={it().sourceUrl!} target="_blank" rel="noreferrer">{it().sourceKind === "fmcsa" ? "FMCSA ↗" : "Source ↗"}</a>
+							</Show>
+							<Show when={it().rawData?.prospeo?.domain}>
+								{(domain) => <a class="btn btn-sm" href={`https://${domain()}`} target="_blank" rel="noreferrer">Website ↗</a>}
+							</Show>
+							<a class="btn btn-sm" href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(it().companyName)}`} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+						</div>
 						<For each={stages()}>
 							{(s) => {
 								const r = () => resultFor(it().id, s.key);
@@ -496,7 +514,16 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 											{(res) => (
 												<div class="form-row" style={{ "font-size": "13px", "align-items": "center", "margin-top": "4px" }}>
 													<span>{res().verdict === "pass" ? "✓" : "✗"}</span>
-													<span class="muted">{res().note ?? ""}</span>
+													<span class="muted">
+														<Show when={humanizeAiSignalNote(res().note ?? "")} fallback={res().note ?? ""}>
+															{(h) => (
+																<>
+																	{h()}
+																	<div style={{ "font-size": "11px" }}>{res().note}</div>
+																</>
+															)}
+														</Show>
+													</span>
 													<span class="badge">{res().method}</span>
 													<Show when={res().evidenceUrl}>
 														<a href={res().evidenceUrl!} target="_blank" rel="noreferrer">evidence</a>
@@ -510,6 +537,24 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 								);
 							}}
 						</For>
+						<Show when={it().rawData?.aiMatches}>
+							{(am) => (
+								<Show when={am().matches.length + am().pastMatches.length > 0}>
+									<div style={{ "border-top": "1px solid var(--border, #eee)", padding: "10px 0" }}>
+										<strong style={{ "font-size": "13px" }}>AI-signal people</strong>
+										<For each={[...am().matches, ...am().pastMatches]}>
+											{(m) => (
+												<div style={{ "font-size": "13px", "margin-top": "2px" }}>
+													<Show when={m.linkedinUrl} fallback={<span>{m.evidence}</span>}>
+														<a href={m.linkedinUrl!} target="_blank" rel="noreferrer">{m.evidence}</a>
+													</Show>
+												</div>
+											)}
+										</For>
+									</div>
+								</Show>
+							)}
+						</Show>
 						<div class="form-row" style={{ "margin-top": "12px" }}>
 							<label class="muted" style={{ "font-size": "12px" }}>
 								manual verdicts record as
