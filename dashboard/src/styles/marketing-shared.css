@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Mad Cactus marketing — Franco Maria Ricci Editore design system
+   Basalt marketing — Franco Maria Ricci Editore design system
    Ported from marketing/src/styles/global.css. Body-level rules are
    scoped to :has(.mk-root) so the admin app never inherits the serif
    vellum treatment, and marketing pages never fight app.css.
@@ -121,9 +121,8 @@ body:has(.mk-root) {
     background: var(--color-letterpress-black);
     color: var(--color-paper);
 }
-.mk-root .logo-seal {
-    width: 64px;
-    height: 64px;
+.mk-root .logo-wordmark {
+    font-size: 26px;
     color: var(--color-letterpress-black);
 }
 
@@ -198,14 +197,6 @@ body:has(.mk-root) {
     gap: var(--spacing-32);
     margin-bottom: var(--spacing-64);
 }
-.mk-root .footer-logo {
-    display: none;
-    width: 108px;
-    height: 108px;
-    flex-shrink: 0;
-    order: 1;
-    filter: brightness(0) invert(1);
-}
 .mk-root .footer-wordmark {
     font-family: var(--font-serif);
     font-weight: 400;
@@ -262,8 +253,5 @@ body:has(.mk-root) {
 @media (max-width: 480px) {
     .mk-root .footer-wordmark {
         display: none;
-    }
-    .mk-root .footer-logo {
-        display: block;
     }
 }

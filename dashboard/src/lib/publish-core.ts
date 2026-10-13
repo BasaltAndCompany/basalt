@@ -73,7 +73,7 @@ function quoteToPromptBox(html: string): string {
  */
 export const EMAIL_FOOTER_HTML =
 	`<hr style="border:none;border-top:1px solid #d8d2c4;margin:32px 0 20px;">` +
-	`<p style="font-size:13px;color:#6b6455;line-height:1.6;">The Cactus Dispatch turns real AI deployments into ` +
+	`<p style="font-size:13px;color:#6b6455;line-height:1.6;">The Basalt Dispatch turns real AI deployments into ` +
 	`patterns you can use this week. Questions, ideas, comments? Just reply to this email, I read and answer every one.</p>`;
 
 // ── Email template — the Dispatch issue page (vellum, serif, gold accents)
@@ -121,7 +121,7 @@ export function renderIssueEmail(opts: {
 	issueNumber?: number | null;
 	tracking?: { docId: string };
 }): string {
-	const eyebrow = `THE CACTUS DISPATCH${opts.issueNumber ? ` · ISSUE ${String(opts.issueNumber).padStart(2, "0")}` : ""}`;
+	const eyebrow = `THE BASALT DISPATCH${opts.issueNumber ? ` · ISSUE ${String(opts.issueNumber).padStart(2, "0")}` : ""}`;
 	const bodyHtml = inlineBodyStyles(renderIssueBody(opts.markdown, opts.appendix, "email"));
 	return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>` +
 		`<body style="margin:0;background:${E.vellum};">` +
@@ -134,21 +134,20 @@ export function renderIssueEmail(opts: {
 }
 
 /**
- * The email footer's cactus seal doubles as the open tracker: in sends its src
- * hits /api/track/open/<docId> (logged, then 302 to the static seal); the
+ * The email footer's wordmark doubles as the open tracker: in sends a 1×1 img
+ * hits /api/track/open/<docId> (logged, then 302 to the favicon); the
  * ?r={{email}} variable is Resend's per-recipient substitution, so opens stay
- * per-person. Previews pass no docId and render the static seal untracked.
+ * per-person. Previews pass no docId and render just the wordmark, untracked.
  * ponytail: origin hardcoded like shortLinkBase()'s fallback — both the brain
  * CTA and this pixel need the prod origin inside email HTML.
  */
 export function emailFooterHtml(tracking?: { docId: string }): string {
-	const sealSrc = tracking
-		? `https://madcactus.org/api/track/open/${tracking.docId}?r={{email}}`
-		: "https://madcactus.org/cactus-seal.png";
-	return (
-		EMAIL_FOOTER_HTML +
-		`<img src="${sealSrc}" width="72" height="72" alt="Mad Cactus" style="display:block;margin:20px auto 0;border-radius:50%;" />`
-	);
+	const wordmark =
+		`<div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;color:#0a0a0a;text-align:center;margin:20px 0 0;">Basalt<span style="color:#C8102E;">.</span></div>`;
+	const pixel = tracking
+		? `<img src="https://basalt.ac/api/track/open/${tracking.docId}?r={{email}}" width="1" height="1" alt="" style="display:block;" />`
+		: "";
+	return EMAIL_FOOTER_HTML + wordmark + pixel;
 }
 
 export function markdownToHtml(md: string, channel: "email" | "web" = "web"): string {

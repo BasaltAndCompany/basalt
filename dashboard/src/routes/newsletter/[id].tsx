@@ -24,7 +24,7 @@ export default function DispatchIssuePage() {
 			const md = i.webMarkdown ?? i.markdown;
 			const html = renderIssueBody(await renderMentionsInMarkdown(md), i.webAppendix, "web")
 				.replaceAll('href="/brain"', `href="/brain?ref=${i.id}"`)
-				.replaceAll('href="https://madcactus.org/brain"', `href="/brain?ref=${i.id}"`);
+				.replaceAll('href="https://basalt.ac/brain"', `href="/brain?ref=${i.id}"`);
 			return { ...i, subject: newsletterSubject({ markdown: md, title: i.title }), html };
 		}),
 	);
@@ -32,13 +32,13 @@ export default function DispatchIssuePage() {
 		<Suspense fallback={<div style={{ "min-height": "60vh", display: "grid", "place-items": "center" }}>Loading…</div>}>
 			<Show when={issue()}>
 				{(i) => (
-					<MarketingPage title={`${i().subject} — The Cactus Dispatch`} description={i().subject}>
-						<Title>{i().subject} — The Cactus Dispatch</Title>
+					<MarketingPage title={`${i().subject} — The Basalt Dispatch`} description={i().subject}>
+						<Title>{i().subject} — The Basalt Dispatch</Title>
 						<Header />
 						<article class="issue">
 							<div class="issue-inner">
 								<p class="issue-eyebrow">
-									<a href="/newsletter">The Cactus Dispatch</a> &nbsp;/&nbsp; Issue {String(i().issueNumber).padStart(2, "0")}
+									<a href="/newsletter">The Basalt Dispatch</a> &nbsp;/&nbsp; Issue {String(i().issueNumber).padStart(2, "0")}
 								</p>
 								<h1 class="issue-title">{i().subject}</h1>
 								{/* published issue html — the exact render the email send uses */}

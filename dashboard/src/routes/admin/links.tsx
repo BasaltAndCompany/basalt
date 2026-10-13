@@ -5,6 +5,8 @@ import ConfirmButton from "~/components/ConfirmButton";
 import CreateDialog from "~/components/CreateDialog";
 import Layout from "~/components/Layout";
 import { getUserQuery } from "~/lib/queries";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 type Link = { slug: string; target: string; clicks: number; docId: string | null; docTitle: string | null; docKind: string | null; createdAt: string };
 type Doc = { id: string; title: string; kind: string; publishedAt: string | null };
@@ -125,13 +127,13 @@ export default function AdminLinks() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Links — Mad Cactus</Title>
+			<Title>Links — Basalt</Title>
 			<h1 class="page-title" style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "4px" }}>
 				Short Links
 				<CreateDialog label="Create a link" title="Create a link" submitLabel="Save link" onSubmit={(_fd, form) => save(form)}>
 					<div class="form-group">
 						<label for="link_dest">Destination page</label>
-						<input id="link_dest" name="dest" value="https://madcactus.org/newsletter" spellcheck={false} />
+						<input id="link_dest" name="dest" value="https://basalt.ac/newsletter" spellcheck={false} />
 					</div>
 					<div class="form-row">
 						<div class="form-group">
@@ -156,16 +158,12 @@ export default function AdminLinks() {
 					</details>
 					<div class="form-group">
 						<label for="link_doc">Attached post / newsletter</label>
-						<select id="link_doc" name="docId">
-							<option value="">— none (standalone link) —</option>
-							<For each={docOptions()}>
-								{(d) => (
-									<option value={d.id}>
-										{d.kind}: {d.title}
-									</option>
-								)}
-							</For>
-						</select>
+						<SelectField
+							id="link_doc"
+							name="docId"
+							value=""
+							options={() => [{ value: "", label: "— none (standalone link) —" }, ...docOptions().map((d) => ({ value: d.id, label: d.kind + ": " + d.title }))]}
+						/>
 					</div>
 				</CreateDialog>
 			</h1>
@@ -173,47 +171,47 @@ export default function AdminLinks() {
 				Clean /l/&lt;slug&gt; URLs for first comments and posts — UTMs hide behind the redirect, clicks count per link.
 			</p>
 
-			<table style={{ width: "100%", "border-collapse": "collapse" }}>
-				<thead>
-					<tr style={{ "text-align": "left", "border-bottom": "1px solid #ddd" }}>
-						<th style={{ padding: "8px" }}>Link</th>
-						<th style={{ padding: "8px" }}>Target</th>
-						<th style={{ padding: "8px" }}>Attached to</th>
-						<th style={{ padding: "8px" }}>Clicks</th>
-						<th style={{ padding: "8px" }} />
-					</tr>
-				</thead>
-				<tbody>
+			<Table >
+				<TableHeader>
+					<TableRow >
+						<TableHead >Link</TableHead>
+						<TableHead >Target</TableHead>
+						<TableHead >Attached to</TableHead>
+						<TableHead >Clicks</TableHead>
+						<TableHead />
+					</TableRow>
+				</TableHeader>
+				<TableBody>
 					<For each={links()}>
 						{(l) => (
-							<tr style={{ "border-bottom": "1px solid #eee" }}>
-								<td style={{ padding: "8px" }}>
+							<TableRow >
+								<TableCell >
 									<code>{l.slug}</code>
-								</td>
-								<td style={{ padding: "8px", "max-width": "420px", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>{l.target}</td>
-								<td style={{ padding: "8px" }}>
+								</TableCell>
+								<TableCell style={{ padding: "8px", "max-width": "420px", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>{l.target}</TableCell>
+								<TableCell >
 									<Show
 										when={l.docId && l.docTitle}
 										fallback={<span class="muted" style={{ "font-size": "13px" }}>—</span>}
 									>
 										<a href={docHref(l.docId!, l.docKind)}>{l.docTitle}</a>
 									</Show>
-								</td>
-								<td style={{ padding: "8px", "font-variant-numeric": "tabular-nums" }}>{l.clicks}</td>
-								<td style={{ padding: "8px" }}>
+								</TableCell>
+								<TableCell style={{ padding: "8px", "font-variant-numeric": "tabular-nums" }}>{l.clicks}</TableCell>
+								<TableCell >
 									<span style={{ display: "inline-flex", gap: "6px", "align-items": "center" }}>
-									<button type="button" class="btn btn-sm" onClick={() => void copyLink(l)}>
+									<Button variant="outline" size="sm" type="button"  onClick={() => void copyLink(l)}>
 										{copied() === l.slug ? "Copied" : "Copy link"}
-									</button>
-									<button type="button" class="btn btn-sm" onClick={() => openEdit(l)}>Edit</button>
+									</Button>
+									<Button variant="outline" size="sm" type="button"  onClick={() => openEdit(l)}>Edit</Button>
 									<ConfirmButton label="Delete" danger onConfirm={() => remove(l.slug)} />
 								</span>
-								</td>
-							</tr>
+								</TableCell>
+							</TableRow>
 						)}
 					</For>
-				</tbody>
-			</table>
+				</TableBody>
+			</Table>
 
 			<dialog
 				ref={dialogRef}
@@ -225,27 +223,22 @@ export default function AdminLinks() {
 					<form onSubmit={saveEdit} style={{ display: "grid", gap: "8px" }}>
 						<label style={{ display: "grid", gap: "4px" }}>
 							Target URL
-							<input name="target" value={editing()!.target} required style={{ padding: "8px" }} spellcheck={false} />
+							<input name="target" value={editing()!.target} required spellcheck={false} />
 						</label>
 						<label style={{ display: "grid", gap: "4px" }}>
 							Attached post / newsletter
-							<select name="docId" style={{ padding: "8px" }}>
-								<option value="">— none (standalone link) —</option>
-								<For each={docOptions()}>
-									{(d) => (
-										<option value={d.id} selected={d.id === editing()!.docId}>
-											{d.kind}: {d.title}
-										</option>
-									)}
-								</For>
-							</select>
+							<SelectField
+								name="docId"
+								value={editing()?.docId ?? ""}
+								options={() => [{ value: "", label: "— none (standalone link) —" }, ...docOptions().map((d) => ({ value: d.id, label: d.kind + ": " + d.title }))]}
+							/>
 						</label>
 						<Show when={editError()}>
 							<p style={{ color: "#b91c1c" }}>{editError()}</p>
 						</Show>
 						<div style={{ display: "flex", gap: "8px", "justify-content": "flex-end", "margin-top": "4px" }}>
-							<button type="button" class="btn btn-sm" onClick={() => dialogRef?.close()}>Cancel</button>
-							<button type="submit" class="btn btn-sm btn-primary">Save</button>
+							<Button variant="outline" size="sm" type="button"  onClick={() => dialogRef?.close()}>Cancel</Button>
+							<Button size="sm" type="submit">Save</Button>
 						</div>
 					</form>
 				</Show>

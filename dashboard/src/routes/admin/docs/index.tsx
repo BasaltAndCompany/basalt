@@ -5,7 +5,7 @@ import DocList from "~/components/DocList";
 export default function AdminDocs() {
 	return (
 		<Layout>
-			<Title>Docs — Mad Cactus</Title>
+			<Title>Docs — Basalt</Title>
 			<DocList
 				kind={null}
 				title="Docs"

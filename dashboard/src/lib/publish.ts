@@ -1,5 +1,5 @@
 // Publish dispatch: a doc of kind "post" goes to LinkedIn, "newsletter" goes
-// out as a Resend broadcast to the Cactus Dispatch audience. Failures email
+// out as a Resend broadcast to the Basalt Dispatch audience. Failures email
 // the owner — a scheduled publish must never die silently.
 // Pure transforms live in publish-core.ts (client-safe); re-exported here for
 // the scheduler and existing imports.
@@ -10,8 +10,8 @@ import { markdownToPostText, newsletterSubject, markdownToHtml, renderIssueBody,
 
 export { markdownToPostText, newsletterSubject, markdownToHtml, renderIssueBody, renderIssueEmail, emailFooterHtml, EMAIL_FOOTER_HTML };
 
-const ALERT_EMAIL = process.env.ALERT_EMAIL ?? "cpfeifer@madcactus.org";
-const NEWSLETTER_FROM = process.env.NEWSLETTER_FROM ?? "Collin Pfeifer <dispatch@madcactus.org>";
+const ALERT_EMAIL = process.env.ALERT_EMAIL ?? "cpfeifer@basalt.ac";
+const NEWSLETTER_FROM = process.env.NEWSLETTER_FROM ?? "Collin Pfeifer <dispatch@basalt.ac>";
 
 export async function publishDoc(doc: Doc): Promise<string> {
 	if (doc.kind === "post") {

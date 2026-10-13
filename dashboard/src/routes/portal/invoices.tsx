@@ -7,6 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { InvoiceStatus } from "~/db/schema";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 
 const statusBadge: Record<InvoiceStatus, string> = {
 	draft: "badge-paused",
@@ -23,7 +24,7 @@ export default function PortalInvoices() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Invoices — Mad Cactus Client Portal</Title>
+			<Title>Invoices — Basalt Client Portal</Title>
 			<h1 class="page-title">Invoices</h1>
 			<p class="page-subtitle">Billing history and payment links</p>
 
@@ -32,54 +33,49 @@ export default function PortalInvoices() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No invoices yet.</div>}
+							fallback={<Card class="empty">No invoices yet.</Card>}
 						>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Invoice #</th>
-										<th>Amount</th>
-										<th>Issued</th>
-										<th>Due</th>
-										<th>Status</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Invoice #</TableHead>
+										<TableHead>Amount</TableHead>
+										<TableHead>Issued</TableHead>
+										<TableHead>Due</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(inv) => (
-											<tr>
-												<td class="mono">{inv.number}</td>
-												<td class="mono" style={{ "font-weight": "500" }}>
+											<TableRow>
+												<TableCell class="mono">{inv.number}</TableCell>
+												<TableCell class="mono" style={{ "font-weight": "500" }}>
 													${inv.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-												</td>
-												<td class="muted">{inv.issueDate.toLocaleDateString()}</td>
-												<td class="muted">{inv.dueDate ? inv.dueDate.toLocaleDateString() : "—"}</td>
-												<td>
+												</TableCell>
+												<TableCell class="muted">{inv.issueDate.toLocaleDateString()}</TableCell>
+												<TableCell class="muted">{inv.dueDate ? inv.dueDate.toLocaleDateString() : "—"}</TableCell>
+												<TableCell>
 													<span class={`badge ${statusBadge[inv.status]}`}>
 														{inv.status}
 													</span>
-												</td>
-												<td>
+												</TableCell>
+												<TableCell>
 													<div style={{ display: "flex", gap: "8px" }}>
 														<Show when={inv.paymentUrl && inv.status !== "paid"}>
-															<a
-																href={inv.paymentUrl!}
+															<Button as="a" size="sm" href={inv.paymentUrl!}
 																target="_blank"
-																rel="noopener noreferrer"
-																class="btn btn-sm btn-primary"
-															>
+																rel="noopener noreferrer">
 																Pay Now
-															</a>
+															</Button>
 														</Show>
 														<Show when={inv.storagePath}>
-															<a
-																href={`/api/download?path=${encodeURIComponent(inv.storagePath!)}`}
-																class="btn btn-sm"
-																download=""
-															>
+															<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(inv.storagePath!)}`}
+																
+																download="">
 																PDF
-															</a>
+															</Button>
 														</Show>
 														<Show when={inv.notes}>
 															<span class="muted" style={{ "font-size": "12px", "max-width": "200px", display: "block", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" }}>
@@ -87,12 +83,12 @@ export default function PortalInvoices() {
 															</span>
 														</Show>
 													</div>
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>

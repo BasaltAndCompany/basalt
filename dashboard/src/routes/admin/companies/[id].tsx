@@ -22,6 +22,8 @@ import {
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
 import type { InvoiceStatus } from "~/db/schema";
+import { Button, Card } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 export default function CompanyDetail() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -93,7 +95,7 @@ export default function CompanyDetail() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Company Detail — Mad Cactus</Title>
+			<Title>Company Detail — Basalt</Title>
 			<A href="/admin/companies" class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", display: "inline-block" }}>
 				All Companies
 			</A>
@@ -104,7 +106,7 @@ export default function CompanyDetail() {
 						<h1 class="page-title">{c().name}</h1>
 
 						{/* ── Meeting pseudonyms (Anarlog publisher) ── */}
-						<div class="card" style={{ padding: "16px", "margin-top": "16px" }}>
+						<Card style={{ padding: "16px", "margin-top": "16px" }}>
 							<div class="muted" style={{ "font-size": "13px", "margin-bottom": "6px" }}>
 								Meeting pseudonyms — Anarlog meetings whose title contains one of these push to the dashboard as drafts
 							</div>
@@ -126,9 +128,9 @@ export default function CompanyDetail() {
 									value={(JSON.parse(c().aliases ?? "[]") as string[]).join(", ")}
 									style={{ flex: "1" }}
 								/>
-								<button type="submit" class="btn btn-sm">Save</button>
+								<Button variant="outline" size="sm" type="submit">Save</Button>
 							</form>
-						</div>
+						</Card>
 
 						{/* ── Members ─────────────────────────────────── */}
 						<div style={{ "margin-top": "32px" }}>
@@ -149,12 +151,18 @@ export default function CompanyDetail() {
 									>
 										<div class="form-group">
 											<label for="member_id">Select Member</label>
-											<select id="member_id" name="member_id" required>
-												<option value="" disabled selected>Choose…</option>
-												<For each={unlinkedMembers()}>
-													{(m) => <option value={m.id}>{m.name} ({m.email})</option>}
-												</For>
-											</select>
+											<SelectField
+												id="member_id"
+												name="member_id"
+												required
+												placeholder="Choose…"
+												options={() =>
+													(unlinkedMembers() ?? []).map((m) => ({
+														value: m.id,
+														label: `${m.name} (${m.email})`,
+													}))
+												}
+											/>
 										</div>
 									</CreateDialog>
 									<CreateDialog
@@ -192,11 +200,11 @@ export default function CompanyDetail() {
 							<Suspense fallback={<p class="muted">Loading…</p>}>
 								<Show when={companyMembers()}>
 									{(list) => (
-										<Show when={list().length > 0} fallback={<div class="card empty">No members yet.</div>}>
+										<Show when={list().length > 0} fallback={<Card class="empty">No members yet.</Card>}>
 											<div style={{ display: "flex", "flex-direction": "column", gap: "8px" }}>
 												<For each={list()}>
 													{(m) => (
-														<div class="card" style={{ display: "flex", "align-items": "center", gap: "12px", padding: "14px 20px" }}>
+														<Card style={{ display: "flex", "align-items": "center", gap: "12px", padding: "14px 20px" }}>
 															<div style={{ flex: "1" }}>
 																<span style={{ "font-size": "14px" }}>{m.name}</span>
 																<span class="muted" style={{ "font-size": "12px", "margin-left": "8px" }}>{m.email}</span>
@@ -206,12 +214,10 @@ export default function CompanyDetail() {
 															</div>
 															<div style={{ display: "flex", gap: "8px" }}>
 																<Show when={invitePending(m.email)}>
-																	<button
-																		class="btn btn-sm"
-																		onClick={() => handleResendInvite(m.id, m.email)}
+																	<Button variant="outline" size="sm" onClick={() => handleResendInvite(m.id, m.email)}
 																	>
 																		Resend Invite
-																	</button>
+																	</Button>
 																</Show>
 																<ConfirmButton
 																	label="Remove"
@@ -224,7 +230,7 @@ export default function CompanyDetail() {
 																		}}
 																	/>
 															</div>
-														</div>
+														</Card>
 													)}
 												</For>
 											</div>
@@ -238,7 +244,7 @@ export default function CompanyDetail() {
 						<Suspense fallback={<p class="muted">Loading…</p>}>
 							<div style={{ "margin-top": "40px" }}>
 								<div class="section-heading">Projects</div>
-								<Show when={companyProjects().length > 0} fallback={<div class="card empty">No projects yet for this company.</div>}>
+								<Show when={companyProjects().length > 0} fallback={<Card class="empty">No projects yet for this company.</Card>}>
 									<For each={companyProjects()}>
 										{(proj) => (
 											<CompanyProjectSection
@@ -275,9 +281,9 @@ function CompanyProjectSection(props: {
 	const deleteInvoice = useAction(deleteInvoiceAction);
 
 	return (
-		<div class="card" style={{ "margin-bottom": "16px", padding: "24px" }}>
+		<Card style={{ "margin-bottom": "16px", padding: "24px" }}>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "16px" }}>
-				<A href={`/admin/projects/${props.proj.id}`} class="gold" style={{ "font-size": "16px", "font-weight": "500" }}>
+				<A href={`/admin/projects/${props.proj.id}`} style={{ "font-size": "16px", "font-weight": "500" }}>
 					{props.proj.name}
 				</A>
 			</div>
@@ -288,10 +294,10 @@ function CompanyProjectSection(props: {
 			<div>
 				<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "8px" }}>
 					<span class="muted" style={{ "font-size": "13px" }}>Invoices</span>
-					<button class="btn btn-sm" onClick={props.toggleInvForm}>New Invoice</button>
+					<Button variant="outline" size="sm" onClick={props.toggleInvForm}>New Invoice</Button>
 				</div>
 				<Show when={props.showInvForm}>
-					<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+					<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 						<form onSubmit={props.onInvoice}>
 							<div class="form-row">
 								<div class="form-group">
@@ -306,10 +312,15 @@ function CompanyProjectSection(props: {
 							<div class="form-row">
 								<div class="form-group">
 									<label for={`inv_st_${props.proj.id}`}>Status</label>
-									<select id={`inv_st_${props.proj.id}`} name="status">
-										<option value="draft">Draft</option>
-										<option value="sent">Sent</option>
-									</select>
+									<SelectField
+										id={`inv_st_${props.proj.id}`}
+										name="status"
+										value="draft"
+										options={[
+											{ value: "draft", label: "Draft" },
+											{ value: "sent", label: "Sent" },
+										]}
+									/>
 								</div>
 								<div class="form-group">
 									<label for={`inv_iss_${props.proj.id}`}>Issue Date</label>
@@ -320,9 +331,9 @@ function CompanyProjectSection(props: {
 								<label for={`inv_due_${props.proj.id}`}>Due Date</label>
 								<input type="date" id={`inv_due_${props.proj.id}`} name="due_date" />
 							</div>
-							<button type="submit" class="btn btn-primary">Create</button>
+							<Button type="submit">Create</Button>
 						</form>
-					</div>
+					</Card>
 				</Show>
 				<Suspense fallback={<p class="muted" style={{ "font-size": "12px" }}>Loading…</p>}>
 					<Show when={invoices()}>
@@ -359,6 +370,6 @@ function CompanyProjectSection(props: {
 					</Show>
 				</Suspense>
 			</div>
-		</div>
+		</Card>
 	);
 }

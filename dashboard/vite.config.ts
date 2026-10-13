@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { nitro } from "nitro/vite";
 import { solidStart } from "@solidjs/start/config";
+import tailwindcss from "@tailwindcss/vite";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,8 +12,8 @@ export default defineConfig({
 	// feedback-widget ships a pre-bundled dist; left external it gets a second
 	// copy of solid-js/web in dev → hydration throws "create new DOM elements".
 	// noExternal (SSR) + exclude (client pre-bundle) keep one shared copy.
-	ssr: { noExternal: ["@aspectrr/feedback-widget"] },
-	optimizeDeps: { exclude: ["@aspectrr/feedback-widget"] },
+	ssr: { noExternal: ["@aspectrr/feedback-widget", "@basalt/ui"] },
+	optimizeDeps: { exclude: ["@aspectrr/feedback-widget", "@basalt/ui"] },
 	plugins: [
 		solidStart(),
 		// static marketing pages — prerendered at build. Requires the build to
@@ -20,6 +21,7 @@ export default defineConfig({
 		// worker_threads of the CURRENT runtime, and db/index.ts needs Bun SQL.
 		// /newsletter and /newsletter/:id stay SSR (live DB archive + issues).
 		nitro({ prerender: { crawlLinks: false, routes: ["/", "/scorecard", "/iu"] } }),
+		tailwindcss(),
 	],
   // `bun` is a runtime builtin on the oven/bun image (API routes use Bun.$);
   // keep the bundler from trying to resolve it.

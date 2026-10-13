@@ -11,6 +11,7 @@ import {
 	getEmailStatusQuery,
 } from "~/lib/email-queries";
 import type { EmailThread, EmailMessage, EmailOutbox } from "~/db/schema";
+import { Button } from "@basalt/ui";
 
 type DraftVersionRow = { id: string; version: number; author: string; createdAt: string; updatedAt: string };
 type DraftDiffPart = { added?: boolean; removed?: boolean; value: string };
@@ -698,7 +699,7 @@ export default function AdminEmail() {
 
 	return (
 		<Layout>
-			<Title>Email — Mad Cactus</Title>
+			<Title>Email — Basalt</Title>
 			<div style={{ display: "flex", "align-items": "baseline", gap: "16px" }}>
 				<h1 class="page-title">Email</h1>
 				<span class="muted" style={{ "font-size": "13px" }}>
@@ -708,10 +709,10 @@ export default function AdminEmail() {
 				</span>
 				<div style={{ flex: 1 }} />
 				<Show when={sendStatus()}><span class="muted" style={{ "font-size": "13px" }}>{sendStatus()}</span></Show>
-				<Show when={!status()} fallback={<button type="button" class="btn btn-sm" onClick={() => sync()}>Sync</button>}>
-					<a class="btn btn-sm" aria-busy={connecting()} href="/api/email/oauth" onClick={() => setConnecting(true)}>
+				<Show when={!status()} fallback={<Button variant="outline" size="sm" type="button"  onClick={() => sync()}>Sync</Button>}>
+					<Button as="a" variant="outline" size="sm" aria-busy={connecting()} href="/api/email/oauth" onClick={() => setConnecting(true)}>
 						{connecting() ? "Connecting…" : "Connect Gmail"}
-					</a>
+					</Button>
 				</Show>
 			</div>
 			<p class="page-subtitle">
@@ -743,9 +744,9 @@ export default function AdminEmail() {
 						Sent
 					</button>
 				</div>
-				<button type="button" class="btn btn-sm" onClick={() => setCompose({ to: "", subject: "", body: "" })}>
+				<Button variant="outline" size="sm" type="button"  onClick={() => setCompose({ to: "", subject: "", body: "" })}>
 					Compose (c)
-				</button>
+				</Button>
 			</div>
 
 			{/* Drafts tab — agent + composed drafts, edit → send; every edit
@@ -819,9 +820,9 @@ export default function AdminEmail() {
 										<span class="muted" style={{ "font-size": "12px" }}>sending…</span>
 									</Show>
 									<div style={{ flex: 1 }} />
-									<button type="button" class="btn btn-sm" onClick={() => sendDraft(d.id)}>Send now</button>
-									<button type="button" class="btn btn-sm" onClick={() => void unscheduleDraft(d.id)}>Unschedule</button>
-									<button type="button" class="btn btn-sm" onClick={() => discardDraft(d.id)}>Discard</button>
+									<Button variant="outline" size="sm" type="button"  onClick={() => sendDraft(d.id)}>Send now</Button>
+									<Button variant="outline" size="sm" type="button"  onClick={() => void unscheduleDraft(d.id)}>Unschedule</Button>
+									<Button variant="outline" size="sm" type="button"  onClick={() => discardDraft(d.id)}>Discard</Button>
 								</div>
 								<div class="muted" style={{ "font-size": "13px", "margin-top": "4px" }}>
 									<Show when={d.status === "failed"} fallback={<>fires {new Date(d.sendAt!).toLocaleString()}</>}>
@@ -850,19 +851,18 @@ export default function AdminEmail() {
 							setSearchParams({ q: undefined });
 						}
 					}}
-					style={{ flex: 1, padding: "10px 14px", background: "var(--bg-card)", border: "1px solid rgba(0,0,0,0.12)", "font-size": "14px" }}
+					style={{ flex: 1, padding: "10px 14px", background: "var(--card)", border: "1px solid rgba(0,0,0,0.12)", "font-size": "14px" }}
 				/>
 				<Show when={q() || activeQ()}>
-					<button
-						type="button"
-						class="btn btn-sm"
+					<Button variant="outline" size="sm" type="button"
+						
 						onClick={() => {
 							setQ("");
 							setSearchParams({ q: undefined });
 						}}
 					>
 						Clear
-					</button>
+					</Button>
 				</Show>
 			</div>
 
@@ -871,7 +871,7 @@ export default function AdminEmail() {
 				<div>
 					<Show when={folder() === "inbox"}>
 					<Show when={visMode()}>
-						<div class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", color: "#bc9c5c" }}>
+						<div class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", color: "var(--foreground)" }}>
 							visual — {visRangeIds().length} selected · j/k extend · e done · u unread · ! spam · # delete · esc cancel
 						</div>
 					</Show>
@@ -900,7 +900,7 @@ export default function AdminEmail() {
 									onpointerover={() => prefetch(t)}
 								>
 									<div style={{ display: "flex", gap: "10px", "align-items": "baseline" }}>
-										<Show when={isUnread(t)}><span style={{ color: "#bc9c5c" }}>●</span></Show>
+										<Show when={isUnread(t)}><span style={{ color: "var(--foreground)" }}>●</span></Show>
 										<strong style={{ "font-size": "14px", flex: 1 }}>{t.subject}</strong>
 										<span class="muted" style={{ "font-size": "12px" }}>{new Date(t.lastMessageAt).toLocaleDateString()}</span>
 									</div>
@@ -911,9 +911,9 @@ export default function AdminEmail() {
 							)}
 						</For>
 						<Show when={visibleThreads().length > visibleCount()}>
-							<button type="button" class="btn btn-sm" style={{ "margin-top": "8px" }} onClick={() => setVisibleCount((c) => c + 100)}>
+							<Button variant="outline" size="sm" type="button"  style={{ "margin-top": "8px" }} onClick={() => setVisibleCount((c) => c + 100)}>
 								Load older mail ({visibleThreads().length - visibleCount()} more)…
-							</button>
+							</Button>
 						</Show>
 					</Show>
 					</Show>
@@ -946,9 +946,9 @@ export default function AdminEmail() {
 							)}
 						</For>
 						<Show when={inbox()!.sent.length > visibleCount()}>
-							<button type="button" class="btn btn-sm" style={{ "margin-top": "4px" }} onClick={() => setVisibleCount((c) => c + 100)}>
+							<Button variant="outline" size="sm" type="button"  style={{ "margin-top": "4px" }} onClick={() => setVisibleCount((c) => c + 100)}>
 								Load older sent mail ({inbox()!.sent.length - visibleCount()} more)…
-							</button>
+							</Button>
 						</Show>
 					</Show>
 					</Show>
@@ -1002,11 +1002,11 @@ export default function AdminEmail() {
 							}}
 						</For>
 						<div style={{ display: "flex", gap: "8px", "margin-top": "8px" }}>
-							<button type="button" class="btn btn-sm" onClick={() => threadOp(selected()!.thread.id, "archive")}>Done (e)</button>
-							<button type="button" class="btn btn-sm" onClick={() => threadOp(selected()!.thread.id, "unread")}>Unread (u)</button>
-							<button type="button" class="btn btn-sm" onClick={askUnsub}>Unsub (x)</button>
-							<button type="button" class="btn btn-sm" style={{ "border-color": "#a33", color: "#a33" }} onClick={askSpam}>Spam (!)</button>
-							<button type="button" class="btn btn-sm" style={{ "border-color": "#a33", color: "#a33" }} onClick={askDelete}>Delete (#)</button>
+							<Button variant="outline" size="sm" type="button"  onClick={() => threadOp(selected()!.thread.id, "archive")}>Done (e)</Button>
+							<Button variant="outline" size="sm" type="button"  onClick={() => threadOp(selected()!.thread.id, "unread")}>Unread (u)</Button>
+							<Button variant="outline" size="sm" type="button"  onClick={askUnsub}>Unsub (x)</Button>
+							<Button variant="outline" size="sm" type="button"  style={{ "border-color": "#a33", color: "#a33" }} onClick={askSpam}>Spam (!)</Button>
+							<Button variant="outline" size="sm" type="button"  style={{ "border-color": "#a33", color: "#a33" }} onClick={askDelete}>Delete (#)</Button>
 						</div>
 					</div>
 				</Show>
@@ -1019,19 +1019,18 @@ export default function AdminEmail() {
 					style={{ position: "fixed", inset: "0", background: "rgba(0, 0, 0, 0.35)", "z-index": 60, display: "grid", "place-items": "center" }}
 					onClick={() => setPending(null)}
 				>
-					<div class="card" style={{ width: "460px", "max-width": "90vw", padding: "24px", background: "var(--bg-card)", "border-top-color": pending()!.danger ? "#a33" : "var(--text)" }} onClick={(e) => e.stopPropagation()}>
+					<div class="card" style={{ width: "460px", "max-width": "90vw", padding: "24px", background: "var(--card)", "border-top-color": pending()!.danger ? "#a33" : "var(--foreground)" }} onClick={(e) => e.stopPropagation()}>
 						<h2 style={{ "font-size": "17px", margin: "0 0 8px" }}>{pending()!.title}</h2>
 						<p class="muted" style={{ "font-size": "14px", "line-height": "1.5", margin: 0, "overflow-wrap": "anywhere" }}>{pending()!.body}</p>
 						<div style={{ display: "flex", gap: "8px", "justify-content": "flex-end", "margin-top": "16px" }}>
-							<button type="button" class="btn btn-sm" onClick={() => setPending(null)}>Cancel (esc)</button>
-							<button
-								type="button"
-								class="btn btn-sm"
-								style={pending()!.danger ? { "border-color": "#a33", color: "#a33" } : { "border-color": "var(--gold)", color: "var(--gold)" }}
+							<Button variant="outline" size="sm" type="button"  onClick={() => setPending(null)}>Cancel (esc)</Button>
+							<Button variant="outline" size="sm" type="button"
+								
+								style={pending()!.danger ? { "border-color": "#a33", color: "#a33" } : { "border-color": "var(--foreground)", color: "var(--foreground)" }}
 								onClick={() => void confirmPending()}
 							>
 								{pending()!.confirm} (⏎)
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -1054,7 +1053,7 @@ export default function AdminEmail() {
 									onInput={(e) => editDraft(d.id, { to: e.currentTarget.value })}
 									style={{ flex: 1, padding: "8px", border: "1px solid rgba(0,0,0,0.12)" }}
 								/>
-								<button type="button" class="btn btn-sm" classList={{ active: showCcBcc() }} onClick={() => setShowCcBcc(!showCcBcc())}>Cc Bcc</button>
+								<Button variant="outline" size="sm" type="button"  classList={{ active: showCcBcc() }} onClick={() => setShowCcBcc(!showCcBcc())}>Cc Bcc</Button>
 							</div>
 							<Show when={showCcBcc() || editMeta()[d.id]?.cc || editMeta()[d.id]?.bcc || d.ccEmail || d.bccEmail}>
 								<input
@@ -1085,13 +1084,13 @@ export default function AdminEmail() {
 							/>
 							<VoiceLintPanel result={draftLint()[d.id] ?? null} stale={lintStale()[d.id]} />
 							<div style={{ display: "flex", gap: "8px", "align-items": "center", "flex-wrap": "wrap" }}>
-								<button type="button" class="btn btn-sm" classList={{ active: openDraftHistory() === d.id }} onClick={() => void toggleDraftHistory(d.id)}>
+								<Button variant="outline" size="sm" type="button"  classList={{ active: openDraftHistory() === d.id }} onClick={() => void toggleDraftHistory(d.id)}>
 									History
-								</button>
+								</Button>
 								<div style={{ flex: 1 }} />
 								<Show when={draftSaveState()[d.id]}><span class="muted" style={{ "font-size": "12px" }}>{draftSaveState()[d.id]}</span></Show>
-								<Show when={lintBlockedDraft() === d.id} fallback={<button type="button" class="btn btn-primary btn-sm" onClick={() => sendDraft(d.id)}>Send</button>}>
-									<button type="button" class="btn btn-sm" style={{ "border-color": "#a33", color: "#a33" }} onClick={() => sendDraft(d.id, true)}>Send anyway (ignores voice lint)</button>
+								<Show when={lintBlockedDraft() === d.id} fallback={<Button size="sm" type="button"  onClick={() => sendDraft(d.id)}>Send</Button>}>
+									<Button variant="outline" size="sm" type="button"  style={{ "border-color": "#a33", color: "#a33" }} onClick={() => sendDraft(d.id, true)}>Send anyway (ignores voice lint)</Button>
 								</Show>
 								<Show
 									when={lintBlockedSched() === d.id}
@@ -1101,7 +1100,7 @@ export default function AdminEmail() {
 											fallback={
 												<>
 													<span class="muted" style={{ "font-size": "12px" }}>Scheduled {new Date(d.sendAt!).toLocaleString()}</span>
-													<button type="button" class="btn btn-sm" onClick={() => void unscheduleDraft(d.id)}>Unschedule</button>
+													<Button variant="outline" size="sm" type="button"  onClick={() => void unscheduleDraft(d.id)}>Unschedule</Button>
 												</>
 											}
 										>
@@ -1112,15 +1111,15 @@ export default function AdminEmail() {
 												value={schedInput()[d.id] ?? ""}
 												onChange={(e) => setSchedInput({ ...schedInput(), [d.id]: e.currentTarget.value })}
 											/>
-											<button type="button" class="btn btn-sm" onClick={() => void scheduleDraft(d.id)}>Schedule</button>
+											<Button variant="outline" size="sm" type="button"  onClick={() => void scheduleDraft(d.id)}>Schedule</Button>
 										</Show>
 									}
 								>
-									<button type="button" class="btn btn-sm" style={{ "border-color": "#a33", color: "#a33" }} onClick={() => void scheduleDraft(d.id, true)}>Schedule anyway (ignores voice lint)</button>
+									<Button variant="outline" size="sm" type="button"  style={{ "border-color": "#a33", color: "#a33" }} onClick={() => void scheduleDraft(d.id, true)}>Schedule anyway (ignores voice lint)</Button>
 								</Show>
-								<button type="button" class="btn btn-sm" onClick={() => discardDraft(d.id)}>Discard</button>
+								<Button variant="outline" size="sm" type="button"  onClick={() => discardDraft(d.id)}>Discard</Button>
 								<div style={{ flex: 1 }} />
-								<button type="button" class="btn btn-sm" onClick={() => setOpenDraft(null)}>Close (esc)</button>
+								<Button variant="outline" size="sm" type="button"  onClick={() => setOpenDraft(null)}>Close (esc)</Button>
 							</div>
 							<Show when={openDraftHistory() === d.id}>
 								<div class="doc-history" style={{ position: "static", width: "100%", "max-height": "160px", "margin-top": "12px" }}>
@@ -1166,7 +1165,7 @@ export default function AdminEmail() {
 								onInput={(e) => setCompose({ ...compose()!, to: e.currentTarget.value })}
 								style={{ flex: 1, padding: "8px", border: "1px solid rgba(0,0,0,0.12)" }}
 							/>
-							<button type="button" class="btn btn-sm" classList={{ active: showCcBcc() }} onClick={() => setShowCcBcc(!showCcBcc())}>Cc Bcc</button>
+							<Button variant="outline" size="sm" type="button"  classList={{ active: showCcBcc() }} onClick={() => setShowCcBcc(!showCcBcc())}>Cc Bcc</Button>
 						</div>
 						<Show when={showCcBcc() || compose()!.cc || compose()!.bcc}>
 							<input
@@ -1196,11 +1195,11 @@ export default function AdminEmail() {
 							style={{ width: "100%", "margin-bottom": "8px", padding: "8px", "font-family": "inherit", border: "1px solid rgba(0,0,0,0.12)" }}
 						/>
 						<div style={{ display: "flex", gap: "8px", "justify-content": "flex-end" }}>
-							<Show when={lintBlockedDraft() && lintBlockedDraft() === compose()!.draftId} fallback={<button type="button" class="btn btn-primary btn-sm" onClick={() => sendCompose()}>Send</button>}>
-								<button type="button" class="btn btn-sm" style={{ "border-color": "#a33", color: "#a33" }} onClick={() => sendCompose(true)}>Send anyway (ignores voice lint)</button>
+							<Show when={lintBlockedDraft() && lintBlockedDraft() === compose()!.draftId} fallback={<Button size="sm" type="button"  onClick={() => sendCompose()}>Send</Button>}>
+								<Button variant="outline" size="sm" type="button"  style={{ "border-color": "#a33", color: "#a33" }} onClick={() => sendCompose(true)}>Send anyway (ignores voice lint)</Button>
 							</Show>
-							<button type="button" class="btn btn-sm" onClick={() => setCompose(null)}>Esc</button>
-							<button type="button" class="btn btn-sm" onClick={manualCompose}>Save draft</button>
+							<Button variant="outline" size="sm" type="button"  onClick={() => setCompose(null)}>Esc</Button>
+							<Button variant="outline" size="sm" type="button"  onClick={manualCompose}>Save draft</Button>
 						</div>
 					</div>
 				</div>

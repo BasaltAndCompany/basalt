@@ -20,5 +20,5 @@ export function randomKey(len = 7): string {
 /** Public origin /l/<slug> lives on (no trailing slash). */
 export function shortLinkBase(): string {
 	// ponytail: hardcoded fallback is the known prod origin; upgrade path = require the env
-	return process.env.PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://madcactus.org";
+	return process.env.PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://basalt.ac";
 }

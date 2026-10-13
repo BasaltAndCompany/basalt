@@ -6,6 +6,8 @@ import {
 	createDocumentLinkAction,
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
+import { Button, Card } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 type FormMode = "link" | "file" | "transcript";
 
@@ -47,21 +49,21 @@ export default function ProjectDocuments(props: {
 					Documents
 				</span>
 				<div style={{ display: "flex", gap: "6px" }}>
-					<button class="btn btn-sm" onClick={() => toggle("link")}>
+					<Button variant="outline" size="sm" onClick={() => toggle("link")}>
 						Add Link
-					</button>
-					<button class="btn btn-sm" onClick={() => toggle("file")}>
+					</Button>
+					<Button variant="outline" size="sm" onClick={() => toggle("file")}>
 						Upload File
-					</button>
-					<button class="btn btn-sm" onClick={() => toggle("transcript")}>
+					</Button>
+					<Button variant="outline" size="sm" onClick={() => toggle("transcript")}>
 						Add Transcript
-					</button>
+					</Button>
 				</div>
 			</div>
 
 			{/* ── Link form ── */}
 			<Show when={activeForm() === "link"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form onSubmit={handleDocLink}>
 						<div class="form-row">
 							<div class="form-group">
@@ -76,10 +78,14 @@ export default function ProjectDocuments(props: {
 							</div>
 							<div class="form-group">
 								<label for={`lnk_ty_${props.projectId}`}>Type</label>
-								<select id={`lnk_ty_${props.projectId}`} name="type">
-									<option value="link">Link</option>
-									<option value="transcript">Transcript Link</option>
-								</select>
+								<SelectField
+									id={`lnk_ty_${props.projectId}`}
+									name="type"
+									options={[
+										{ value: "link", label: "Link" },
+										{ value: "transcript", label: "Transcript Link" },
+									]}
+								/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -113,16 +119,16 @@ export default function ProjectDocuments(props: {
 								placeholder="Paste key text to make searchable…"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Add
-						</button>
+						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── File upload form ── */}
 			<Show when={activeForm() === "file"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form
 						method="post"
 						action="/api/upload"
@@ -158,16 +164,16 @@ export default function ProjectDocuments(props: {
 								placeholder="Brief description"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Upload
-						</button>
+						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── Transcript form ── */}
 			<Show when={activeForm() === "transcript"}>
-				<div class="card" style={{ "margin-bottom": "8px", padding: "16px" }}>
+				<Card style={{ "margin-bottom": "8px", padding: "16px" }}>
 					<form
 						method="post"
 						action="/api/upload-transcript"
@@ -214,11 +220,11 @@ export default function ProjectDocuments(props: {
 								placeholder="Brief description"
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">
+						<Button type="submit">
 							Add Transcript
-						</button>
+						</Button>
 					</form>
-				</div>
+				</Card>
 			</Show>
 
 			{/* ── Document list ── */}
@@ -256,7 +262,6 @@ export default function ProjectDocuments(props: {
 													href={doc.url!}
 													target="_blank"
 													rel="noopener noreferrer"
-													class="gold"
 												>
 													{doc.title}
 												</a>
@@ -265,7 +270,6 @@ export default function ProjectDocuments(props: {
 											<Show when={doc.type !== "link" && doc.url}>
 												<a
 													href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
-													class="gold"
 												>
 													{doc.title}
 												</a>

@@ -10,6 +10,7 @@ import {
 	getClientUserQuery,
 	revokeApiKeyAction,
 } from "~/lib/client-queries";
+import { Button, Card } from "@basalt/ui";
 
 export default function PortalApiKeys() {
 	const user = createAsync(() => getClientUserQuery(), { deferStream: true });
@@ -37,7 +38,7 @@ export default function PortalApiKeys() {
 
 	const claudeConfig = `{
   "mcpServers": {
-    "madcactus": {
+    "basalt": {
       "url": "${mcpUrl}",
       "headers": {
         "Authorization": "Bearer YOUR_API_KEY"
@@ -48,7 +49,7 @@ export default function PortalApiKeys() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>API Keys — Mad Cactus Client Portal</Title>
+			<Title>API Keys — Basalt Client Portal</Title>
 
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
@@ -78,12 +79,12 @@ export default function PortalApiKeys() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No API keys yet.</div>}
+							fallback={<Card class="empty">No API keys yet.</Card>}
 						>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
 								<For each={list()}>
 									{(key) => (
-										<div class="card" style={{ display: "flex", "align-items": "center", gap: "16px", padding: "16px 20px" }}>
+										<Card style={{ display: "flex", "align-items": "center", gap: "16px", padding: "16px 20px" }}>
 											<div style={{ flex: "1" }}>
 												<div style={{ "font-weight": "500", "font-size": "14px" }}>
 													{key.label}
@@ -110,7 +111,7 @@ export default function PortalApiKeys() {
 											>
 												<span class="badge badge-paused">Revoked</span>
 											</Show>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>
@@ -120,15 +121,13 @@ export default function PortalApiKeys() {
 			</div>
 
 			{/* MCP setup instructions */}
-			<div class="card" style={{ "margin-top": "32px" }}>
+			<Card style={{ "margin-top": "32px" }}>
 				<h3 style={{ "margin-bottom": "8px" }}>How to Connect Your Agent</h3>
 				<p class="muted" style={{ "font-size": "13px", "margin-bottom": "16px" }}>
 					Add this MCP server config to your AI agent (Claude Desktop, Cursor, etc.):
 				</p>
 				<div style={{ position: "relative" }}>
-					<button
-						class="btn btn-sm"
-						style={{ position: "absolute", top: "8px", right: "8px" }}
+					<Button variant="outline" size="sm" style={{ position: "absolute", top: "8px", right: "8px" }}
 						onClick={() => {
 							navigator.clipboard.writeText(claudeConfig);
 							setCopied(true);
@@ -136,10 +135,10 @@ export default function PortalApiKeys() {
 						}}
 					>
 						{copied() ? "Copied" : "Copy"}
-					</button>
+					</Button>
 					<pre
 						style={{
-							background: "var(--bg-elevated)",
+							background: "var(--secondary)",
 							border: "1px solid rgba(255,255,255,0.1)",
 							"border-radius": "0px",
 							padding: "16px",
@@ -153,9 +152,9 @@ export default function PortalApiKeys() {
 					</pre>
 				</div>
 				<p class="muted" style={{ "font-size": "12px", "margin-top": "12px" }}>
-					Once connected, ask your agent: "What's the status of my project with Mad Cactus?"
+					Once connected, ask your agent: "What's the status of my project with Basalt?"
 				</p>
-			</div>
+			</Card>
 		</PortalLayout>
 	);
 }
@@ -174,7 +173,7 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 					style={{
 						flex: "1",
 						padding: "10px 14px",
-						background: "var(--bg-elevated)",
+						background: "var(--secondary)",
 						border: "1px solid rgba(255,255,255,0.1)",
 						"font-size": "13px",
 						"word-break": "break-all",
@@ -182,16 +181,14 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 				>
 					{key()}
 				</code>
-				<button
-					class="btn btn-primary"
-					onClick={() => {
+				<Button onClick={() => {
 						navigator.clipboard.writeText(key());
 						setCopied(true);
 						setTimeout(() => setCopied(false), 2000);
 					}}
 				>
 					{copied() ? "Copied" : "Copy"}
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

@@ -10,6 +10,7 @@ import {
 	runBrainCycleAction,
 	closeLoopAction,
 } from "~/lib/brain/admin";
+import { Button, Card } from "@basalt/ui";
 
 const kindColor: Record<string, string> = {
 	lesson: "var(--accent, #a855f7)",
@@ -48,27 +49,27 @@ export default function AdminBrain() {
 	};
 
 	const statCard = (label: string, value: () => number | string | undefined | null) => (
-		<div class="card" style={{ padding: "14px 18px", flex: 1 }}>
+		<Card style={{ padding: "14px 18px", flex: 1 }}>
 			<div class="muted" style={{ "font-size": "12px" }}>{label}</div>
 			<div style={{ "font-size": "22px", "font-weight": 600 }}>{value() ?? "—"}</div>
-		</div>
+		</Card>
 	);
 
 	return (
 		<Layout>
-			<Title>Brain — Mad Cactus</Title>
+			<Title>Brain — Basalt</Title>
 			<div style={{ display: "flex", "align-items": "baseline", gap: "16px" }}>
 				<h1 class="page-title">Brain</h1>
 				<div style={{ flex: 1 }} />
 				<Show when={status()}>
 					<span class="muted" style={{ "font-size": "13px" }}>{status()}</span>
 				</Show>
-				<button type="button" class="btn btn-sm" disabled={!!busy()} onClick={() => void refresh("slack")}>
+				<Button variant="outline" size="sm" type="button"  disabled={!!busy()} onClick={() => void refresh("slack")}>
 					{busy() === "slack" ? "running…" : "Run cycle"}
-				</button>
-				<button type="button" class="btn btn-sm" disabled={!!busy()} onClick={() => void refresh("reprocess", true)}>
+				</Button>
+				<Button variant="outline" size="sm" type="button"  disabled={!!busy()} onClick={() => void refresh("reprocess", true)}>
 					{busy() === "reprocess" ? "running…" : "Reprocess transcripts"}
-				</button>
+				</Button>
 			</div>
 			<p class="page-subtitle">Distilled knowledge — pages, facts, conclusions, open loops</p>
 
@@ -84,7 +85,7 @@ export default function AdminBrain() {
 					})}
 				</div>
 
-				<div class="card" style={{ padding: "14px 18px", "margin-bottom": "16px" }}>
+				<Card style={{ padding: "14px 18px", "margin-bottom": "16px" }}>
 					<strong style={{ "font-size": "13px" }}>Open loops</strong>
 					<Show when={loops()?.length} fallback={<div class="muted" style={{ "font-size": "13px", "margin-top": "6px" }}>Nothing waiting.</div>}>
 						<For each={loops()}>
@@ -104,16 +105,16 @@ export default function AdminBrain() {
 										});
 									}}>
 										<input type="hidden" name="loopId" value={l.id} />
-										<button type="submit" class="btn btn-sm">close</button>
+										<Button variant="outline" size="sm" type="submit">close</Button>
 									</form>
 								</div>
 							)}
 						</For>
 					</Show>
-				</div>
+				</Card>
 
 				<div style={{ display: "flex", gap: "16px", "align-items": "flex-start" }}>
-					<div class="card" style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
+					<Card style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
 						<strong style={{ "font-size": "13px" }}>Recent facts</strong>
 						<For each={facts()}>
 							{(f) => (
@@ -132,9 +133,9 @@ export default function AdminBrain() {
 								No facts yet — set OPENROUTER_API_KEY and run a cycle.
 							</div>
 						</Show>
-					</div>
+					</Card>
 
-					<div class="card" style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
+					<Card style={{ padding: "14px 18px", flex: 1, "min-width": "0" }}>
 						<strong style={{ "font-size": "13px" }}>Pages (by salience)</strong>
 						<For each={pages()}>
 							{(p) => (
@@ -146,7 +147,7 @@ export default function AdminBrain() {
 								</div>
 							)}
 						</For>
-					</div>
+					</Card>
 				</div>
 			</Suspense>
 		</Layout>

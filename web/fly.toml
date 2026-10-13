@@ -1,0 +1,28 @@
+# fly.toml — Basalt & Company marketing site (web/)
+# Deploys via .github/workflows/fly.yml after CI on main. The dashboard
+# (madcactus-dashboard) stays up for admin/api/portal; madcactus.org points
+# here after the domain flip.
+
+app = "basalt-web"
+primary_region = "iad"
+
+[build]
+dockerfile = "Dockerfile"
+
+[http_service]
+internal_port = 3000
+force_https = true
+auto_stop_machines = "stop"
+auto_start_machines = true
+min_machines_running = 0
+
+[[http_service.checks]]
+interval = "10s"
+timeout = "5s"
+grace_period = "30s"
+method = "GET"
+path = "/contact"
+
+[[vm]]
+size = "shared-cpu-1x"
+memory = "512mb"

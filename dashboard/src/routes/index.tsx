@@ -29,7 +29,7 @@ export default function Home() {
 	});
 	return (
 		<MarketingPage
-			title="Mad Cactus — Turn Your Business AI-Native"
+			title="Basalt — Turn Your Business AI-Native"
 			description="We embed AI into your operations to drive real revenue — custom agents and workflows that let your team of five operate like a team of twenty-five."
 		>
 			<Header />
@@ -53,7 +53,7 @@ export default function Home() {
 						</a>
 					</div>
 					<div class="hero-plate">
-						<img src="/cactus-in-bloom.jpg" alt="Cactus in bloom" />
+						<img src="/in-bloom.jpg" alt="In bloom" />
 					</div>
 				</div>
 			</section>

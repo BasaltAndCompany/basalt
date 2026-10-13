@@ -1,9 +1,11 @@
+import Brand from "~/components/Brand";
+
 export function Header() {
 	return (
 		<header class="top-bar">
 			<div class="top-bar-inner">
 				<a href="/" class="logo-link">
-					<img src="/cactus-seal.svg" alt="Mad Cactus" class="logo-seal" />
+					<span class="logo-wordmark"><Brand /></span>
 				</a>
 				<a href="/portal/login" class="top-bar-signin">
 					Clients

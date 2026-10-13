@@ -2,6 +2,8 @@ import { Title } from "@solidjs/meta";
 import { createAsync, useAction } from "@solidjs/router";
 import { Show, createSignal } from "solid-js";
 import { getUserQuery, loginAction } from "~/lib/queries";
+import { Button, Card } from "@basalt/ui";
+import Brand from "~/components/Brand";
 
 export default function Login() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -24,24 +26,18 @@ export default function Login() {
 			when={user()}
 			fallback={
 				<div class="login-shell">
-					<Title>Login — Mad Cactus</Title>
-					<div
-						class="card"
-						style={{
+					<Title>Login — Basalt</Title>
+					<Card style={{
 							width: "100%",
 							"max-width": "400px",
 							padding: "40px",
 							"margin": "20px",
-						}}
-					>
-						<div style={{ display: "flex", "align-items": "center", gap: "12px", "margin-bottom": "32px" }}>
-							<img src="/cactus-seal.svg" alt="Mad Cactus" style={{ width: "40px", height: "40px" }} />
-							<div>
-								<div style={{ "font-family": "var(--font-serif)", "font-size": "20px" }}>Mad Cactus</div>
-								<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--text-subtle)" }}>Portal</div>
-							</div>
+						}}>
+						<div class="login-brand">
+							<div class="login-brand-name"><Brand /></div>
+							<div class="login-brand-sub">Portal</div>
 						</div>
-						<h1 style={{ "font-family": "var(--font-serif)", "font-size": "22px", "margin-bottom": "8px" }}>Sign in</h1>
+						<h1 class="login-title">Sign in</h1>
 						<p class="muted" style={{ "margin-bottom": "24px", "font-size": "14px" }}>
 							Sign in to access your dashboard.
 						</p>
@@ -72,11 +68,11 @@ export default function Login() {
 							<Show when={error()}>
 								<p class="login-error">{error()}</p>
 							</Show>
-							<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }} disabled={loading()}>
+							<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }} disabled={loading()}>
 								{loading() ? "Signing in…" : "Sign in"}
-							</button>
+							</Button>
 						</form>
-					</div>
+					</Card>
 				</div>
 			}
 		>

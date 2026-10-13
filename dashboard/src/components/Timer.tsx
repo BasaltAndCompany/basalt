@@ -7,6 +7,7 @@ import {
 	startTimerAction,
 	stopTimerAction,
 } from "~/lib/queries";
+import SelectField from "~/components/select-field";
 
 function fmtElapsed(ms: number): string {
 	const s = Math.max(0, Math.floor(ms / 1000));
@@ -65,18 +66,16 @@ export default function Timer() {
 				fallback={
 					<form onSubmit={[run, start]}>
 						<div class="timer-widget-label">Timer</div>
-						<select name="project_id" required>
-							<option value="" disabled selected>
-								Project…
-							</option>
-							<For each={projects()?.filter((p) => p.status === "active")}>
-								{(p) => (
-									<option value={p.id}>
-										{p.name} — {p.companyName}
-									</option>
-								)}
-							</For>
-						</select>
+						<SelectField
+							name="project_id"
+							required
+							placeholder="Project…"
+							options={() =>
+								(projects() ?? [])
+									.filter((p) => p.status === "active")
+									.map((p) => ({ value: p.id, label: `${p.name} — ${p.companyName}` }))
+							}
+						/>
 						<input
 							name="description"
 							placeholder="What are you working on?"

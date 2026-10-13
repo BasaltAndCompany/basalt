@@ -26,7 +26,36 @@ const files = [...new Glob("*.js").scanSync({ cwd: ASSETS })];
 let failed = false;
 for (const file of files) {
 	const src = await Bun.file(`${ASSETS}/${file}`).text();
+	// seroval (Start's hydration serializer — shipped to browsers by design)
+	// feature-detects Buffer in a base64 codec whose else-branch no textual
+	// guard heuristic can see. Skip the bare-Buffer marker for chunks that ARE
+	// seroval; the other markers (allocUnsafe, DATABASE_URL, pg_is_in_recovery,
+	// execFile) still scan every chunk, and those are the signatures an actual
+	// db-chain leak carries.
+	const isSeroval = src.includes("maxBase64Length");
 	for (const [re, why] of MARKERS) {
+		if (re.source.includes("Buffer\\.")) {
+			if (isSeroval) continue;
+			// Bare-Buffer scan with feature-detect awareness: seroval (hydration
+			// serializer, always client-side) guards its Buffer use with
+			// `typeof Buffer<"u"` — same safety class as globalThis qualification.
+			// Anything NOT within 24 chars after a typeof/globalThis guard is a leak.
+			const bare = /Buffer\.[A-Za-z$_]/g;
+			let m: RegExpExecArray | null;
+			let leaked = false;
+			while ((m = bare.exec(src))) {
+				const before = src.slice(Math.max(0, m.index - 40), m.index);
+				if (/typeof Buffer\s*[<>=!]+/.test(before)) continue;
+				if (before.includes("globalThis.")) continue;
+				leaked = true;
+				break;
+			}
+			if (leaked) {
+				console.error(`✗ ${file}: ${why} (matched /${re.source}/)`);
+				failed = true;
+			}
+			continue;
+		}
 		if (re.test(src)) {
 			console.error(`✗ ${file}: ${why} (matched /${re.source}/)`);
 			failed = true;

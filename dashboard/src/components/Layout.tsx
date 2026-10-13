@@ -2,6 +2,7 @@ import { A, createAsync } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
 import { For, ParentComponent, Show, createEffect, createSignal, onMount } from "solid-js";
 import Timer from "~/components/Timer";
+import Brand from "~/components/Brand";
 import CommandPalette from "~/components/CommandPalette";
 import Toaster from "~/components/Toaster";
 import { getDueOutreachCountQuery } from "~/lib/admin-queries";
@@ -20,6 +21,7 @@ const links = [
 	{ href: "/admin/projects", label: "Projects", icon: "M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9L9.2 3.9A2 2 0 0 0 7.5 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" },
 	{ href: "/admin/companies", label: "Companies", icon: "M4 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18M16 8h2a2 2 0 0 1 2 2v12M2 22h20M8 6h2M8 10h2M8 14h2M12 6h.01M12 10h.01M12 14h.01" },
 	{ href: "/admin/meetings", label: "Meetings", icon: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" },
+	{ href: "/admin/funnels", label: "Funnels", icon: "M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" },
 	{ href: "/admin/outreach", label: "Outreach", icon: "M22 2 11 13M22 2l-7 20-4-9-9-4z" },
 	{ href: "/admin/campaigns", label: "Campaigns", icon: "M4 4h16v6H4zM4 14h16v6H4zM7 7h.01M7 17h.01" },
 	{ href: "/admin/videos", label: "Videos", icon: "M23 7l-7 5 7 5V7zM1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" },
@@ -58,6 +60,7 @@ const Layout: ParentComponent<{ user?: { id?: string; email?: string } | null }>
 	return (
 		<div class="layout" classList={{ collapsed: collapsed() }}>
 			<CommandPalette />
+			<Toaster />
 			<aside class="sidebar">
 				<button
 					type="button"
@@ -69,10 +72,8 @@ const Layout: ParentComponent<{ user?: { id?: string; email?: string } | null }>
 					{collapsed() ? "›" : "‹"}
 				</button>
 				<div class="sidebar-logo">
-					<img src="/cactus-seal.svg" alt="Mad Cactus" />
 					<div class="sidebar-logo-text">
-						Mad Cactus
-						<small>Portal</small>
+						<Brand suffix="Portal" />
 					</div>
 				</div>
 				<nav class="sidebar-nav">
@@ -88,9 +89,7 @@ const Layout: ParentComponent<{ user?: { id?: string; email?: string } | null }>
 								<NavIcon d={link.icon} />
 								<span class="nav-label">{link.label}</span>
 								<Show when={link.href === "/admin/outreach"}>
-									<span class="nav-badge" style={{ "margin-left": "auto", color: "var(--orange)", "font-size": "11px" }}>
-										{dueOutreach() ?? ""}
-									</span>
+									<span class="nav-count">{dueOutreach() ?? ""}</span>
 								</Show>
 							</A>
 						)}

@@ -47,11 +47,11 @@ export default function SharedDoc() {
 		<main style={{ "max-width": "720px", margin: "48px auto", padding: "0 24px", "font-family": "Georgia, 'Times New Roman', serif" }}>
 			<Switch fallback={<Title>Not found</Title>}>
 				<Match when={!doc.loading && !doc()}>
-					<Title>Not found — Mad Cactus</Title>
+					<Title>Not found — Basalt</Title>
 					<p class="muted">This share link is invalid or was unshared.</p>
 				</Match>
 				<Match when={doc()}>
-					<Title>{doc()!.title} — Mad Cactus</Title>
+					<Title>{doc()!.title} — Basalt</Title>
 					<h1>{doc()!.title}</h1>
 					<For each={[mdToHtml(doc()!.markdown)]}>{(html) => <div innerHTML={html} />}</For>
 				</Match>

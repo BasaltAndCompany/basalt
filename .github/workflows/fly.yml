@@ -1,4 +1,4 @@
-name: Fly Deploy (dashboard)
+name: Fly Deploy (dashboard + web)
 # Branch protection is paywalled on the free org plan, so prod is guarded
 # here instead: deploy only lands after CI (test + typecheck + docker-build)
 # is green on main, and at the exact SHA that was tested.
@@ -12,14 +12,16 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: dashboard
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      # repo root is the build context (both apps import the @basalt/ui
+      # workspace package); the Dockerfiles build each app's .output
+      - run: flyctl deploy --remote-only --config dashboard/fly.toml --dockerfile dashboard/Dockerfile
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - run: flyctl deploy --remote-only --config web/fly.toml --dockerfile web/Dockerfile
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

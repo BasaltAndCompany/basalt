@@ -1,0 +1,310 @@
+{
+  "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-latin-ext-opsz-normal-CoJBavOu.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-opsz-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-latin-opsz-normal-X2BzlAjV.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-math-opsz-normal-CbZAXtrh.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-opsz-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-opsz-normal.woff2": {
+    "file": "_build/assets/bodoni-moda-symbols-opsz-normal-d21etpfE.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+bodoni-moda@5.3.0/node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-opsz-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2": {
+    "file": "_build/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2": {
+    "file": "_build/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2": {
+    "file": "_build/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2": {
+    "file": "_build/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2"
+  },
+  "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2": {
+    "file": "_build/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+    "src": "../node_modules/.bun/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2"
+  },
+  "_card-Dn8LRbVz.js": {
+    "file": "_build/assets/card-Dn8LRbVz.js",
+    "name": "card",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_createAsync-Cd30YF3_.js": {
+    "file": "_build/assets/createAsync-Cd30YF3_.js",
+    "name": "createAsync",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_utils-C5uTcCG4.js"
+    ]
+  },
+  "_dist-Bfhshbr9.js": {
+    "file": "_build/assets/dist-Bfhshbr9.js",
+    "name": "dist",
+    "imports": [
+      "_web-Bf2WcyEa.js"
+    ]
+  },
+  "_input-CPeEP3Md.js": {
+    "file": "_build/assets/input-CPeEP3Md.js",
+    "name": "input",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_label-kTf9Enyu.js": {
+    "file": "_build/assets/label-kTf9Enyu.js",
+    "name": "label",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_logo-DeT9Z6q4.js": {
+    "file": "_build/assets/logo-DeT9Z6q4.js",
+    "name": "logo",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_routing-CecSaODk.js": {
+    "file": "_build/assets/routing-CecSaODk.js",
+    "name": "routing",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_utils-C5uTcCG4.js"
+    ]
+  },
+  "_separator-CDqdeI3h.js": {
+    "file": "_build/assets/separator-CDqdeI3h.js",
+    "name": "separator",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_site-Bha_-JLz.js": {
+    "file": "_build/assets/site-Bha_-JLz.js",
+    "name": "site",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_dist-Bfhshbr9.js",
+      "_src-80yAutk3.js",
+      "_logo-DeT9Z6q4.js"
+    ]
+  },
+  "_site-state-CIUA0Awq.js": {
+    "file": "_build/assets/site-state-CIUA0Awq.js",
+    "name": "site-state"
+  },
+  "_src-80yAutk3.js": {
+    "file": "_build/assets/src-80yAutk3.js",
+    "name": "src",
+    "imports": [
+      "_web-Bf2WcyEa.js"
+    ]
+  },
+  "_textarea-DLhaI_tV.js": {
+    "file": "_build/assets/textarea-DLhaI_tV.js",
+    "name": "textarea",
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js"
+    ]
+  },
+  "_utils-C5uTcCG4.js": {
+    "file": "_build/assets/utils-C5uTcCG4.js",
+    "name": "utils",
+    "imports": [
+      "_web-Bf2WcyEa.js"
+    ]
+  },
+  "_web-Bf2WcyEa.js": {
+    "file": "_build/assets/web-Bf2WcyEa.js",
+    "name": "web"
+  },
+  "src/entry-client.tsx": {
+    "file": "_build/assets/entry-client-CN4PJZV1.js",
+    "name": "entry-client",
+    "src": "src/entry-client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_dist-Bfhshbr9.js",
+      "_routing-CecSaODk.js",
+      "_utils-C5uTcCG4.js"
+    ],
+    "dynamicImports": [
+      "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
+      "src/routes/footage.tsx?pick=default&pick=$css",
+      "src/routes/contact.tsx?pick=default&pick=$css",
+      "src/routes/brain.tsx?pick=default&pick=$css",
+      "src/routes/iu.tsx?pick=default&pick=$css",
+      "src/routes/writing.tsx?pick=default&pick=$css",
+      "src/routes/careers.tsx?pick=default&pick=$css",
+      "src/routes/ui.tsx?pick=default&pick=$css",
+      "src/routes/newsletter/index.tsx?pick=default&pick=$css",
+      "src/routes/newsletter/[id].tsx?pick=default&pick=$css"
+    ],
+    "css": [
+      "_build/assets/entry-client-wfSJLOww.css"
+    ],
+    "assets": [
+      "_build/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+      "_build/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+      "_build/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+      "_build/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+      "_build/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+      "_build/assets/bodoni-moda-math-opsz-normal-CbZAXtrh.woff2",
+      "_build/assets/bodoni-moda-symbols-opsz-normal-d21etpfE.woff2",
+      "_build/assets/bodoni-moda-latin-ext-opsz-normal-CoJBavOu.woff2",
+      "_build/assets/bodoni-moda-latin-opsz-normal-X2BzlAjV.woff2"
+    ]
+  },
+  "src/routes/brain.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/brain-Cju-ccLU.js",
+    "name": "brain",
+    "src": "src/routes/brain.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_input-CPeEP3Md.js",
+      "_label-kTf9Enyu.js",
+      "_textarea-DLhaI_tV.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/careers.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/careers-auEqQPjm.js",
+    "name": "careers",
+    "src": "src/routes/careers.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/contact.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/contact-CN-aLTcB.js",
+    "name": "contact",
+    "src": "src/routes/contact.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_input-CPeEP3Md.js",
+      "_label-kTf9Enyu.js",
+      "_textarea-DLhaI_tV.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/footage.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/footage-BGCOTvLQ.js",
+    "name": "footage",
+    "src": "src/routes/footage.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_card-Dn8LRbVz.js",
+      "_input-CPeEP3Md.js",
+      "_label-kTf9Enyu.js",
+      "_separator-CDqdeI3h.js",
+      "_site-state-CIUA0Awq.js"
+    ]
+  },
+  "src/routes/index.tsx?pick=Site&pick=default&pick=$css": {
+    "file": "_build/assets/index-D0DCvAnI.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_logo-DeT9Z6q4.js",
+      "_site-state-CIUA0Awq.js"
+    ]
+  },
+  "src/routes/iu.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/iu-CGeesrDo.js",
+    "name": "iu",
+    "src": "src/routes/iu.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_separator-CDqdeI3h.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/newsletter/[id].tsx?pick=default&pick=$css": {
+    "file": "_build/assets/_id_-CtRe8eMZ.js",
+    "name": "_id_",
+    "src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_dist-Bfhshbr9.js",
+      "_routing-CecSaODk.js",
+      "_src-80yAutk3.js",
+      "_createAsync-Cd30YF3_.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/newsletter/index.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/index-5AQvBJkb.js",
+    "name": "index",
+    "src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_createAsync-Cd30YF3_.js",
+      "_input-CPeEP3Md.js",
+      "_site-Bha_-JLz.js"
+    ]
+  },
+  "src/routes/ui.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/ui-ymVyGPoU.js",
+    "name": "ui",
+    "src": "src/routes/ui.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_src-80yAutk3.js",
+      "_card-Dn8LRbVz.js",
+      "_input-CPeEP3Md.js",
+      "_label-kTf9Enyu.js",
+      "_textarea-DLhaI_tV.js",
+      "_separator-CDqdeI3h.js"
+    ]
+  },
+  "src/routes/writing.tsx?pick=default&pick=$css": {
+    "file": "_build/assets/writing-CEgH-De3.js",
+    "name": "writing",
+    "src": "src/routes/writing.tsx?pick=default&pick=$css",
+    "isEntry": true,
+    "imports": [
+      "_web-Bf2WcyEa.js",
+      "_createAsync-Cd30YF3_.js",
+      "_site-Bha_-JLz.js"
+    ]
+  }
+}
