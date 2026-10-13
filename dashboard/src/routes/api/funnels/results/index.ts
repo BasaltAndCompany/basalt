@@ -2,7 +2,7 @@
 // POST /api/funnels/results { itemId, stage, verdict, evidenceUrl?, note?, method? }
 // Triggers promotion on all-stages-pass and un-approves the linked prospect on a fail.
 import type { APIEvent } from "@solidjs/start/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "~/db";
 import { funnelItems, funnelStageResults } from "~/db/schema";
 import { FUNNEL_METHODS } from "~/db/schema";
@@ -43,16 +43,14 @@ export const POST = async (event: APIEvent) => {
 		method,
 		checkedAt: new Date(),
 	};
-	const [existing] = await db
-		.select({ id: funnelStageResults.id })
-		.from(funnelStageResults)
-		.where(and(eq(funnelStageResults.itemId, body.itemId), eq(funnelStageResults.stage, body.stage)))
-		.limit(1);
-	if (existing) {
-		await db.update(funnelStageResults).set(values).where(eq(funnelStageResults.id, existing.id));
-	} else {
-		await db.insert(funnelStageResults).values({ itemId: body.itemId, stage: body.stage, ...values });
-	}
+	// upsert per (item, stage) — race-free where two writers pick the same item
+	await db
+		.insert(funnelStageResults)
+		.values({ itemId: body.itemId, stage: body.stage, ...values })
+		.onConflictDoUpdate({
+			target: [funnelStageResults.itemId, funnelStageResults.stage],
+			set: values,
+		});
 	await applyVerdictConsequences(body.itemId, info.stages);
 	return json({ ok: true });
 };
