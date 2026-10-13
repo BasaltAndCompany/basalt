@@ -23,7 +23,7 @@ export const FREIGHT_STAGES: FunnelStage[] = [
 	{ key: "revenue_band", label: "Revenue", gate: "$10-70M estimate; rev/employee $150-500k sanity; no Prospeo revenue → headcount × $325k/emp estimate", method: "api", params: { min: 10_000_000, max: 70_000_000, perEmp: 325_000 } },
 	{ key: "tech_team", label: "Tech team", gate: "≤6 title hits for CTO/VP Eng/IT Director/engineer/developer", method: "api", params: { maxHits: 6 } },
 	{ key: "owner_led", label: "Owner-led", gate: "Founder/CEO still running it, not a PE roll-up", method: "agent", soft: true },
-	{ key: "ai_signal", label: "AI signal", gate: "≥1 employee self-labels AI (Prospeo roster); site evidence corroborates only; vendor-hint recorded separately", method: "api" },
+	{ key: "ai_signal", label: "AI signal", gate: "≥1 employee self-labels AI (Prospeo roster); site evidence corroborates only; vendor-hint recorded separately", method: "api", params: { maxRosterPages: 10 } },
 ];
 
 /** Funnels API accepts an admin session (UI) or an mc_ API key (scripts/agents). */

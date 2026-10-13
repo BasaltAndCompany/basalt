@@ -1,7 +1,7 @@
 // Funnel stage batch runner — shared by the dashboard "Run stage" button and
 // the scheduler's daily automation. Drivers: Prospeo (headcount, revenue —
 // 0 credits on miss), Apollo (tech_team), cache reads (ai_signal roster/site).
-import { eq, sql } from "drizzle-orm";
+import { and, eq, notInArray, sql } from "drizzle-orm";
 import { db } from "~/db";
 import { funnelItems, funnelStageResults, type FunnelStage } from "~/db/schema";
 import { applyVerdictConsequences, getQueue, getRunStages } from "~/lib/funnels";
@@ -14,7 +14,7 @@ import {
 	type ProspeoCompany,
 	type ProspeoRoster,
 } from "~/lib/enrich-prospeo";
-import { scoreAiSignal, scoreRoster, scanSite } from "~/lib/ai-signal";
+import { pastMatches, scoreAiSignal, scoreRoster, scanSite } from "~/lib/ai-signal";
 
 const M = 1_000_000;
 
@@ -76,16 +76,18 @@ async function cacheProspeo(itemId: string, co: ProspeoCompany | null) {
 		.where(eq(funnelItems.id, itemId));
 }
 
-/** Same pattern for the people roster — cached so re-runs and re-scores cost
- *  zero credits (Prospeo additionally dedupes identical pages free for 30d). */
-async function cacheRoster(itemId: string, roster: ProspeoRoster) {
+/** Same pattern for the people roster / AI matches — cached so re-runs and
+  *  re-scores cost zero credits (Prospeo additionally dedupes identical pages
+ *  free for 30d). The jsonb path is a bound parameter — no sql.raw anywhere. */
+async function cacheRawJson(itemId: string, key: "roster" | "aiMatches", value: unknown) {
 	await db
 		.update(funnelItems)
 		.set({
-			rawData: sql`jsonb_set(coalesce(${funnelItems.rawData}, '{}'::jsonb), '{roster}', ${JSON.stringify(roster)}::jsonb)`,
+			rawData: sql`jsonb_set(coalesce(${funnelItems.rawData}, '{}'::jsonb), ARRAY[${key}]::text[], ${JSON.stringify(value)}::jsonb)`,
 		})
 		.where(eq(funnelItems.id, itemId));
 }
+const cacheRoster = (itemId: string, roster: ProspeoRoster) => cacheRawJson(itemId, "roster", roster);
 
 /** Keyless page fetch for the site scan — a dead site skips the scan, it
  *  never fails the stage. ponytail: 500KB cap covers any real homepage. */
@@ -114,6 +116,71 @@ function internalLinks(html: string): string[] {
 	return out;
 }
 
+/** The ai_signal driver: complete a partial cached roster (legacy page-1
+ *  caches have no `complete` key → read as partial), score the full roster +
+ *  site, cache matches for the detail modal. Pages cost 1 credit each
+ *  (identical pages deduped free for 30d), so a complete roster never
+ *  re-fetches. */
+async function aiSignalVerdict(item: typeof funnelItems.$inferSelect, stage: FunnelStage) {
+	const raw = (item.rawData ?? {}) as Record<string, unknown>;
+	const prospeo = (raw.prospeo ?? null) as { companyId?: string | null; domain?: string | null } | null;
+	const refs = {
+		companyId: prospeo?.companyId ?? null,
+		domain: prospeo?.domain ?? null,
+		name: item.companyName,
+	};
+	const maxPages = num(stage, "maxRosterPages", 10);
+	const cached = (raw.roster ?? null) as ProspeoRoster | null;
+	let roster = cached;
+	if (!roster?.complete) {
+		const fresh = await prospeoCompanyRoster(refs, { maxPages });
+		if (cached) {
+			// union keeps people from a partial cache the fresh pull couldn't re-reach
+			const seen = new Set(fresh.people.map((p) => p.name));
+			fresh.people.push(...cached.people.filter((p) => !seen.has(p.name)));
+			fresh.total = Math.max(fresh.total, cached.total);
+		}
+		roster = fresh;
+		await cacheRoster(item.id, fresh);
+	}
+	const matches = scoreRoster(roster.people);
+	const past = pastMatches(roster.people);
+
+	const siteEvidence: string[] = [];
+	const vendorHints: string[] = [];
+	let siteAttempted = false;
+	if (refs.domain) {
+		siteAttempted = true;
+		const base = `https://${refs.domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "")}`;
+		const home = await fetchPage(base);
+		if (home) {
+			const hs = scanSite(home, `${base}/`, item.companyName);
+			siteEvidence.push(...hs.evidence);
+			vendorHints.push(...hs.vendorHints);
+			const links = internalLinks(home);
+			const pages = [...new Set([...links.slice(0, 3), links.find((p) => /privacy/i.test(p)) ?? "/privacy"])];
+			for (const path of pages) {
+				const page = await fetchPage(`${base}${path}`);
+				if (!page) continue;
+				const s = scanSite(page, `${base}${path}`, item.companyName);
+				siteEvidence.push(...s.evidence);
+				vendorHints.push(...s.vendorHints);
+			}
+		}
+	}
+	const t = scoreAiSignal({
+		employeeMatches: matches,
+		pastMatches: past,
+		siteEvidence,
+		vendorHints,
+		roster,
+		maxPages,
+		siteAttempted,
+	});
+	await cacheRawJson(item.id, "aiMatches", { matches, pastMatches: past });
+	return { verdict: t.verdict, note: t.note };
+}
+
 /** Batch-run an api-method stage over its queue. `limit` bounds credit spend. */
 export async function runStageBatch(runId: string, stageKey: string, limit = 50): Promise<BatchResult> {
 	const info = await getRunStages(runId);
@@ -124,11 +191,28 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 
 	const queue = await getQueue(runId, stageKey);
 	if (!queue) return { ok: false, error: "Run not found" };
-	const items = queue.slice(0, Math.min(Math.max(Math.trunc(limit), 1), 500));
+	const cap = Math.min(Math.max(Math.trunc(limit), 1), 500);
+	const items = queue.slice(0, cap);
 
 	let okCount = 0;
 	let errors = 0;
 	let firstError = "";
+	const recordError = (e: unknown) => {
+		errors++;
+		if (!firstError) {
+			// drizzle wraps the pg error — the real message (constraint name) is the cause
+			const cause = e instanceof Error && e.cause instanceof Error ? e.cause.message : null;
+			firstError = cause ?? (e instanceof Error ? e.message : String(e));
+		}
+	};
+	const upsert = (itemId: string, v: "pass" | "fail", n: string) =>
+		db
+			.insert(funnelStageResults)
+			.values({ itemId, stage: stageKey, verdict: v, note: n, method: "api" })
+			.onConflictDoUpdate({
+				target: [funnelStageResults.itemId, funnelStageResults.stage],
+				set: { verdict: v, note: n, method: "api", checkedAt: new Date() },
+			});
 
 	// Prospeo firmographic stages: one bulk request per 50 companies instead of
 	// N singles — same credit cost (per match), one rate-limit slot, no 429
@@ -194,73 +278,48 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 				verdict = hits <= num(stage, "maxHits", 6) ? "pass" : "fail";
 				note = `${hits} tech titles in ${roster0.people.length}-person sample (Prospeo)`;
 			} else if (stageKey === "ai_signal") {
-				const raw = (item.rawData ?? {}) as Record<string, unknown>;
-				const prospeo = (raw.prospeo ?? null) as { companyId?: string | null; domain?: string | null } | null;
-				const refs = {
-					companyId: prospeo?.companyId ?? null,
-					domain: prospeo?.domain ?? null,
-					name: item.companyName,
-				};
-				let roster = (raw.roster ?? null) as ProspeoRoster | null;
-				if (!roster) {
-					roster = await prospeoCompanyRoster(refs);
-					await cacheRoster(item.id, roster);
-				}
-				const matches = scoreRoster(roster.people);
-
-				const siteEvidence: string[] = [];
-				const vendorHints: string[] = [];
-				let siteAttempted = false;
-				if (refs.domain) {
-					siteAttempted = true;
-					const base = `https://${refs.domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "")}`;
-					const home = await fetchPage(base);
-					if (home) {
-						const hs = scanSite(home, `${base}/`, item.companyName);
-						siteEvidence.push(...hs.evidence);
-						vendorHints.push(...hs.vendorHints);
-						const links = internalLinks(home);
-						const pages = [...new Set([...links.slice(0, 3), links.find((p) => /privacy/i.test(p)) ?? "/privacy"])];
-						for (const path of pages) {
-							const page = await fetchPage(`${base}${path}`);
-							if (!page) continue;
-							const s = scanSite(page, `${base}${path}`, item.companyName);
-							siteEvidence.push(...s.evidence);
-							vendorHints.push(...s.vendorHints);
-						}
-					}
-				}
-				const t = scoreAiSignal({
-					employeeMatches: matches,
-					siteEvidence,
-					vendorHints,
-					rosterTotal: roster.total,
-					rosterPeople: roster.people.length,
-					siteAttempted,
-				});
-				verdict = t.verdict;
-				note = t.note;
+				({ verdict, note } = await aiSignalVerdict(item, stage));
 			} else {
 				return { ok: false, error: `No api driver for stage ${stageKey}` };
 			}
 			// upsert per (item, stage): a concurrent writer (scheduler enrich, manual
 			// click, verify agent) may have recorded this item after the queue snapshot
 			// — latest verdict wins, evidenceUrl survives (not in set)
-			await db
-				.insert(funnelStageResults)
-				.values({ itemId: item.id, stage: stageKey, verdict, note, method: "api" })
-				.onConflictDoUpdate({
-					target: [funnelStageResults.itemId, funnelStageResults.stage],
-					set: { verdict, note, method: "api", checkedAt: new Date() },
-				});
+			await upsert(item.id, verdict, note);
 			okCount++;
 			await applyVerdictConsequences(item.id, info.stages);
 		} catch (e) {
-			errors++;
-			if (!firstError) {
-				// drizzle wraps the pg error — the real message (constraint name) is the cause
-				const cause = e instanceof Error && e.cause instanceof Error ? e.cause.message : null;
-				firstError = cause ?? (e instanceof Error ? e.message : String(e));
+			recordError(e);
+		}
+	}
+
+	// ai_signal auto-backfill: anything already scored on a partial roster
+	// (legacy page-1 caches, quota-cut pulls) completes its pagination and
+	// re-scores on the next run — queue items first, backfill second, same cap.
+	// Latest-wins upsert + applyVerdictConsequences handle flipped verdicts.
+	if (stageKey === "ai_signal") {
+		const done = items.map((i) => i.id);
+		const partials = await db
+			.select()
+			.from(funnelItems)
+			.where(
+				and(
+					eq(funnelItems.runId, runId),
+					sql`exists (select 1 from ${funnelStageResults} r where r.item_id = ${funnelItems.id} and r.stage = 'ai_signal')`,
+					sql`${funnelItems.rawData} -> 'roster' is not null`,
+					sql`coalesce(${funnelItems.rawData} -> 'roster' ->> 'complete', 'false') <> 'true'`,
+					done.length ? notInArray(funnelItems.id, done) : undefined,
+				),
+			)
+			.limit(cap);
+		for (const item of partials) {
+			try {
+				const { verdict, note } = await aiSignalVerdict(item, stage);
+				await upsert(item.id, verdict, note);
+				okCount++;
+				await applyVerdictConsequences(item.id, info.stages);
+			} catch (e) {
+				recordError(e);
 			}
 		}
 	}
