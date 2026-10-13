@@ -2,11 +2,7 @@
 // POST /api/funnels/results { itemId, stage, verdict, evidenceUrl?, note?, method? }
 // Triggers promotion on all-stages-pass and un-approves the linked prospect on a fail.
 import type { APIEvent } from "@solidjs/start/server";
-import { eq } from "drizzle-orm";
-import { db } from "~/db";
-import { funnelItems, funnelStageResults } from "~/db/schema";
-import { FUNNEL_METHODS } from "~/db/schema";
-import { applyVerdictConsequences, funnelAuthed, getRunStages } from "~/lib/funnels";
+import { funnelAuthed, recordStageVerdict } from "~/lib/funnels";
 
 function json(body: unknown, status = 200) {
 	return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -25,32 +21,14 @@ export const POST = async (event: APIEvent) => {
 	if (!body.itemId || !body.stage || !["pass", "fail"].includes(body.verdict ?? "")) {
 		return json({ error: "itemId, stage, verdict (pass|fail) required" }, 400);
 	}
-	const method = FUNNEL_METHODS.includes((body.method ?? "") as never) ? body.method! : "human";
-
-	const [item] = await db
-		.select({ id: funnelItems.id, runId: funnelItems.runId })
-		.from(funnelItems)
-		.where(eq(funnelItems.id, body.itemId))
-		.limit(1);
-	if (!item) return json({ error: "Unknown itemId" }, 404);
-	const info = await getRunStages(item.runId);
-	if (!info || !info.stages.some((s) => s.key === body.stage)) return json({ error: "Unknown stage" }, 400);
-
-	const values = {
-		verdict: body.verdict!,
-		evidenceUrl: body.evidenceUrl?.trim() || null,
-		note: body.note?.trim() || null,
-		method,
-		checkedAt: new Date(),
-	};
-	// upsert per (item, stage) — race-free where two writers pick the same item
-	await db
-		.insert(funnelStageResults)
-		.values({ itemId: body.itemId, stage: body.stage, ...values })
-		.onConflictDoUpdate({
-			target: [funnelStageResults.itemId, funnelStageResults.stage],
-			set: values,
-		});
-	await applyVerdictConsequences(body.itemId, info.stages);
+	const r = await recordStageVerdict({
+		itemId: body.itemId,
+		stage: body.stage,
+		verdict: body.verdict as "pass" | "fail",
+		note: body.note ?? null,
+		evidenceUrl: body.evidenceUrl ?? null,
+		method: body.method ?? null,
+	});
+	if ("error" in r) return json({ error: r.error }, r.status);
 	return json({ ok: true });
 };

@@ -11,6 +11,7 @@ import {
 	funnelStageResults,
 	funnels,
 	outreachProspects,
+	FUNNEL_METHODS,
 	type FunnelStage,
 } from "~/db/schema";
 
@@ -113,6 +114,75 @@ export async function importRunItems(
 		}
 	}
 	return { imported, duplicated, skippedPromoted };
+}
+
+/** New funnel, idempotent on name (existing row wins — safe to re-call).
+ *  Stages clone the freight skeleton; industry_gate rewords the industry_type
+ *  gate for a non-freight industry. */
+export async function createFunnel(name: string, description?: string | null, industryGate?: string | null) {
+	const trimmed = name.trim();
+	const [existing] = await db.select().from(funnels).where(eq(funnels.name, trimmed)).limit(1);
+	if (existing) return existing;
+	const stages: FunnelStage[] = FREIGHT_STAGES.map((s) =>
+		s.key === "industry_type" && industryGate?.trim() ? { ...s, gate: industryGate.trim() } : s,
+	);
+	const [row] = await db
+		.insert(funnels)
+		.values({ name: trimmed, description: description?.trim() || null, stages })
+		.onConflictDoNothing({ target: funnels.name })
+		.returning();
+	return row ?? (await db.select().from(funnels).where(eq(funnels.name, trimmed)).limit(1))[0];
+}
+
+const RUN_SOURCES = ["importyeti", "fmcsa", "paste", "mixed"];
+
+/** Open a run for a funnel, by id or name (same shape as POST /api/funnels). */
+export async function createFunnelRun(opts: { funnelId?: string; funnelName?: string; source?: string; note?: string }) {
+	let funnelId = opts.funnelId ?? null;
+	if (!funnelId && opts.funnelName?.trim()) {
+		const [f] = await db.select({ id: funnels.id }).from(funnels).where(ilike(funnels.name, opts.funnelName.trim())).limit(1);
+		funnelId = f?.id ?? null;
+	}
+	if (!funnelId) return { error: "funnel not found — pass funnel_id or funnel_name" } as const;
+	const source = RUN_SOURCES.includes(opts.source ?? "") ? opts.source! : "paste";
+	const [run] = await db.insert(funnelRuns).values({ funnelId, source, note: opts.note?.trim() || null }).returning();
+	return { run };
+}
+
+/** Record one stage verdict (upsert per item+stage) and run promotion/
+ *  un-approve consequences. The one code path shared by the REST results
+ *  handler and the MCP record_funnel_verdict tool. */
+export async function recordStageVerdict(input: {
+	itemId: string;
+	stage: string;
+	verdict: "pass" | "fail";
+	note?: string | null;
+	evidenceUrl?: string | null;
+	method?: string | null;
+}): Promise<{ ok: true } | { error: string; status: number }> {
+	const method = FUNNEL_METHODS.includes((input.method ?? "") as never) ? input.method! : "human";
+	const [item] = await db
+		.select({ id: funnelItems.id, runId: funnelItems.runId })
+		.from(funnelItems)
+		.where(eq(funnelItems.id, input.itemId))
+		.limit(1);
+	if (!item) return { error: "Unknown itemId", status: 404 };
+	const info = await getRunStages(item.runId);
+	if (!info || !info.stages.some((s) => s.key === input.stage)) return { error: "Unknown stage", status: 400 };
+	const values = {
+		verdict: input.verdict,
+		evidenceUrl: input.evidenceUrl?.trim() || null,
+		note: input.note?.trim() || null,
+		method,
+		checkedAt: new Date(),
+	};
+	// upsert per (item, stage) — race-free where two writers pick the same item
+	await db
+		.insert(funnelStageResults)
+		.values({ itemId: input.itemId, stage: input.stage, ...values })
+		.onConflictDoUpdate({ target: [funnelStageResults.itemId, funnelStageResults.stage], set: values });
+	await applyVerdictConsequences(input.itemId, info.stages);
+	return { ok: true };
 }
 
 /** Insert the Freight ICP funnel if the table is empty. Called on list reads —
@@ -249,13 +319,22 @@ export async function applyVerdictConsequences(itemId: string, stages: FunnelSta
 			.from(funnelStageResults)
 			.where(eq(funnelStageResults.itemId, itemId));
 		const noteFor = (k: string) => resultRows.find((r) => r.stage === k)?.note ?? "unknown";
-	// attach to the Freight & logistics campaign when one exists (campaignId is
-	// nullable — a missing campaign must not block promotion)
-	const [campaign] = await db
-		.select({ id: campaigns.id })
-		.from(campaigns)
-		.where(ilike(campaigns.name, "%freight%"))
+	// attach to a campaign named after the funnel (first word, case-insensitive:
+	// "Freight ICP" → %freight%, "Legal ICP" → %legal%). campaignId is nullable
+	// — a missing campaign must not block promotion.
+	const [frow] = await db
+		.select({ name: funnels.name })
+		.from(funnelRuns)
+		.innerJoin(funnels, eq(funnelRuns.funnelId, funnels.id))
+		.where(eq(funnelRuns.id, item.runId))
 		.limit(1);
+	const [campaign] = frow
+		? await db
+				.select({ id: campaigns.id })
+				.from(campaigns)
+				.where(ilike(campaigns.name, `%${frow.name.split(/\s+/)[0]}%`))
+				.limit(1)
+		: [];
 		if (item.prospectId) {
 			await db
 				.update(outreachProspects)

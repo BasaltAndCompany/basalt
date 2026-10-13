@@ -14,6 +14,8 @@ import { maybeRunCycle } from "~/lib/brain/distill";
 import { listComponentTypes, getComponent, resolveCard, searchAll, linksFor, loadRow } from "~/registry/registry";
 import { linkComponents, listLinks, UnknownKindError } from "~/lib/entity-links";
 import { createVideo, setProspectVideo } from "~/lib/videos";
+import { createFunnel, createFunnelRun, importRunItems, recordStageVerdict } from "~/lib/funnels";
+import { runStageBatch } from "~/lib/funnel-stages";
 
 
 /**
@@ -705,7 +707,95 @@ chat_uuid: { type: "string" },
 			},
 		},
 	},
+	// ── Funnels (write: build and run a funnel without raw REST) ──
+	{
+		name: "create_funnel",
+		description:
+			"Create a funnel (idempotent on name) whose stages clone the freight 7-gate skeleton (hq_state, industry_type, headcount, revenue_band, tech_team, owner_led, ai_signal) with industry_type's gate reworded via industry_gate. Then create_funnel_run → add_funnel_items → run_funnel_stage.",
+		inputSchema: {
+			type: "object",
+			properties: {
+				name: { type: "string", description: "unique funnel name, e.g. 'Legal ICP'" },
+				description: { type: "string" },
+				industry_gate: { type: "string", description: "rewords the industry_type gate for this industry (e.g. 'Indiana law firm — attorneys are the product')" },
+			},
+			required: ["name"],
+		},
+	},
+	{
+		name: "create_funnel_run",
+		description:
+			"Open a run for a funnel (by funnel_name, case-insensitive, or funnel_id). source defaults to 'paste'. Returns the run id that add_funnel_items / run_funnel_stage / funnel_stats consume.",
+		inputSchema: {
+			type: "object",
+			properties: {
+				funnel_name: { type: "string" },
+				funnel_id: { type: "string" },
+				source: { type: "string", enum: ["importyeti", "fmcsa", "paste", "mixed"], description: "default 'paste'" },
+				note: { type: "string", description: "where the pull came from, e.g. 'Best Lawyers pull 2026-10'" },
+			},
+		},
+	},
+	{
+		name: "add_funnel_items",
+		description:
+			"Import companies into an open run (≤100 per call, deduped per run, already-promoted companies skipped). Pass state + rawData.industryType and the hq_state / industry_type verdicts are auto-written from that evidence. Re-pulls are safe.",
+		inputSchema: {
+			type: "object",
+			properties: {
+				run_id: { type: "string" },
+				items: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							companyName: { type: "string" },
+							city: { type: "string" },
+							state: { type: "string" },
+							sourceUrl: { type: "string" },
+							sourceKind: { type: "string" },
+							rawData: { type: "object", description: "free-form evidence; industryType key feeds the industry_type verdict" },
+						},
+						required: ["companyName"],
+					},
+				},
+			},
+			required: ["run_id", "items"],
+		},
+	},
+	{
+		name: "run_funnel_stage",
+		description:
+			"Batch-run an api-method stage (headcount, revenue_band, tech_team, ai_signal) for queued items through its driver (Prospeo/Apollo — CREDITS). limit bounds the batch; re-calls resume where it stopped. agent-method stages (owner_led) are yours: judge then record_funnel_verdict.",
+		inputSchema: {
+			type: "object",
+			properties: {
+				run_id: { type: "string" },
+				stage: { type: "string", description: "stage key (funnel_stats has them)" },
+				limit: { type: "number", description: "default 50, max 500" },
+			},
+			required: ["run_id", "stage"],
+		},
+	},
+	{
+		name: "record_funnel_verdict",
+		description:
+			"Record one stage verdict (pass|fail) for a funnel item — the same upsert + promotion path as the REST endpoint. agent/human stages land here; also overrides any auto verdict. Promotion fires when every non-soft stage passes.",
+		inputSchema: {
+			type: "object",
+			properties: {
+				item_id: { type: "string" },
+				stage: { type: "string" },
+				verdict: { type: "string", enum: ["pass", "fail"] },
+				note: { type: "string", description: "evidence summary, e.g. 'tier1: 2 employees post AI work'" },
+				evidence_url: { type: "string" },
+				method: { type: "string", enum: ["source", "api", "agent", "human"], description: "default 'human'" },
+			},
+			required: ["item_id", "stage", "verdict"],
+		},
+	},
 ] as const;
+
 
 /** Resolve a campaign row by id, or case-insensitive name. */
 async function resolveCampaign(
@@ -1715,6 +1805,80 @@ export async function POST(event: APIEvent) {
 								verdicts: (byItem.get(r.id) ?? []).map(({ itemId: _omit, ...v }) => v),
 							})),
 						};
+						break;
+					}
+					case "create_funnel": {
+						const name = String(toolArgs.name ?? "").trim();
+						if (!name) {
+							result = { error: "name is required" };
+							break;
+						}
+						result = await createFunnel(
+							name,
+							toolArgs.description ? String(toolArgs.description) : null,
+							toolArgs.industry_gate ? String(toolArgs.industry_gate) : null,
+						);
+						break;
+					}
+					case "create_funnel_run": {
+						result = await createFunnelRun({
+							funnelId: toolArgs.funnel_id ? String(toolArgs.funnel_id) : undefined,
+							funnelName: toolArgs.funnel_name ? String(toolArgs.funnel_name) : undefined,
+							source: toolArgs.source ? String(toolArgs.source) : undefined,
+							note: toolArgs.note ? String(toolArgs.note) : undefined,
+						});
+						break;
+					}
+					case "add_funnel_items": {
+						const [runRow] = await db
+							.select({ id: funnelRuns.id, status: funnelRuns.status })
+							.from(funnelRuns)
+							.where(eq(funnelRuns.id, String(toolArgs.run_id ?? "")))
+							.limit(1);
+						if (!runRow) {
+							result = { error: "run_id not found — create_funnel_run or funnel_stats has ids" };
+							break;
+						}
+						if (runRow.status !== "open") {
+							result = { error: "Run is closed — reopen by creating a new run" };
+							break;
+						}
+						const rows = (Array.isArray(toolArgs.items) ? toolArgs.items : []).filter(
+							(x: unknown) => !!x && typeof x === "object" && typeof (x as Record<string, unknown>).companyName === "string",
+						) as { companyName: string }[];
+						if (rows.length === 0) {
+							result = { error: "items[] with companyName required" };
+							break;
+						}
+						if (rows.length > 100) {
+							result = { error: "Max 100 items per call" };
+							break;
+						}
+						result = { ok: true, ...(await importRunItems(runRow.id, rows)) };
+						break;
+					}
+					case "run_funnel_stage": {
+						result = await runStageBatch(
+							String(toolArgs.run_id ?? ""),
+							String(toolArgs.stage ?? ""),
+							Number(toolArgs.limit ?? 50) || 50,
+						);
+						break;
+					}
+					case "record_funnel_verdict": {
+						const verdict = String(toolArgs.verdict ?? "");
+						if (!toolArgs.item_id || !toolArgs.stage || !["pass", "fail"].includes(verdict)) {
+							result = { error: "item_id, stage, verdict (pass|fail) required" };
+							break;
+						}
+						result = await recordStageVerdict({
+							itemId: String(toolArgs.item_id),
+							stage: String(toolArgs.stage),
+							verdict: verdict as "pass" | "fail",
+							note: toolArgs.note ? String(toolArgs.note) : null,
+							evidenceUrl: toolArgs.evidence_url ? String(toolArgs.evidence_url) : null,
+							method: toolArgs.method ? String(toolArgs.method) : null,
+						});
 						break;
 					}
 					default:
