@@ -1,6 +1,7 @@
 // /contact — the first real consumer of the form primitives outside the
 // gallery. Posts to the dashboard's /api/contact (Resend deliverable email).
 import { createSignal, Show } from "solid-js"
+import { DASHBOARD } from "@/lib/dashboard"
 import { Page } from "@/components/site"
 import { Button } from "@basalt/ui"
 import { Input } from "@basalt/ui"
@@ -17,7 +18,7 @@ export default function Contact() {
     const data = Object.fromEntries(new FormData(e.currentTarget as HTMLFormElement).entries())
     setSending(true)
     setError("")
-    const res = await fetch("https://madcactus.org/api/contact", {
+    const res = await fetch(`${DASHBOARD}/api/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

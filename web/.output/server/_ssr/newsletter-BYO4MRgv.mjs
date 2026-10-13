@@ -1,9 +1,9 @@
 import { E as Show, M as createComponent, h as ssr, l as escape, v as ssrHydrationKey, w as For } from "../_libs/solid-js.mjs";
-import { t as createAsync } from "./createAsync-Bhn6yo3Y.mjs";
+import { n as createAsync, t as DASHBOARD } from "./dashboard-BIAjpOOX.mjs";
 import { m as Button } from "./src-BhApVd6d.mjs";
 import { t as Page } from "./site-U7vXey32.mjs";
 import { t as Input } from "./input-BznnxyTF.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/newsletter-VyoSaBcS.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/newsletter-BYO4MRgv.js
 var _tmpl$ = [
 	"<section",
 	" class=\"mx-auto max-w-3xl px-6 pb-20 pt-14 text-center\"><h1 class=\"font-serif text-5xl leading-[1.05] tracking-[-0.01em] md:text-6xl\">AI teardowns<br><em>from our real clients.</em></h1><p class=\"mx-auto mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground\">Weekly breakdowns of real AI deployments. What we built, what it cost, and the blueprint to do the same thing. Higher margins, more revenue, no new headcount.</p><form class=\"mx-auto mt-8 flex max-w-md items-center gap-2\"><!--$-->",
@@ -37,7 +37,6 @@ var _tmpl$6 = [
 	"</h3></a>"
 ];
 var id$$ = "src/routes/newsletter/index.tsx?pick=default&pick=$css";
-var DASHBOARD = "https://madcactus.org";
 function Newsletter() {
 	const issues = createAsync(async () => {
 		const res = await fetch(`${DASHBOARD}/api/newsletter-issues`);

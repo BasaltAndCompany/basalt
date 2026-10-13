@@ -1,6 +1,7 @@
 // /newsletter/[id] — one Dispatch issue. The dashboard API returns the exact
 // published render (same pipeline the email send uses); we display it.
 import { useParams } from "@solidjs/router"
+import { DASHBOARD } from "@/lib/dashboard"
 import { createAsync } from "@solidjs/router"
 import { Show } from "solid-js"
 import { Title } from "@solidjs/meta"
@@ -17,7 +18,7 @@ type Issue = {
 export default function DispatchIssuePage() {
   const params = useParams()
   const issue = createAsync(async () => {
-    const res = await fetch(`https://madcactus.org/api/newsletter-issues/${params.id}`)
+    const res = await fetch(`${DASHBOARD}/api/newsletter-issues/${params.id}`)
     if (!res.ok) return null
     return (await res.json()) as Issue
   })

@@ -2,7 +2,7 @@ import { B as createSignal, E as Show, K as onCleanup, M as createComponent, g a
 import { m as Button } from "./src-BhApVd6d.mjs";
 import { t as Logo } from "./logo-C6EWCjdw.mjs";
 import { t as initHeroVideo } from "./site-state-ihm8ahx4.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-BtpYac5f.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-CBVXNKjH.js
 var _tmpl$ = ["<div", " class=\"lava-glow absolute inset-x-0 bottom-0 h-72\" aria-hidden=\"true\"></div>"];
 var _tmpl$2 = ["<svg", " class=\"absolute bottom-0 left-0 h-40 w-full\" viewBox=\"0 0 1200 160\" preserveAspectRatio=\"none\"><g fill=\"#050505\"><rect x=\"0\" y=\"148\" width=\"1200\" height=\"12\"></rect><rect x=\"170\" y=\"66\" width=\"170\" height=\"94\"></rect><rect x=\"515\" y=\"14\" width=\"190\" height=\"146\"></rect><rect x=\"880\" y=\"92\" width=\"165\" height=\"68\"></rect></g></svg>"];
 var _tmpl$3 = [
@@ -50,7 +50,7 @@ var id$$ = "src/routes/index.tsx?pick=Site&pick=default&pick=$css";
 var MESSAGES = [
 	{
 		title: "The rock under everything.",
-		body: "We turn working businesses AI-native — the intelligence layer, the agents, the workflows that make it real."
+		body: "We embed AI into your operations to drive real revenue — custom agents and workflows that let a team of five operate like a team of twenty-five."
 	},
 	{
 		title: "First the audit. Then the brain. Then the agents.",
@@ -58,11 +58,11 @@ var MESSAGES = [
 	},
 	{
 		title: "Proven in production.",
-		body: "From public institutions to start-ups — Indiana University to Customs Data Lock."
+		body: "Indiana University to Customs Data Lock — same hours, an estimated 2.75x more revenue per hour worked."
 	},
 	{
 		title: "Hand tasks to agents, or don't pay.",
-		body: "We don't sell hours. We embed with your team, build the layer, deploy the agents, and train your people to run them. The work speaks for itself."
+		body: "We don't sell hours. We embed with your team, build the layer, deploy the agents, and train your people to run them."
 	}
 ];
 function LinkText(props) {

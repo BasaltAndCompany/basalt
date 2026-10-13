@@ -1,9 +1,9 @@
 import { a as useParams, n as Title } from "./_ssr/ssr.mjs";
 import { E as Show, M as createComponent, h as ssr, l as escape, v as ssrHydrationKey } from "./_libs/solid-js.mjs";
-import { t as createAsync } from "./_ssr/createAsync-Bhn6yo3Y.mjs";
+import { n as createAsync, t as DASHBOARD } from "./_ssr/dashboard-BIAjpOOX.mjs";
 import { m as Button } from "./_ssr/src-BhApVd6d.mjs";
 import { t as Page } from "./_ssr/site-U7vXey32.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/_id_-ConznEos.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/_id_-JvhiNOKx.js
 var _tmpl$ = ["<div", " class=\"mx-auto max-w-2xl px-6 py-24 text-center\"><p class=\"font-sans text-muted-foreground\">Loading…</p></div>"];
 var _tmpl$2 = ["<div", " class=\"mx-auto max-w-2xl px-6 py-24 text-center\"><p class=\"font-sans text-muted-foreground\">That issue doesn't exist.</p></div>"];
 var _tmpl$3 = [
@@ -22,7 +22,7 @@ var id$$ = "src/routes/newsletter/[id].tsx?pick=default&pick=$css";
 function DispatchIssuePage() {
 	const params = useParams();
 	const issue = createAsync(async () => {
-		const res = await fetch(`https://madcactus.org/api/newsletter-issues/${params.id}`);
+		const res = await fetch(`${DASHBOARD}/api/newsletter-issues/${params.id}`);
 		if (!res.ok) return null;
 		return await res.json();
 	});

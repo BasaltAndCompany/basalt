@@ -9,7 +9,7 @@ import { Input } from "@basalt/ui"
 
 type Issue = { id: string; issueNumber: number; title: string; publishedAt: string | null }
 
-const DASHBOARD = "https://madcactus.org"
+import { DASHBOARD } from "@/lib/dashboard"
 
 export default function Newsletter() {
   const issues = createAsync(async () => {

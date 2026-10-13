@@ -169,6 +169,10 @@ var clientViteManifest = {
 		"name": "createAsync",
 		"imports": ["_web-Bf2WcyEa.js", "_utils-C5uTcCG4.js"]
 	},
+	"_dashboard-CKJIORz9.js": {
+		"file": "_build/assets/dashboard-CKJIORz9.js",
+		"name": "dashboard"
+	},
 	"_dist-Bfhshbr9.js": {
 		"file": "_build/assets/dist-Bfhshbr9.js",
 		"name": "dist",
@@ -233,7 +237,7 @@ var clientViteManifest = {
 		"name": "web"
 	},
 	"src/entry-client.tsx": {
-		"file": "_build/assets/entry-client-CN4PJZV1.js",
+		"file": "_build/assets/entry-client-ke-PmThe.js",
 		"name": "entry-client",
 		"src": "src/entry-client.tsx",
 		"isEntry": true,
@@ -269,7 +273,7 @@ var clientViteManifest = {
 		]
 	},
 	"src/routes/brain.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/brain-Cju-ccLU.js",
+		"file": "_build/assets/brain-BonLQJ_v.js",
 		"name": "brain",
 		"src": "src/routes/brain.tsx?pick=default&pick=$css",
 		"isEntry": true,
@@ -279,6 +283,7 @@ var clientViteManifest = {
 			"_input-CPeEP3Md.js",
 			"_label-kTf9Enyu.js",
 			"_textarea-DLhaI_tV.js",
+			"_dashboard-CKJIORz9.js",
 			"_site-Bha_-JLz.js"
 		]
 	},
@@ -294,7 +299,7 @@ var clientViteManifest = {
 		]
 	},
 	"src/routes/contact.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/contact-CN-aLTcB.js",
+		"file": "_build/assets/contact-D5lxxulG.js",
 		"name": "contact",
 		"src": "src/routes/contact.tsx?pick=default&pick=$css",
 		"isEntry": true,
@@ -304,6 +309,7 @@ var clientViteManifest = {
 			"_input-CPeEP3Md.js",
 			"_label-kTf9Enyu.js",
 			"_textarea-DLhaI_tV.js",
+			"_dashboard-CKJIORz9.js",
 			"_site-Bha_-JLz.js"
 		]
 	},
@@ -323,7 +329,7 @@ var clientViteManifest = {
 		]
 	},
 	"src/routes/index.tsx?pick=Site&pick=default&pick=$css": {
-		"file": "_build/assets/index-D0DCvAnI.js",
+		"file": "_build/assets/index-DJxmPP2D.js",
 		"name": "index",
 		"src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
 		"isEntry": true,
@@ -347,7 +353,7 @@ var clientViteManifest = {
 		]
 	},
 	"src/routes/newsletter/[id].tsx?pick=default&pick=$css": {
-		"file": "_build/assets/_id_-CtRe8eMZ.js",
+		"file": "_build/assets/_id_-DBaDqeDx.js",
 		"name": "_id_",
 		"src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
 		"isEntry": true,
@@ -357,11 +363,12 @@ var clientViteManifest = {
 			"_routing-CecSaODk.js",
 			"_src-80yAutk3.js",
 			"_createAsync-Cd30YF3_.js",
+			"_dashboard-CKJIORz9.js",
 			"_site-Bha_-JLz.js"
 		]
 	},
 	"src/routes/newsletter/index.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/index-5AQvBJkb.js",
+		"file": "_build/assets/index-B8gbmzv2.js",
 		"name": "index",
 		"src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
 		"isEntry": true,
@@ -370,6 +377,7 @@ var clientViteManifest = {
 			"_src-80yAutk3.js",
 			"_createAsync-Cd30YF3_.js",
 			"_input-CPeEP3Md.js",
+			"_dashboard-CKJIORz9.js",
 			"_site-Bha_-JLz.js"
 		]
 	},
@@ -389,13 +397,14 @@ var clientViteManifest = {
 		]
 	},
 	"src/routes/writing.tsx?pick=default&pick=$css": {
-		"file": "_build/assets/writing-CEgH-De3.js",
+		"file": "_build/assets/writing-B8On-NHW.js",
 		"name": "writing",
 		"src": "src/routes/writing.tsx?pick=default&pick=$css",
 		"isEntry": true,
 		"imports": [
 			"_web-Bf2WcyEa.js",
 			"_createAsync-Cd30YF3_.js",
+			"_dashboard-CKJIORz9.js",
 			"_site-Bha_-JLz.js"
 		]
 	}
@@ -1254,8 +1263,8 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
-			"build": () => import("./routes-BtpYac5f.mjs"),
-			"import": () => import("./routes-BtpYac5f.mjs")
+			"build": () => import("./routes-CBVXNKjH.mjs"),
+			"import": () => import("./routes-CBVXNKjH.mjs")
 		},
 		"path": "/"
 	},
@@ -1313,8 +1322,8 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/writing.tsx?pick=default&pick=$css",
-			"build": () => import("./writing-B8OAlVwX.mjs"),
-			"import": () => import("./writing-B8OAlVwX.mjs")
+			"build": () => import("./writing-DWL1GILp.mjs"),
+			"import": () => import("./writing-DWL1GILp.mjs")
 		},
 		"path": "/writing"
 	},
@@ -1340,8 +1349,8 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
-			"build": () => import("./newsletter-VyoSaBcS.mjs"),
-			"import": () => import("./newsletter-VyoSaBcS.mjs")
+			"build": () => import("./newsletter-BYO4MRgv.mjs"),
+			"import": () => import("./newsletter-BYO4MRgv.mjs")
 		},
 		"path": "/newsletter/"
 	},
@@ -1349,8 +1358,8 @@ var solid_start_routes_default = [
 		"page": true,
 		"$component": {
 			"src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
-			"build": () => import("../_id_-ConznEos.mjs"),
-			"import": () => import("../_id_-ConznEos.mjs")
+			"build": () => import("../_id_-JvhiNOKx.mjs"),
+			"import": () => import("../_id_-JvhiNOKx.mjs")
 		},
 		"path": "/newsletter/:id"
 	}

@@ -3,6 +3,7 @@
 // the ink theme + form primitives. Posts to the dashboard's /api/brain-request
 // (same-origin today; CORS makes it survive the domain flip).
 import type { JSX } from "solid-js"
+import { DASHBOARD } from "@/lib/dashboard"
 import { createSignal, Show } from "solid-js"
 import { Page } from "@/components/site"
 import { Button } from "@basalt/ui"
@@ -74,7 +75,7 @@ export default function BrainLanding() {
     data.ref = new URLSearchParams(window.location.search).get("ref") ?? ""
     setSending(true)
     setError("")
-    const res = await fetch("https://madcactus.org/api/brain-request", {
+    const res = await fetch(`${DASHBOARD}/api/brain-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

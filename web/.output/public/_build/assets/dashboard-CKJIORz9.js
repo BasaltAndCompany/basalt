@@ -1,0 +1,1 @@
+var e=`https://madcactus.org`;export{e as t};

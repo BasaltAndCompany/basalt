@@ -3,12 +3,13 @@
 import { createAsync } from "@solidjs/router"
 import { For, Show } from "solid-js"
 import { Page } from "@/components/site"
+import { DASHBOARD } from "@/lib/dashboard"
 
 type Issue = { id: string; issueNumber: number; title: string; publishedAt: string | null }
 
 export default function Writing() {
   const issues = createAsync(async () => {
-    const res = await fetch("https://madcactus.org/api/newsletter-issues")
+    const res = await fetch(`${DASHBOARD}/api/newsletter-issues`)
     if (!res.ok) return []
     const data = (await res.json()) as { issues: Issue[] }
     return data.issues

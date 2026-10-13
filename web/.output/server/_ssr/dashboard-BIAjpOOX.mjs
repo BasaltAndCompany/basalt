@@ -1,6 +1,6 @@
 import { r as setFunctionName } from "./ssr.mjs";
 import { $ as untrack, A as catchError, R as createResource } from "../_libs/solid-js.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/createAsync-Bhn6yo3Y.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/dashboard-BIAjpOOX.js
 /**
 * This is mock of the eventual Solid 2.0 primitive. It is not fully featured.
 */
@@ -18,5 +18,6 @@ function createAsync(fn, options) {
 function subFetch(fn, prev) {
 	return fn(prev);
 }
+var DASHBOARD = "https://madcactus.org";
 //#endregion
-export { createAsync as t };
+export { createAsync as n, DASHBOARD as t };

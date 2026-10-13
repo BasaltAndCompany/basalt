@@ -51,6 +51,10 @@
       "_utils-C5uTcCG4.js"
     ]
   },
+  "_dashboard-CKJIORz9.js": {
+    "file": "_build/assets/dashboard-CKJIORz9.js",
+    "name": "dashboard"
+  },
   "_dist-Bfhshbr9.js": {
     "file": "_build/assets/dist-Bfhshbr9.js",
     "name": "dist",
@@ -139,7 +143,7 @@
     "name": "web"
   },
   "src/entry-client.tsx": {
-    "file": "_build/assets/entry-client-CN4PJZV1.js",
+    "file": "_build/assets/entry-client-ke-PmThe.js",
     "name": "entry-client",
     "src": "src/entry-client.tsx",
     "isEntry": true,
@@ -177,7 +181,7 @@
     ]
   },
   "src/routes/brain.tsx?pick=default&pick=$css": {
-    "file": "_build/assets/brain-Cju-ccLU.js",
+    "file": "_build/assets/brain-BonLQJ_v.js",
     "name": "brain",
     "src": "src/routes/brain.tsx?pick=default&pick=$css",
     "isEntry": true,
@@ -187,6 +191,7 @@
       "_input-CPeEP3Md.js",
       "_label-kTf9Enyu.js",
       "_textarea-DLhaI_tV.js",
+      "_dashboard-CKJIORz9.js",
       "_site-Bha_-JLz.js"
     ]
   },
@@ -202,7 +207,7 @@
     ]
   },
   "src/routes/contact.tsx?pick=default&pick=$css": {
-    "file": "_build/assets/contact-CN-aLTcB.js",
+    "file": "_build/assets/contact-D5lxxulG.js",
     "name": "contact",
     "src": "src/routes/contact.tsx?pick=default&pick=$css",
     "isEntry": true,
@@ -212,6 +217,7 @@
       "_input-CPeEP3Md.js",
       "_label-kTf9Enyu.js",
       "_textarea-DLhaI_tV.js",
+      "_dashboard-CKJIORz9.js",
       "_site-Bha_-JLz.js"
     ]
   },
@@ -231,7 +237,7 @@
     ]
   },
   "src/routes/index.tsx?pick=Site&pick=default&pick=$css": {
-    "file": "_build/assets/index-D0DCvAnI.js",
+    "file": "_build/assets/index-DJxmPP2D.js",
     "name": "index",
     "src": "src/routes/index.tsx?pick=Site&pick=default&pick=$css",
     "isEntry": true,
@@ -255,7 +261,7 @@
     ]
   },
   "src/routes/newsletter/[id].tsx?pick=default&pick=$css": {
-    "file": "_build/assets/_id_-CtRe8eMZ.js",
+    "file": "_build/assets/_id_-DBaDqeDx.js",
     "name": "_id_",
     "src": "src/routes/newsletter/[id].tsx?pick=default&pick=$css",
     "isEntry": true,
@@ -265,11 +271,12 @@
       "_routing-CecSaODk.js",
       "_src-80yAutk3.js",
       "_createAsync-Cd30YF3_.js",
+      "_dashboard-CKJIORz9.js",
       "_site-Bha_-JLz.js"
     ]
   },
   "src/routes/newsletter/index.tsx?pick=default&pick=$css": {
-    "file": "_build/assets/index-5AQvBJkb.js",
+    "file": "_build/assets/index-B8gbmzv2.js",
     "name": "index",
     "src": "src/routes/newsletter/index.tsx?pick=default&pick=$css",
     "isEntry": true,
@@ -278,6 +285,7 @@
       "_src-80yAutk3.js",
       "_createAsync-Cd30YF3_.js",
       "_input-CPeEP3Md.js",
+      "_dashboard-CKJIORz9.js",
       "_site-Bha_-JLz.js"
     ]
   },
@@ -297,13 +305,14 @@
     ]
   },
   "src/routes/writing.tsx?pick=default&pick=$css": {
-    "file": "_build/assets/writing-CEgH-De3.js",
+    "file": "_build/assets/writing-B8On-NHW.js",
     "name": "writing",
     "src": "src/routes/writing.tsx?pick=default&pick=$css",
     "isEntry": true,
     "imports": [
       "_web-Bf2WcyEa.js",
       "_createAsync-Cd30YF3_.js",
+      "_dashboard-CKJIORz9.js",
       "_site-Bha_-JLz.js"
     ]
   }
