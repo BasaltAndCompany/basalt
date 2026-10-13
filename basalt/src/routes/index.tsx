@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, onMount, Show } from "solid-js"
 import { Logo } from "@/brand/logo"
-import { Button } from "@madcactus/ui"
+import { Button } from "@basalt/ui"
 import { initHeroVideo } from "@/routes/site-state"
 
 
@@ -20,7 +20,7 @@ const MESSAGES = [
   },
   {
     title: "Proven in production.",
-    body: "An autonomous agent transformed IU's ticket-resolution pipeline — productivity up, resolution time down. Measured impact, from real clients.",
+    body: "From public institutions to start-ups — Indiana University to Customs Data Lock.",
   },
   {
     title: "Hand tasks to agents, or don't pay.",

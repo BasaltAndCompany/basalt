@@ -5,7 +5,7 @@ import ConfirmButton from "~/components/ConfirmButton";
 import CreateDialog from "~/components/CreateDialog";
 import Layout from "~/components/Layout";
 import { getUserQuery } from "~/lib/queries";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 type Link = { slug: string; target: string; clicks: number; docId: string | null; docTitle: string | null; docKind: string | null; createdAt: string };
@@ -127,13 +127,13 @@ export default function AdminLinks() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Links — Mad Cactus</Title>
+			<Title>Links — Basalt</Title>
 			<h1 class="page-title" style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "4px" }}>
 				Short Links
 				<CreateDialog label="Create a link" title="Create a link" submitLabel="Save link" onSubmit={(_fd, form) => save(form)}>
 					<div class="form-group">
 						<label for="link_dest">Destination page</label>
-						<input id="link_dest" name="dest" value="https://madcactus.org/newsletter" spellcheck={false} />
+						<input id="link_dest" name="dest" value="https://basalt.ac/newsletter" spellcheck={false} />
 					</div>
 					<div class="form-row">
 						<div class="form-group">

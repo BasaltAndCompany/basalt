@@ -9,7 +9,7 @@ import {
 	getUserQuery,
 } from "~/lib/queries";
 import { getCompaniesForSelectQuery } from "~/lib/admin-queries";
-import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 const statusBadge: Record<string, string> = {
@@ -31,7 +31,7 @@ export default function Projects() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Projects — Mad Cactus</Title>
+			<Title>Projects — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Projects</h1>
@@ -123,7 +123,7 @@ export default function Projects() {
 										{(p) => (
 											<TableRow>
 												<TableCell>
-													<A href={`/admin/projects/${p.id}`} class="gold">{p.name}</A>
+													<A href={`/admin/projects/${p.id}`}>{p.name}</A>
 												</TableCell>
 												<TableCell class="muted">{p.companyName}</TableCell>
 												<TableCell style={{ "text-transform": "capitalize" }}>{p.engagementType}</TableCell>

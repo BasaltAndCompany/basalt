@@ -10,7 +10,7 @@ import {
 	getClientUserQuery,
 	revokeApiKeyAction,
 } from "~/lib/client-queries";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 
 export default function PortalApiKeys() {
 	const user = createAsync(() => getClientUserQuery(), { deferStream: true });
@@ -38,7 +38,7 @@ export default function PortalApiKeys() {
 
 	const claudeConfig = `{
   "mcpServers": {
-    "madcactus": {
+    "basalt": {
       "url": "${mcpUrl}",
       "headers": {
         "Authorization": "Bearer YOUR_API_KEY"
@@ -49,7 +49,7 @@ export default function PortalApiKeys() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>API Keys — Mad Cactus Client Portal</Title>
+			<Title>API Keys — Basalt Client Portal</Title>
 
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
@@ -152,7 +152,7 @@ export default function PortalApiKeys() {
 					</pre>
 				</div>
 				<p class="muted" style={{ "font-size": "12px", "margin-top": "12px" }}>
-					Once connected, ask your agent: "What's the status of my project with Mad Cactus?"
+					Once connected, ask your agent: "What's the status of my project with Basalt?"
 				</p>
 			</Card>
 		</PortalLayout>

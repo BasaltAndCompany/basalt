@@ -1,10 +1,10 @@
 import { createEffect, createSignal, onCleanup, Show } from "solid-js"
-import { Badge } from "@madcactus/ui"
-import { Button } from "@madcactus/ui"
-import { Card } from "@madcactus/ui"
-import { Input } from "@madcactus/ui"
-import { Label } from "@madcactus/ui"
-import { Separator } from "@madcactus/ui"
+import { Badge } from "@basalt/ui"
+import { Button } from "@basalt/ui"
+import { Card } from "@basalt/ui"
+import { Input } from "@basalt/ui"
+import { Label } from "@basalt/ui"
+import { Separator } from "@basalt/ui"
 
 type Clip = {
   title: string

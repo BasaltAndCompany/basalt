@@ -1,4 +1,4 @@
-// Public Cactus Dispatch issues — published newsletters, served straight from
+// Public Basalt Dispatch issues — published newsletters, served straight from
 // the dashboard DB so marketing never redeploys per issue (tiny headless CMS).
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "~/db";

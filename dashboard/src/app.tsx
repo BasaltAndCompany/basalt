@@ -3,14 +3,14 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { ErrorBoundary, Suspense } from "solid-js";
 import "./app.css";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 
 export default function App() {
 	return (
 		<Router
 			root={(props) => (
 				<MetaProvider>
-					<Title>Mad Cactus Portal</Title>
+					<Title>Basalt Portal</Title>
 					<ErrorBoundary
 						fallback={(err, reset) => (
 							<div style={{ padding: "48px", "max-width": "640px" }}>

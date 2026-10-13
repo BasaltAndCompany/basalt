@@ -10,7 +10,7 @@ import {
 	runBrainCycleAction,
 	closeLoopAction,
 } from "~/lib/brain/admin";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 
 const kindColor: Record<string, string> = {
 	lesson: "var(--accent, #a855f7)",
@@ -57,7 +57,7 @@ export default function AdminBrain() {
 
 	return (
 		<Layout>
-			<Title>Brain — Mad Cactus</Title>
+			<Title>Brain — Basalt</Title>
 			<div style={{ display: "flex", "align-items": "baseline", gap: "16px" }}>
 				<h1 class="page-title">Brain</h1>
 				<div style={{ flex: 1 }} />

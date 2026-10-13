@@ -10,7 +10,7 @@ import {
 	createAdminApiKeyAction,
 	revokeAdminApiKeyAction,
 } from "~/lib/admin-queries";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 
 /** Memberless API keys — server-to-server auth (e.g. the Anarlog publisher).
  *  Raw key is shown once at creation; only a hash is stored. */
@@ -28,7 +28,7 @@ export default function AdminApiKeys() {
 
 	return (
 		<Layout user={user()}>
-			<Title>API Keys — Mad Cactus</Title>
+			<Title>API Keys — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">API Keys</h1>

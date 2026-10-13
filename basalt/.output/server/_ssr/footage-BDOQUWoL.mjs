@@ -1,11 +1,11 @@
-import { B as createSignal, E as Show, F as createEffect, K as onCleanup, M as createComponent, g as ssrAttribute, h as ssr, l as escape, v as ssrHydrationKey } from "../_libs/solid-js.mjs";
+import { B as createSignal, E as Show, F as createEffect, K as onCleanup, M as createComponent, g as ssrAttribute, h as ssr, l as escape, q as onMount, v as ssrHydrationKey } from "../_libs/solid-js.mjs";
 import { m as Button, p as Badge } from "./src-CEr7MizD.mjs";
 import { t as Input } from "./input-DcyE3u5y.mjs";
 import { t as Label } from "./label-BULDmeCR.mjs";
 import { t as Card } from "./card-Vk7S3yNE.mjs";
 import { t as Separator } from "./separator-DzFt32A7.mjs";
 import { t as initHeroVideo } from "./site-state-ihm8ahx4.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/footage-DZn9vIrk.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/footage-BDOQUWoL.js
 var _tmpl$ = [
 	"<div",
 	" class=\"mt-6 flex items-center gap-3 font-sans text-xs text-muted-foreground\"><!--$-->",
@@ -229,11 +229,13 @@ function VideoPicker(props) {
 }
 var id$$ = "src/routes/footage.tsx?pick=default&pick=$css";
 function Footage() {
+	const [heroVideo, setHeroVideo] = createSignal(null);
+	onMount(() => setHeroVideo(initHeroVideo()));
 	return createComponent(VideoPicker, {
 		get heroVideo() {
-			return initHeroVideo();
+			return heroVideo();
 		},
-		onSetHero: () => {},
+		onSetHero: setHeroVideo,
 		onBack: () => {
 			window.location.href = "/";
 		}

@@ -8,7 +8,7 @@ import { CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList, } from "@madcactus/ui";
+	CommandList, } from "@basalt/ui";
 
 type Cmd = { label: string; hint?: string; run: () => void };
 

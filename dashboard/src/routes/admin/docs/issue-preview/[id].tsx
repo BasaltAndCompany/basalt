@@ -21,18 +21,18 @@ export default function DispatchIssuePreviewPage() {
 			{(d) => {
 				const subject = () => newsletterSubject({ markdown: d().markdown, title: d().title });
 				return (
-					<MarketingPage title={`${subject()} — The Cactus Dispatch`} description={subject()}>
-						<Title>{subject()} — The Cactus Dispatch (preview)</Title>
+					<MarketingPage title={`${subject()} — The Basalt Dispatch`} description={subject()}>
+						<Title>{subject()} — The Basalt Dispatch (preview)</Title>
 						<Header />
 						<article class="issue">
 							<div class="issue-inner">
 								<p class="issue-eyebrow">
-									<a href="/newsletter">The Cactus Dispatch</a> &nbsp;/&nbsp; Preview
+									<a href="/newsletter">The Basalt Dispatch</a> &nbsp;/&nbsp; Preview
 								</p>
 								<h1 class="issue-title">{subject()}</h1>
 								<div class="issue-body" innerHTML={renderIssueBody(d().markdown, d().webAppendix, "web")
 								.replaceAll('href="/brain"', `href="/brain?ref=${d().id}"`)
-								.replaceAll('href="https://madcactus.org/brain"', `href="/brain?ref=${d().id}"`)} />
+								.replaceAll('href="https://basalt.ac/brain"', `href="/brain?ref=${d().id}"`)} />
 								<div class="issue-cta">
 									<h3>Want to start turning your company AI-native?</h3>
 									<p>I build a custom company brain for one reader every week, completely free. All you have to do is click below.</p>

@@ -24,17 +24,19 @@ import {
 import { OUTREACH_STAGES, stageLabel, type OutreachProspect, type OutreachStage, type Video } from "~/db/schema";
 import type { ProspectEmailStatus } from "~/lib/admin-queries";
 import { fmtDate, fmtDur, videoSummary } from "~/lib/video-summary";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 const STAGE_COLOR: Record<string, string> = {
 	candidate: "var(--muted-foreground)",
 	proposed: "#8e7cc3",
 	sent: "var(--muted-foreground)",
-	watching: "var(--orange)",
+	// ponytail: board dots are per-stage data-viz, not status badges — they keep
+	// distinct hues inline now that --green/--orange vars are gone from the theme.
+	watching: "#c4862a",
 	replied: "#2980b9",
 	meeting: "#2980b9",
-	won: "var(--green)",
+	won: "#3d9970",
 	shutdown: "var(--red)",
 };
 
@@ -282,7 +284,7 @@ function EmailSection(props: { prospect: OutreachProspect }) {
 								<span
 									class="badge"
 									style={{
-										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--green)" : "var(--muted-foreground)",
+										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--foreground)" : "var(--muted-foreground)",
 										"margin-left": "auto",
 									}}
 								>
@@ -560,10 +562,10 @@ function BoardCard(props: {
 			<div style={{ display: "flex", "align-items": "baseline", gap: "6px" }}>
 				<span style={{ "font-weight": "600", "font-size": "13px" }}>{p().company}</span>
 				<Show when={p().icpApproved}>
-					<span class="badge" style={{ color: "var(--green)", "white-space": "nowrap" }}>ICP ✓</span>
+					<span class="badge badge-active" style={{ "white-space": "nowrap" }}>ICP ✓</span>
 				</Show>
 				<Show when={props.due}>
-					<span class="badge" style={{ color: "var(--orange)", "margin-left": "auto", "white-space": "nowrap" }}>due</span>
+					<span class="badge" style={{ "margin-left": "auto", "white-space": "nowrap" }}>due</span>
 				</Show>
 			</div>
 			<Show when={p().stage === "candidate"}>
@@ -581,7 +583,7 @@ function BoardCard(props: {
 				</div>
 			</Show>
 
-			<div class="muted" style={{ "font-size": "12px", margin: "5px 0", color: props.due ? "var(--orange)" : undefined }}>
+			<div class="muted" style={{ "font-size": "12px", margin: "5px 0", color: props.due ? "var(--foreground)" : undefined }}>
 				→ {fmtDate(p().nextActionAt)}
 				<Show when={p().nextActionNote}> — {p().nextActionNote}</Show>
 			</div>
@@ -639,7 +641,7 @@ function BoardCard(props: {
 					<Show when={p().email}>
 						<EmailSection prospect={p()} />
 					</Show>
-					<div class="muted" style={{ "font-size": "12px", margin: "8px 0", color: props.due ? "var(--orange)" : undefined }}>
+					<div class="muted" style={{ "font-size": "12px", margin: "8px 0", color: props.due ? "var(--foreground)" : undefined }}>
 						→ {fmtDate(p().nextActionAt)}
 						<Show when={p().nextActionNote}> — {p().nextActionNote}</Show>
 					</div>
@@ -657,7 +659,7 @@ function BoardCard(props: {
 						</details>
 					</Show>
 					<Show when={(() => { const v = p().video; return v ? videoSummary(v) : null; })()}>
-						{(s) => <div style={{ color: "var(--orange)", "font-size": "12px", margin: "8px 0" }}>{s()}</div>}
+						{(s) => <div class="muted" style={{ "font-size": "12px", margin: "8px 0" }}>{s()}</div>}
 					</Show>
 					<Show when={p().notes}>
 						<p class="muted" style={{ "font-size": "12px", margin: "8px 0" }}>{p().notes}</p>
@@ -848,7 +850,7 @@ export default function AdminOutreach() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Outreach — Mad Cactus</Title>
+			<Title>Outreach — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Pipeline</h1>

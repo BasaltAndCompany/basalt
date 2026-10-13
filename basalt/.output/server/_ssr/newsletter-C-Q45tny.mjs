@@ -1,9 +1,9 @@
 import { E as Show, M as createComponent, h as ssr, l as escape, v as ssrHydrationKey, w as For } from "../_libs/solid-js.mjs";
 import { t as createAsync } from "./createAsync-COGvrKs3.mjs";
 import { m as Button } from "./src-CEr7MizD.mjs";
-import { t as Page } from "./site-n8E3Se2v.mjs";
+import { t as Page } from "./site-BN-DxPGT.mjs";
 import { t as Input } from "./input-DcyE3u5y.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/newsletter-Bb6AGKQu.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/newsletter-C-Q45tny.js
 var _tmpl$ = [
 	"<section",
 	" class=\"mx-auto max-w-3xl px-6 pb-20 pt-14 text-center\"><h1 class=\"font-serif text-5xl leading-[1.05] tracking-[-0.01em] md:text-6xl\">AI teardowns<br><em>from our real clients.</em></h1><p class=\"mx-auto mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground\">Weekly breakdowns of real AI deployments. What we built, what it cost, and the blueprint to do the same thing. Higher margins, more revenue, no new headcount.</p><form class=\"mx-auto mt-8 flex max-w-md items-center gap-2\"><!--$-->",

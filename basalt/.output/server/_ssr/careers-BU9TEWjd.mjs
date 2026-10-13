@@ -1,7 +1,7 @@
 import { M as createComponent, h as ssr, l as escape, v as ssrHydrationKey } from "../_libs/solid-js.mjs";
 import { m as Button } from "./src-CEr7MizD.mjs";
-import { t as Page } from "./site-n8E3Se2v.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/careers-DvKYdmCg.js
+import { t as Page } from "./site-BN-DxPGT.mjs";
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/careers-BU9TEWjd.js
 var _tmpl$ = [
 	"<section",
 	" class=\"mx-auto max-w-xl px-6 pb-24 pt-14\"><h1 class=\"font-serif text-5xl leading-[1.05] tracking-[-0.01em]\">Careers</h1><p class=\"mt-6 font-sans text-base leading-relaxed text-muted-foreground\">No open roles right now. We stay deliberately small — the agents handle the volume, and the humans handle the judgment. When that balance breaks, we hire.</p><p class=\"mt-4 font-sans text-base leading-relaxed text-muted-foreground\">Think you'd be one of them? Say so before there's an opening.</p><!--$-->",

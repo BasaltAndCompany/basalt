@@ -6,7 +6,7 @@ import { createAsync, useAction } from "@solidjs/router";
 import { For, Show } from "solid-js";
 import Layout from "~/components/Layout";
 import { getBrainRequestsQuery, setBrainRequestStatusAction, linkBrainRequestToProspectAction } from "~/lib/admin-queries";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 const STATUSES = ["new", "building", "delivered", "declined"] as const;
@@ -18,7 +18,7 @@ export default function BrainRequests() {
 
 	return (
 		<Layout>
-			<Title>Brain requests — Mad Cactus</Title>
+			<Title>Brain requests — Basalt</Title>
 			<h1 class="page-title">Brain requests</h1>
 			<p class="page-subtitle">Free company-brain requests from /brain. Build it from their answers + public data, then link the row to a prospect.</p>
 			<Show when={requests()?.length} fallback={<p class="muted">No requests yet.</p>}>

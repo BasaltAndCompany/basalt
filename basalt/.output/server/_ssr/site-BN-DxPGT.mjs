@@ -2,7 +2,7 @@ import { n as Title, t as Meta } from "./ssr.mjs";
 import { M as createComponent, h as ssr, l as escape, v as ssrHydrationKey } from "../_libs/solid-js.mjs";
 import { m as Button } from "./src-CEr7MizD.mjs";
 import { t as Logo } from "./logo-ekwqMmrK.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/site-n8E3Se2v.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/site-BN-DxPGT.js
 var _tmpl$ = [
 	"<div",
 	" class=\"min-h-svh bg-background text-foreground\"><!--$-->",
@@ -80,7 +80,7 @@ function SiteFooter() {
 		variant: "link",
 		size: "link",
 		as: "a",
-		href: "mailto:cpfeifer@madcactus.org",
+		href: "mailto:cpfeifer@basalt.ac",
 		children: "Email"
 	})), escape(createComponent(Button, {
 		variant: "link",

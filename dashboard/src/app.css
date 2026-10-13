@@ -59,10 +59,9 @@
     --ring: rgba(250, 250, 250, 0.3);
     --radius: 0rem;
 
-    /* Status colors (semantic, not aliases): used by tables/badges in admin. */
-    --green: #3d9970;
-    --orange: #c4862a;
-    --red: #C8102E; /* the one red */
+    /* The one color: signal red, destructive meaning only (blocked / over-cap /
+       destructive). Everything else is ink. */
+    --red: #C8102E;
 
     /* Typography — Bodoni display + Geist sans (fontsource, was Google Playfair) */
     --font-serif: 'Bodoni Moda Variable', 'Bodoni MT', Georgia, serif;
@@ -87,20 +86,21 @@
   min-height: 100vh;
 }
 
-/* ── Sidebar — gallery-ink dark band (editorial split) ── */
+/* ── Sidebar — ink column, hairline rule (mockup ink.css) ── */
 .sidebar {
-  width: 240px;
+  width: 236px;
   /* wide pages must never squeeze the nav off-screen */
   flex-shrink: 0;
-  background: var(--secondary);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  padding: 16px 12px;
   position: sticky;
   top: 0;
   height: 100vh;
-  /* content (~900px: logo + 13 links + timer + hints + footer) exceeds short
-     viewports; without this, scrolling to reach the footer pushes the sticky
-     box off the top once the page's scroll range is exhausted */
+  /* content exceeds short viewports; without this, scrolling to reach the
+     footer pushes the sticky box off the top once the scroll range is spent */
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -108,35 +108,38 @@
   display: none;
 }
 
+/* Brand wordmark (components/Brand.tsx) — serif, red period; micro-suffix
+   below. Size lives here; .brand-* declares family/weight only so the
+   marketing footer can render the same mark at display size. */
 .sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.sidebar-logo img {
-  width: 40px;
-  height: 40px;
-  filter: brightness(0) invert(1);
+  padding: 4px 8px;
 }
 
 .sidebar-logo-text {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  color: #fff;
-  line-height: 1;
+  font-size: 18px;
+  line-height: 1.1;
 }
 
-.sidebar-logo-text small {
+.brand-word {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 15;
+  font-weight: 560;
+  line-height: 1.1;
+}
+
+.brand-dot {
+  color: var(--red);
+}
+
+.brand-sub {
   display: block;
   font-family: var(--font-sans);
   font-size: 9px;
-  letter-spacing: 1.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 4px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
 }
 
 .sidebar-nav {
@@ -144,46 +147,48 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding: 16px 0;
 }
 
 .nav-link {
-  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
   font-family: var(--font-sans);
   font-size: 13px;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--muted-foreground);
   transition: color 0.2s, background 0.2s;
-  border-left: 2px solid transparent;
   text-decoration: none;
-  display: block;
 }
 
-/* Icons only appear on the collapsed rail; expanded nav is text-only. */
 .nav-icon {
-  display: none;
-  width: 18px;
-  height: 18px;
-  margin: 0 auto;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .nav-link:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--foreground);
+  background: var(--accent);
 }
 
 .nav-link.active {
   color: var(--foreground);
-  border-left-color: var(--foreground);
-  background: rgba(188, 156, 92, 0.06);
+  background: var(--secondary);
+}
+
+.nav-count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--foreground);
 }
 
 .sidebar-footer {
-  padding: 16px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
   font-family: var(--font-sans);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--muted-foreground);
 }
 
 .sidebar-email {
@@ -223,10 +228,9 @@
   z-index: 10;
   width: 22px;
   height: 22px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border);
   background: var(--secondary);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted-foreground);
   font-size: 13px;
   line-height: 1;
   cursor: pointer;
@@ -237,8 +241,8 @@
 }
 
 .sidebar-collapse:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--foreground);
+  border-color: var(--ring);
 }
 
 /* ── Collapsed sidebar — icon rail ── */
@@ -261,6 +265,7 @@
 
 .layout.collapsed .nav-link {
   padding: 10px 0;
+  justify-content: center;
 }
 
 .layout.collapsed .nav-icon {
@@ -294,43 +299,62 @@
 }
 
 .sidebar-footer button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--muted-foreground);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 0 -10px;
   cursor: pointer;
-  padding: 0;
 }
 
 .sidebar-footer button:hover {
-  color: var(--red);
+  color: var(--foreground);
+  background: var(--accent);
 }
 
 .content {
   flex: 1;
-  padding: 40px 48px;
-  max-width: 1100px;
+  padding: 32px 40px 64px;
+  max-width: 1200px;
   /* allow children to shrink below their content width — without this a wide
      page (board, tables) pushes .layout wider than the viewport and the
      sidebar gets clipped */
   min-width: 0;
 }
 
-/* ── Typography ── */
+/* Links inside the app shell: paper at rest, white on hover (mockup ink.css).
+   Scoped to .content so the marketing pages keep their own palette. */
+.content a {
+  color: rgba(250, 250, 250, 0.72);
+  text-decoration: none;
+}
+
+.content a:hover {
+  color: var(--foreground);
+}
+
+/* ── Typography: serif display titles, micro-labels are the only shout ── */
 .page-title {
   font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: 32px;
-  letter-spacing: -0.5px;
-  margin-bottom: 4px;
+  font-variation-settings: "opsz" 15;
+  font-weight: 560;
+  font-size: 30px;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
 }
 
 .page-title-input {
   font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: 32px;
-  letter-spacing: -0.5px;
+  font-variation-settings: "opsz" 15;
+  font-weight: 560;
+  font-size: 30px;
+  letter-spacing: -0.01em;
   background: transparent;
   border: none;
   border-bottom: 1px dashed transparent;
@@ -342,82 +366,75 @@
 
 .page-title-input:hover,
 .page-title-input:focus {
-  border-bottom-color: rgba(188, 156, 92, 0.5);
+  border-bottom-color: var(--ring);
   outline: none;
 }
 
 .page-subtitle {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted-foreground);
-  margin-bottom: 32px;
+  margin: 0 0 28px;
 }
 
 .section-heading {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 16px;
-  color: var(--foreground);
-  margin-bottom: 16px;
-  margin-top: 40px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 32px 0 12px;
 }
 
-/* ── Stat grid ── */
+/* ── Stat tiles — hairline cards ── */
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0;
-  background: var(--card);
-  border-top: 1px solid var(--foreground);
-  border-bottom: 1px solid var(--foreground);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .stat-card {
-  padding: 24px;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.stat-card:last-child {
-  border-right: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
 }
 
 .stat-card .label {
   font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted-foreground);
   margin-bottom: 10px;
 }
 
 .stat-card .value {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: 36px;
-  line-height: 1;
+  font-size: 26px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
 }
 
 .stat-card .value .unit {
-  font-size: 18px;
+  font-size: 13px;
+  font-weight: 400;
   color: var(--muted-foreground);
-  font-family: var(--font-sans);
 }
 
 .stat-card .sub {
   font-family: var(--font-sans);
   font-size: 12px;
   color: var(--muted-foreground);
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
-/* ── Progress bar ── */
+/* ── Progress bar (retainer caps) ── */
 .progress {
   height: 6px;
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--secondary);
   overflow: hidden;
   margin-top: 12px;
 }
@@ -428,15 +445,11 @@
   transition: width 0.4s;
 }
 
-.progress-fill.warn {
-  background: var(--orange);
-}
-
 .progress-fill.over {
   background: var(--red);
 }
 
-/* ── Tables ── */
+/* ── Tables — hairline cards ── */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -445,69 +458,87 @@
 .table th {
   text-align: left;
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--muted-foreground);
   padding: 12px 16px;
-  border-bottom: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--border);
 }
 
 .table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  font-family: var(--font-serif);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
   font-size: 14px;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
 }
 
 .table td.hours {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
-.table tr:hover td {
-  background: rgba(0, 0, 0, 0.02);
+.table tbody tr:hover td {
+  background: rgba(250, 250, 250, 0.03);
 }
 
-/* ── Badges ── */
+/* hairline card around a table (mockup) */
+.table-wrap {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.table-wrap .table td {
+  border-bottom: 1px solid var(--border);
+}
+
+.table-wrap tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── Badges — red only for destructive meaning ── */
 .badge {
-  display: inline-block;
-  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid currentColor;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  white-space: nowrap;
 }
 
 .badge-active {
-  color: var(--green);
-}
-
-.badge-paused {
-  color: var(--orange);
+  border-color: rgba(250, 250, 250, 0.3);
+  color: var(--foreground);
 }
 
 .badge-completed {
-  color: var(--muted-foreground);
+  background: rgba(250, 250, 250, 0.08);
+  color: var(--foreground);
+  border-color: transparent;
 }
 
 .badge-over {
+  border-color: rgba(200, 16, 46, 0.5);
   color: var(--red);
 }
 
 /* ── Overview tiles — external / placeholder states ── */
 .stat-card .value-muted {
-  color: var(--muted-foreground);
-  font-style: italic;
+  color: rgba(250, 250, 250, 0.28);
   font-size: 24px;
 }
 
 .stat-card .value-error {
   color: var(--red);
-  font-style: italic;
   font-size: 24px;
 }
 
@@ -517,26 +548,25 @@
 
 .stat-grid-muted {
   margin-top: 12px;
-  border-top-color: rgba(0, 0, 0, 0.12);
 }
 
 .stat-card-placeholder {
-  opacity: 0.6;
+  border-style: dashed;
 }
 
 .stat-card-placeholder .label {
   color: var(--muted-foreground);
 }
 
-/* ── Section heading aside (e.g. total unpaid) ── */
+/* ── Section heading aside (e.g. total unpaid) — signal red ── */
 .section-aside {
   float: right;
   font-family: var(--font-sans);
-  font-style: normal;
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--foreground);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--red);
 }
 
 /* ── Forms ── */
@@ -544,35 +574,48 @@
   margin-bottom: 16px;
 }
 
-.form-group label {
+.form-group label,
+label {
   display: block;
   font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted-foreground);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 14px;
-  background: var(--card);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  height: 40px;
+  padding: 0 12px;
+  background: transparent;
+  border: 1px solid var(--input);
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 14px;
   transition: border-color 0.2s;
 }
 
+.form-group textarea {
+  height: auto;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--foreground);
+  border-color: var(--ring);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(250, 250, 250, 0.3);
 }
 
 .form-row {
@@ -581,11 +624,11 @@
   gap: 16px;
 }
 
-/* ── Card ── */
+/* ── Card — hairline box ── */
 .card {
   background: var(--card);
-  border-top: 1px solid var(--foreground);
-  border-bottom: 1px solid var(--foreground);
+  border: 1px solid var(--border);
+  color: var(--card-foreground);
   padding: 24px;
 }
 
@@ -600,10 +643,10 @@
   align-items: flex-start;
   overflow-x: auto;
   padding-bottom: 12px;
-  /* full-bleed: escape .content's 1100px cap + padding so all seven stages
+  /* full-bleed: escape .content's max-width cap + padding so all seven stages
      are reachable; the negative margins are undone by padding-inline */
-  margin-inline: -48px;
-  padding-inline: 48px;
+  margin-inline: -40px;
+  padding-inline: 40px;
   scrollbar-width: thin;
 }
 .board::-webkit-scrollbar {
@@ -611,19 +654,19 @@
 }
 .board::-webkit-scrollbar-thumb {
   background: rgba(127, 127, 127, 0.35);
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .board-col {
   flex: 0 0 260px;
   background: rgba(127, 127, 127, 0.06);
-  border-radius: 8px;
+  border-radius: 0;
   padding: 10px;
   min-height: 160px;
 }
 
 .board-col.drag-over {
-  outline: 2px dashed var(--orange);
+  outline: 2px dashed rgba(250, 250, 250, 0.3);
   outline-offset: -2px;
 }
 
@@ -646,7 +689,7 @@
 .dot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 0;
   flex: 0 0 auto;
 }
 
@@ -659,7 +702,7 @@
 .board-card {
   background: var(--card);
   border: 1px solid rgba(127, 127, 127, 0.25);
-  border-radius: 6px;
+  border-radius: 0;
   padding: 10px 12px;
   cursor: grab;
   /* text selection steals the mousedown → drag never starts */
@@ -676,7 +719,7 @@
 /* detail dialog opened by clicking a board card */
 .prospect-modal {
   border: 1px solid rgba(127, 127, 127, 0.25);
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--card);
   color: var(--foreground);
   padding: 20px;
@@ -725,7 +768,7 @@
   width: 100%;
   padding: 14px 16px;
   border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border);
   background: transparent;
   font-family: inherit;
   font-size: 15px;
@@ -758,17 +801,17 @@
 }
 
 [cmdk-item][data-selected="true"] {
-  background: rgba(188, 156, 92, 0.12);
+  background: rgba(250, 250, 250, 0.08);
 }
 
 /* ── Sidebar keyboard hints ── */
 .sidebar-hints {
-  margin-top: 10px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
-  justify-items: center;
+  padding: 0 8px;
   font-size: 11px;
-  color: rgb(112, 112, 112);
+  color: var(--muted-foreground);
 }
 
 .sidebar-hints > div {
@@ -777,55 +820,65 @@
   gap: 4px;
 }
 
-.sidebar-hints kbd {
-  display: inline-block;
-  min-width: 14px;
-  padding: 1px 5px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 10px;
-  line-height: 14px;
-  text-align: center;
-  color: rgb(150, 150, 150);
+.sidebar-hints span {
+  margin: 0 6px 0 4px;
 }
 
-/* ── Buttons ── */
+.sidebar-hints kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  color: var(--foreground);
+}
+
+/* ── Buttons (mockup ink.css — solid paper primary) ── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
   font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border: 1px solid var(--foreground);
-  background: transparent;
-  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid var(--primary);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  text-decoration: none;
   white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.15s;
 }
 
 .btn:hover {
-  background: var(--foreground);
-  color: var(--card);
+  opacity: 0.9;
 }
 
-
 .btn-sm {
-  padding: 6px 14px;
-  font-size: 11px;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.btn-block {
+  width: 100%;
 }
 
 /* ── Standalone form elements (outside .form-group) ── */
 select {
-  background: var(--card);
+  appearance: none;
+  background: transparent;
   color: var(--foreground);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--input);
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
 }
 
 select option {
@@ -834,15 +887,19 @@ select option {
 }
 
 input[type="date"] {
-  background: var(--card);
+  background: transparent;
   color: var(--foreground);
-  color-scheme: light;
+  color-scheme: dark;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--foreground);
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not(.form-group input):not(.doc-title) {
-  background: var(--card);
+  background: transparent;
   color: var(--foreground);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--input);
   padding: 10px 14px;
   font-family: var(--font-sans);
   font-size: 14px;
@@ -850,15 +907,14 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type=
 
 input:not(.form-group input):not(.doc-title):focus {
   outline: none;
-  border-color: var(--foreground);
+  border-color: var(--ring);
 }
 
 /* ── Misc ── */
 .empty {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-sans);
   color: var(--muted-foreground);
-  font-size: 14px;
+  font-size: 13px;
   padding: 40px;
   text-align: center;
 }
@@ -867,13 +923,9 @@ input:not(.form-group input):not(.doc-title):focus {
   color: var(--muted-foreground);
 }
 
-.gold {
-  color: var(--foreground);
-}
-
 .mono {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 .delete-btn {
@@ -896,44 +948,59 @@ input:not(.form-group input):not(.doc-title):focus {
   margin-top: 12px;
 }
 
-/* ── Login shell ── */
+/* ── Login shell — plain ink (mockup ink.css) ── */
 .login-shell {
-  position: relative;
-  display: flex;
   min-height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("/cactus-in-bloom.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: var(--background);
   padding: 40px 20px;
 }
-/* ponytail: dark scrim so the paper card pops; gallery-ink tint ties to sidebar. Swap opacity if card feels lost. */
-.login-shell::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 10, 10, 0.55);
+
+.login-brand {
+  margin-bottom: 32px;
 }
-.login-shell > * {
-  position: relative;
-  z-index: 1;
+
+.login-brand-name {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 15;
+  font-weight: 560;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.login-brand-sub {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+
+.login-title {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 15;
+  font-weight: 560;
+  font-size: 24px;
+  margin: 0 0 8px;
 }
 
 /* ── Timer widget (sidebar) ─────────────────────────────────── */
 
 .timer-widget {
-	padding: 16px 24px;
-	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 12px;
+	border: 1px solid var(--border);
+	background: var(--card);
 	font-family: var(--font-sans);
 }
 
 .timer-widget-label {
-	font-size: 9px;
-	letter-spacing: 1.5px;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.14em;
 	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.4);
+	color: var(--muted-foreground);
 	margin-bottom: 8px;
 }
 
@@ -941,18 +1008,17 @@ input:not(.form-group input):not(.doc-title):focus {
 .timer-widget input {
 	width: 100%;
 	box-sizing: border-box;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	color: #fff;
+	background: transparent;
+	border: 1px solid var(--input);
+	color: var(--foreground);
 	font-family: var(--font-sans);
 	font-size: 12px;
 	padding: 6px 8px;
 	margin-bottom: 8px;
-	border-radius: 0;
 }
 
 .timer-widget select option {
-	color: #000;
+	color: var(--foreground);
 }
 
 .timer-widget button {
@@ -977,15 +1043,15 @@ input:not(.form-group input):not(.doc-title):focus {
 }
 
 .timer-elapsed {
-	font-size: 26px;
-	color: var(--foreground);
+	font-family: ui-monospace, monospace;
+	font-size: 20px;
 	font-variant-numeric: tabular-nums;
 	margin-bottom: 2px;
 }
 
 .timer-project {
 	font-size: 13px;
-	color: #fff;
+	color: var(--foreground);
 	margin-bottom: 8px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -993,12 +1059,12 @@ input:not(.form-group input):not(.doc-title):focus {
 }
 
 .timer-project span {
-	color: rgba(255, 255, 255, 0.4);
+	color: var(--muted-foreground);
 }
 
 .timer-desc {
 	font-size: 11px;
-	color: rgba(255, 255, 255, 0.5);
+	color: var(--muted-foreground);
 	margin-bottom: 8px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1007,32 +1073,32 @@ input:not(.form-group input):not(.doc-title):focus {
 
 .timer-stop {
 	background: none;
-	border: 1px solid var(--foreground);
+	border: 1px solid var(--input);
 	color: var(--foreground);
 	margin-bottom: 6px;
 }
 
 .timer-stop:hover {
-	background: rgba(188, 156, 92, 0.12);
+	background: var(--accent);
 }
 
 .timer-discard {
 	background: none;
 	border: none;
-	color: rgba(255, 255, 255, 0.4);
+	color: var(--muted-foreground);
 	font-size: 11px !important;
 	padding: 0 !important;
 	text-decoration: underline;
 }
 
 .timer-discard:hover {
-	color: rgba(255, 255, 255, 0.7);
+	color: var(--foreground);
 }
 
 .timer-error {
 	margin-top: 8px;
 	font-size: 11px;
-	color: #e07a6a;
+	color: var(--red);
 }
 
 /* ── Docs editor (Lexical) ─────────────────────────────────────── */
@@ -1056,7 +1122,7 @@ input:not(.form-group input):not(.doc-title):focus {
 	color: var(--foreground);
 	background: var(--secondary, #141414);
 	border: 1px solid var(--border, #2a2a2a);
-	border-radius: 6px;
+	border-radius: 0;
 	padding: 3px 8px;
 }
 .doc-firstcomment {
@@ -1076,7 +1142,7 @@ input:not(.form-group input):not(.doc-title):focus {
 	color: var(--bad, #ef4444);
 	background: rgba(239, 68, 68, 0.08);
 	border: 1px solid rgba(239, 68, 68, 0.25);
-	border-radius: 6px;
+	border-radius: 0;
 	padding: 6px 10px;
 	margin: 4px 0 8px;
 }
@@ -1097,11 +1163,11 @@ input:not(.form-group input):not(.doc-title):focus {
 textarea.doc-title { resize: none; overflow: hidden; display: block; height: auto; }
 .doc-title:hover,
 .doc-title:focus {
-	border-bottom-color: rgba(188, 156, 92, 0.5);
+	border-bottom-color: var(--ring);
 	outline: none;
 }
 /* email folder tabs (inbox | drafts | sent) */
-.folder-tabs { display: flex; gap: 2px; margin: 14px 0 12px; border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+.folder-tabs { display: flex; gap: 2px; margin: 14px 0 12px; border-bottom: 1px solid var(--border); }
 .folder-tabs button {
 	background: transparent;
 	border: none;
@@ -1126,7 +1192,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	top: 40px;
 	max-height: calc(100vh - 80px);
 	overflow-y: auto;
-	border-left: 1px solid rgba(0, 0, 0, 0.15);
+	border-left: 1px solid var(--border);
 	padding-left: 20px;
 	font-size: 13px;
 }
@@ -1143,15 +1209,15 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	width: 100%;
 	background: transparent;
 	border: none;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+	border-bottom: 1px solid var(--border);
 	padding: 7px 4px;
 	font: inherit;
 	color: inherit;
 	text-align: left;
 	cursor: pointer;
 }
-.doc-history-row:hover { background: rgba(0, 0, 0, 0.04); }
-.doc-history-row.active { background: rgba(188, 156, 92, 0.15); }
+.doc-history-row:hover { background: rgba(250, 250, 250, 0.04); }
+.doc-history-row.active { background: rgba(250, 250, 250, 0.08); }
 .doc-history-ver { font-weight: 600; }
 .doc-history-author {
 	font-size: 11px;
@@ -1172,7 +1238,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	line-height: 1.55;
 	max-height: 55vh;
 	overflow-y: auto;
-	border: 1px solid rgba(0, 0, 0, 0.1);
+	border: 1px solid var(--border);
 	padding: 10px 12px;
 	background: var(--card);
 }
@@ -1198,7 +1264,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	width: 816px;
 	height: 1056px;
 	background: var(--card);
-	border-radius: 3px;
+	border-radius: 0;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14), 0 10px 28px rgba(0, 0, 0, 0.09);
 	z-index: 0;
 	pointer-events: none;
@@ -1246,7 +1312,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	width: 13px;
 	height: 13px;
 	border: 1.5px solid rgba(0, 0, 0, 0.4);
-	border-radius: 3px;
+	border-radius: 0;
 	margin-right: 8px;
 	vertical-align: -2px;
 	line-height: 13px;
@@ -1257,7 +1323,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	background: var(--foreground);
 	border-color: var(--foreground);
 	content: "\2713";
-	color: #fff;
+	color: var(--foreground);
 }
 .doc-editor ul.contains-task-list, .doc-editor li.task-list-item { list-style: none; }
 .doc-editor blockquote {
@@ -1291,7 +1357,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	margin: 0 0 18.67px;
 	background: none;
 }
-.doc-editor .lexical-highlight, .doc-editor mark { background: rgba(188, 156, 92, 0.35); }
+.doc-editor .lexical-highlight, .doc-editor mark { background: rgba(250, 250, 250, 0.2); }
 
 /* GFM pipe tables — fixed layout so wrapping matches the PDF's equal columns */
 .doc-editor table {
@@ -1309,7 +1375,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	box-sizing: border-box;
 	overflow-wrap: break-word;
 }
-.doc-editor table th { background: rgba(188, 156, 92, 0.12); font-weight: 700; }
+.doc-editor table th { background: rgba(250, 250, 250, 0.08); font-weight: 700; }
 
 /* `<!-- pagebreak -->` — hard break: next block starts a fresh page */
 .doc-pagebreak {
@@ -1324,7 +1390,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	left: 0;
 	right: 0;
 	top: 9px;
-	border-top: 1px dashed rgba(188, 156, 92, 0.8);
+	border-top: 1px dashed rgba(250, 250, 250, 0.4);
 }
 .doc-pagebreak span {
 	position: absolute;
@@ -1344,15 +1410,15 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 .doc-export { position: relative; }
 .doc-export summary { list-style: none; cursor: pointer; }
 .doc-export summary::-webkit-details-marker { display: none; }
-.doc-export[open] summary { background: rgba(0, 0, 0, 0.08); }
+.doc-export[open] summary { background: rgba(250, 250, 250, 0.06); }
 .doc-export-menu {
 	position: absolute;
 	right: 0;
 	top: calc(100% + 6px);
 	z-index: 60;
 	background: var(--card);
-	border: 1px solid rgba(0, 0, 0, 0.12);
-	border-radius: 8px;
+	border: 1px solid var(--border);
+	border-radius: 0;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
 	padding: 4px;
 	min-width: 150px;
@@ -1364,22 +1430,22 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	background: none;
 	border: none;
 	padding: 7px 10px;
-	border-radius: 6px;
+	border-radius: 0;
 	cursor: pointer;
 	font: inherit;
 	font-size: 13px;
 	color: inherit;
 }
-.doc-export-menu button:hover { background: rgba(0, 0, 0, 0.06); }
+.doc-export-menu button:hover { background: rgba(250, 250, 250, 0.06); }
 
 /* floating selection toolbar (macro-style) */
 .doc-toolbar {
 	position: fixed;
 	transform: translateX(-50%);
 	gap: 2px;
-	background: #201d19;
+	background: var(--popover);
 	border: 1px solid rgba(255, 255, 255, 0.09);
-	border-radius: 8px;
+	border-radius: 0;
 	padding: 4px;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 	z-index: 1000;
@@ -1390,13 +1456,13 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	color: #e8e2d6;
 	min-width: 28px;
 	height: 26px;
-	border-radius: 5px;
+	border-radius: 0;
 	cursor: pointer;
 	font-size: 12.5px;
 	padding: 0 6px;
 }
 .doc-toolbar button:hover { background: rgba(255, 255, 255, 0.12); }
-.doc-toolbar button.active { background: rgba(188, 156, 92, 0.4); }
+.doc-toolbar button.active { background: rgba(250, 250, 250, 0.3); }
 
 /* voice-lint inline underline (LintedTextarea mirror marks) */
 .lint-underline {
@@ -1457,7 +1523,7 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 	justify-content: flex-end;
 	gap: 8px;
 	padding: 14px 24px;
-	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	border-top: 1px solid var(--border);
 }
 
 /* ── Toasts — global queue in src/lib/toast.ts, rendered by components/Toaster.tsx ── */
@@ -1473,9 +1539,9 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 
 .toast {
 	background: var(--secondary);
-	color: #fff;
+	color: var(--foreground);
 	border: 1px solid var(--border);
-	border-left: 3px solid var(--green);
+	border-left: 3px solid var(--border);
 	padding: 10px 14px;
 	font-family: var(--font-sans);
 	font-size: 13px;
@@ -1498,16 +1564,16 @@ textarea.doc-title { resize: none; overflow: hidden; display: block; height: aut
 .component-mention {
 	display: inline;
 	white-space: nowrap;
-	border-radius: 6px;
+	border-radius: 0;
 	padding: 1px 6px 2px;
 	font-size: 0.92em;
-	background: rgba(188, 156, 92, 0.12);
-	border: 1px solid rgba(188, 156, 92, 0.35);
+	background: rgba(250, 250, 250, 0.08);
+	border: 1px solid rgba(250, 250, 250, 0.2);
 	cursor: default;
 }
 .doc-mention:hover,
 .component-mention:hover {
-	background: rgba(188, 156, 92, 0.22);
+	background: rgba(250, 250, 250, 0.14);
 }
 a.component-mention-link,
 .component-mention-link {
@@ -1544,9 +1610,9 @@ a.component-mention-link:hover {
 	overflow-y: auto;
 	display: grid;
 	gap: 2px;
-	background: #201d19;
+	background: var(--popover);
 	border: 1px solid rgba(255, 255, 255, 0.09);
-	border-radius: 8px;
+	border-radius: 0;
 	padding: 4px;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
@@ -1558,7 +1624,7 @@ a.component-mention-link:hover {
 	text-align: left;
 	background: none;
 	border: none;
-	border-radius: 6px;
+	border-radius: 0;
 	color: #eee;
 	padding: 6px 8px;
 	font-size: 13px;
@@ -1593,9 +1659,9 @@ a.component-mention-link:hover {
 	position: fixed;
 	z-index: 61;
 	width: 280px;
-	background: #201d19;
+	background: var(--popover);
 	border: 1px solid rgba(255, 255, 255, 0.09);
-	border-radius: 10px;
+	border-radius: 0;
 	padding: 10px 12px;
 	box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 	display: grid;
@@ -1620,8 +1686,8 @@ a.component-mention-link:hover {
 	margin-left: auto;
 	font-size: 11px;
 	color: #eee;
-	background: rgba(188, 156, 92, 0.18);
-	border-radius: 5px;
+	background: rgba(250, 250, 250, 0.1);
+	border-radius: 0;
 	padding: 1px 7px;
 }
 .mention-popover-status.mention-popover-deleted {

@@ -8,7 +8,7 @@ import "~/styles/marketing-iu.css";
 export default function IuCaseStudy() {
 	return (
 		<MarketingPage
-			title="Mad Cactus — IU Case Study"
+			title="Basalt — IU Case Study"
 			description="How we built an autonomous data engineering agent for Indiana University that increased productivity by 45%."
 		>
 			<Header />

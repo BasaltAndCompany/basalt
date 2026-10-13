@@ -14,7 +14,7 @@ import {
 	getOverviewQuery,
 	type ExternalResult,
 } from "~/lib/overview";
-import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 /** Render an external-source metric, degrading to a muted "not connected" tile. */
@@ -93,7 +93,7 @@ export default function Home() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Dashboard — Mad Cactus</Title>
+			<Title>Dashboard — Basalt</Title>
 			<h1 class="page-title">Dashboard</h1>
 			<p class="page-subtitle">
 				{new Date().toLocaleDateString("en-US", {
@@ -195,7 +195,7 @@ export default function Home() {
 											{(d) => (
 												<TableRow>
 													<TableCell>
-														<A href={`/admin/projects/${d.projectId}`} class="gold">
+														<A href={`/admin/projects/${d.projectId}`}>
 															{d.title}
 														</A>
 													</TableCell>
@@ -406,7 +406,7 @@ export default function Home() {
 														{new Date(e.entryDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
 													</TableCell>
 													<TableCell>
-														<A href={`/admin/projects/${e.projectId}`} class="gold">{e.projectName}</A>
+														<A href={`/admin/projects/${e.projectId}`}>{e.projectName}</A>
 													</TableCell>
 													<TableCell>{e.description}</TableCell>
 													<TableCell class="hours" style={{ "text-align": "right" }}>{e.hours}</TableCell>

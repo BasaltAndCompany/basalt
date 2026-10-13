@@ -7,7 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { DeliverableStatus } from "~/db/schema";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 
 const statusBadge: Record<DeliverableStatus, string> = {
 	planned: "badge-paused",
@@ -25,7 +25,7 @@ export default function PortalHome() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Overview — Mad Cactus Client Portal</Title>
+			<Title>Overview — Basalt Client Portal</Title>
 			<h1 class="page-title">Projects</h1>
 			<p class="page-subtitle">All engagements across your companies</p>
 

@@ -6,7 +6,7 @@ import {
 	createDocumentLinkAction,
 	deleteDocumentAction,
 } from "~/lib/admin-queries";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 type FormMode = "link" | "file" | "transcript";
@@ -262,7 +262,6 @@ export default function ProjectDocuments(props: {
 													href={doc.url!}
 													target="_blank"
 													rel="noopener noreferrer"
-													class="gold"
 												>
 													{doc.title}
 												</a>
@@ -271,7 +270,6 @@ export default function ProjectDocuments(props: {
 											<Show when={doc.type !== "link" && doc.url}>
 												<a
 													href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
-													class="gold"
 												>
 													{doc.title}
 												</a>

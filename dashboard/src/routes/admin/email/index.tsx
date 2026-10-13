@@ -11,7 +11,7 @@ import {
 	getEmailStatusQuery,
 } from "~/lib/email-queries";
 import type { EmailThread, EmailMessage, EmailOutbox } from "~/db/schema";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 
 type DraftVersionRow = { id: string; version: number; author: string; createdAt: string; updatedAt: string };
 type DraftDiffPart = { added?: boolean; removed?: boolean; value: string };
@@ -699,7 +699,7 @@ export default function AdminEmail() {
 
 	return (
 		<Layout>
-			<Title>Email — Mad Cactus</Title>
+			<Title>Email — Basalt</Title>
 			<div style={{ display: "flex", "align-items": "baseline", gap: "16px" }}>
 				<h1 class="page-title">Email</h1>
 				<span class="muted" style={{ "font-size": "13px" }}>

@@ -22,7 +22,7 @@ import {
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
 import type { InvoiceStatus } from "~/db/schema";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 export default function CompanyDetail() {
@@ -95,7 +95,7 @@ export default function CompanyDetail() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Company Detail — Mad Cactus</Title>
+			<Title>Company Detail — Basalt</Title>
 			<A href="/admin/companies" class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", display: "inline-block" }}>
 				All Companies
 			</A>
@@ -283,7 +283,7 @@ function CompanyProjectSection(props: {
 	return (
 		<Card style={{ "margin-bottom": "16px", padding: "24px" }}>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "16px" }}>
-				<A href={`/admin/projects/${props.proj.id}`} class="gold" style={{ "font-size": "16px", "font-weight": "500" }}>
+				<A href={`/admin/projects/${props.proj.id}`} style={{ "font-size": "16px", "font-weight": "500" }}>
 					{props.proj.name}
 				</A>
 			</div>

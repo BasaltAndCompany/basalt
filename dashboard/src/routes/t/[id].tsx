@@ -20,7 +20,7 @@ export default function TeaserPage() {
 		<Show when={teaser()} fallback={<p class="muted">Not found.</p>}>
 			{(t) => (
 				<Layout user={null}>
-					<Title>{t().title} — Mad Cactus</Title>
+					<Title>{t().title} — Basalt</Title>
 					<article class="teaser" style={{ "max-width": "640px", margin: "48px auto", padding: "0 20px" }}>
 						<h1 style={{ "font-family": "var(--font-serif)", "font-weight": "400", "font-size": "28px" }}>{t().title}</h1>
 						<div class="teaser-body" innerHTML={body()} />

@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@madcactus/ui"
+} from "@basalt/ui"
 
 export type SelectOption = { value: string; label: string }
 

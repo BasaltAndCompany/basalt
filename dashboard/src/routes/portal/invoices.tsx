@@ -7,7 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { InvoiceStatus } from "~/db/schema";
-import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 
 const statusBadge: Record<InvoiceStatus, string> = {
 	draft: "badge-paused",
@@ -24,7 +24,7 @@ export default function PortalInvoices() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Invoices — Mad Cactus Client Portal</Title>
+			<Title>Invoices — Basalt Client Portal</Title>
 			<h1 class="page-title">Invoices</h1>
 			<p class="page-subtitle">Billing history and payment links</p>
 

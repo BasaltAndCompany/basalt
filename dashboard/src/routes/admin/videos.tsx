@@ -7,7 +7,7 @@ import { getUserQuery } from "~/lib/queries";
 import { getOutreachQuery, getVideosQuery, setOutreachVideoAction } from "~/lib/admin-queries";
 import { stageLabel } from "~/db/schema";
 import { videoSummary } from "~/lib/video-summary";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 // Mirrors the server's free-plan cap (dashboard/src/routes/api/upload-video.ts).
@@ -128,7 +128,7 @@ export default function AdminVideos() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Videos — Mad Cactus</Title>
+			<Title>Videos — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Videos</h1>
@@ -202,7 +202,7 @@ export default function AdminVideos() {
 									when={videoSummary(v)}
 									fallback={<div class="muted" style={{ "font-size": "12px" }}>not opened yet</div>}
 								>
-									<div style={{ color: "var(--orange)", "font-size": "12px" }}>{videoSummary(v)}</div>
+									<div class="muted" style={{ "font-size": "12px" }}>{videoSummary(v)}</div>
 								</Show>
 							</div>
 						)}

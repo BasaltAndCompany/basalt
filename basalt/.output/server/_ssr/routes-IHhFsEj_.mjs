@@ -2,7 +2,7 @@ import { B as createSignal, E as Show, K as onCleanup, M as createComponent, g a
 import { m as Button } from "./src-CEr7MizD.mjs";
 import { t as Logo } from "./logo-ekwqMmrK.mjs";
 import { t as initHeroVideo } from "./site-state-ihm8ahx4.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-BD7R7NfS.js
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/routes-IHhFsEj_.js
 var _tmpl$ = ["<div", " class=\"lava-glow absolute inset-x-0 bottom-0 h-72\" aria-hidden=\"true\"></div>"];
 var _tmpl$2 = ["<svg", " class=\"absolute bottom-0 left-0 h-40 w-full\" viewBox=\"0 0 1200 160\" preserveAspectRatio=\"none\"><g fill=\"#050505\"><rect x=\"0\" y=\"148\" width=\"1200\" height=\"12\"></rect><rect x=\"170\" y=\"66\" width=\"170\" height=\"94\"></rect><rect x=\"515\" y=\"14\" width=\"190\" height=\"146\"></rect><rect x=\"880\" y=\"92\" width=\"165\" height=\"68\"></rect></g></svg>"];
 var _tmpl$3 = [
@@ -58,7 +58,7 @@ var MESSAGES = [
 	},
 	{
 		title: "Proven in production.",
-		body: "An autonomous agent transformed IU's ticket-resolution pipeline — productivity up, resolution time down. Measured impact, from real clients."
+		body: "From public institutions to start-ups — Indiana University to Customs Data Lock."
 	},
 	{
 		title: "Hand tasks to agents, or don't pay.",

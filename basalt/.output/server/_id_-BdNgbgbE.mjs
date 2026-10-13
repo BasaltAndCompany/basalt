@@ -2,8 +2,8 @@ import { a as useParams, n as Title } from "./_ssr/ssr.mjs";
 import { E as Show, M as createComponent, h as ssr, l as escape, v as ssrHydrationKey } from "./_libs/solid-js.mjs";
 import { t as createAsync } from "./_ssr/createAsync-COGvrKs3.mjs";
 import { m as Button } from "./_ssr/src-CEr7MizD.mjs";
-import { t as Page } from "./_ssr/site-n8E3Se2v.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/_id_-IOk2R4Iy.js
+import { t as Page } from "./_ssr/site-BN-DxPGT.mjs";
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/_id_-BdNgbgbE.js
 var _tmpl$ = ["<div", " class=\"mx-auto max-w-2xl px-6 py-24 text-center\"><p class=\"font-sans text-muted-foreground\">Loading…</p></div>"];
 var _tmpl$2 = ["<div", " class=\"mx-auto max-w-2xl px-6 py-24 text-center\"><p class=\"font-sans text-muted-foreground\">That issue doesn't exist.</p></div>"];
 var _tmpl$3 = [

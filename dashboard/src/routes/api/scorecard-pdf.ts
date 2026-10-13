@@ -4,12 +4,12 @@ import { CATEGORY_CONTENT } from "./types";
 const FONT_DIR = `${import.meta.dirname}/fonts`;
 const FONT_REGULAR = `${FONT_DIR}/PlayfairDisplay.ttf`;
 const FONT_ITALIC = `${FONT_DIR}/PlayfairDisplay-Italic.ttf`;
-const LOGO = `${import.meta.dirname}/cactus-seal.png`;
 
 const C = {
     vellum: "#f6f6f6",
     gold: "#bc9c5c",
     black: "#0a0a0a",
+    signal: "#C8102E", // the one red — wordmark period
     silver: "#b3b3b3",
     lightSilver: "#e8e8e8",
     codeBg: "#1a1a1a",
@@ -36,6 +36,15 @@ function tierColor(tier: string): string {
     if (tier === "AI Urgent") return C.tierColors.urgent;
     if (tier === "AI Ready") return C.tierColors.ready;
     return C.tierColors.mature;
+}
+
+/** Text wordmark "Basalt." in the doc's serif; returns the x after the period. */
+function drawWordmark(doc: Doc, x: number, y: number, size: number): number {
+    doc.font(FONT_REGULAR).fontSize(size);
+    const w = doc.widthOfString("Basalt");
+    doc.fillColor(C.black).text("Basalt", x, y, { lineBreak: false });
+    doc.fillColor(C.signal).text(".", x + w, y, { lineBreak: false });
+    return x + w + doc.widthOfString(".");
 }
 
 type Doc = any;
@@ -66,11 +75,11 @@ class PageState {
         this.pageIndex++;
 
         // Header
-        this.doc.image(LOGO, m, m - 8, { width: 28 });
+        const afterDot = drawWordmark(this.doc, m, m - 10, 20);
         this.doc.font("Helvetica-Bold").fontSize(9).fillColor(C.gold)
             .text(
                 `${this.catIndex.toString().padStart(2, "0")} / ${this.totalPages.toString().padStart(2, "0")}`,
-                m + 40, m, { lineBreak: false },
+                afterDot + 12, m, { lineBreak: false },
             );
         goldLine(this.doc, m, m + 28, W - m);
         this.y = m + 48;
@@ -216,9 +225,9 @@ export function generateScorecardPDF(data: ScoreData): Promise<Uint8Array<ArrayB
 
             // ══════ PAGE 1: COVER ══════
             fillVellum(doc);
-            doc.image(LOGO, m, m - 8, { width: 36 });
+            const afterDot = drawWordmark(doc, m, m - 10, 24);
             doc.font("Helvetica-Bold").fontSize(9).fillColor(C.silver)
-                .text("AI READINESS ASSESSMENT", m + 48, m, { lineBreak: false });
+                .text("AI READINESS ASSESSMENT", afterDot + 14, m, { lineBreak: false });
             goldLine(doc, m, m + 36, W - m);
 
             doc.font("Helvetica-Bold").fontSize(11).fillColor(tc)
@@ -312,7 +321,7 @@ export function generateScorecardPDF(data: ScoreData): Promise<Uint8Array<ArrayB
             // ══════ FINAL CTA PAGE ══════
             doc.addPage();
             fillVellum(doc);
-            doc.image(LOGO, m, m - 8, { width: 28 });
+            drawWordmark(doc, m, m - 10, 20);
             goldLine(doc, m, m + 28, W - m);
 
             const ctaY = H / 2 - 100;

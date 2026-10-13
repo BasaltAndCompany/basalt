@@ -8,7 +8,7 @@ import {
 	searchDocumentsQuery,
 } from "~/lib/client-queries";
 import type { DocumentType } from "~/db/schema";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 
 const typeLabel: Record<DocumentType, string> = {
 	link: "Link",
@@ -34,7 +34,7 @@ export default function PortalDocuments() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Documents — Mad Cactus Client Portal</Title>
+			<Title>Documents — Basalt Client Portal</Title>
 			<h1 class="page-title">Documents</h1>
 			<p class="page-subtitle">Shared files, links, and meeting transcripts</p>
 

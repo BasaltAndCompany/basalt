@@ -18,7 +18,7 @@ import {
 	publishMeetingAction,
 	type TranscriptBlock,
 } from "~/lib/admin-queries";
-import { Button, Card } from "@madcactus/ui";
+import { Button, Card } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 interface EditableBlock extends TranscriptBlock {
@@ -148,12 +148,12 @@ export default function MeetingEditor() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Edit Meeting — Mad Cactus</Title>
+			<Title>Edit Meeting — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "24px" }}>
 				<div>
 					<h1 class="page-title">Edit Meeting</h1>
 					<p class="page-subtitle" style={{ "margin-bottom": "0" }}>
-						<A class="gold" href="/admin/meetings">
+						<A href="/admin/meetings">
 							← Meetings
 						</A>
 					</p>

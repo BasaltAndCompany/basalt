@@ -14,7 +14,7 @@ import {
 } from "~/lib/queries";
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
-import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
@@ -78,7 +78,7 @@ export default function ProjectDetail() {
 				<Show when={project()} fallback={<p class="muted">Loading…</p>}>
 					{(p) => (
 						<>
-							<Title>{p().name} — Mad Cactus</Title>
+							<Title>{p().name} — Basalt</Title>
 							<A href="/admin/projects" class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", display: "inline-block" }}>
 								All Projects
 							</A>

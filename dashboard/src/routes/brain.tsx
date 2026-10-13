@@ -47,7 +47,7 @@ export default function BrainLanding() {
 
 	return (
 		<MarketingPage
-			title="Get a Free Custom Company Brain | Mad Cactus"
+			title="Get a Free Custom Company Brain | Basalt"
 			description="Answer a few questions about your company. We build you a custom company brain, free, so you can see what AI actually does for your business."
 		>
 			<Header />
@@ -122,7 +122,7 @@ export default function BrainLanding() {
 					<select id="brain-heard" name="heardAbout" style={input}>
 						<option value="">Select…</option>
 						<option>LinkedIn post</option>
-						<option>The Cactus Dispatch newsletter</option>
+						<option>The Basalt Dispatch newsletter</option>
 						<option>Referral</option>
 						<option>Other</option>
 					</select>

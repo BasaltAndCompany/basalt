@@ -52,7 +52,7 @@ export default function Newsletter() {
 
 	return (
 		<MarketingPage
-			title="The Cactus Dispatch | Mad Cactus"
+			title="The Basalt Dispatch | Basalt"
 			description="Weekly AI teardowns for business owners. Real deployments, real numbers, and the blueprint your team needs to build the same thing."
 		>
 			<Header />

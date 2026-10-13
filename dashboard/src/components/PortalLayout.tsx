@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router";
 import { For, ParentComponent, Show, createEffect } from "solid-js";
 import Toaster from "~/components/Toaster";
+import Brand from "~/components/Brand";
 
 const links = [
 	{ href: "/portal", label: "Overview" },
@@ -23,10 +24,8 @@ const PortalLayout: ParentComponent<{ user?: { id?: string; name?: string; email
 		<div class="layout">
 			<aside class="sidebar">
 				<div class="sidebar-logo">
-					<img src="/cactus-seal.svg" alt="Mad Cactus" />
 					<div class="sidebar-logo-text">
-						Mad Cactus
-						<small>Client Portal</small>
+						<Brand suffix="Client Portal" />
 					</div>
 				</div>
 				<nav class="sidebar-nav">

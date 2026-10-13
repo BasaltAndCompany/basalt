@@ -3,8 +3,8 @@
 // layout utilities.
 import type { JSX } from "solid-js"
 import { Page } from "@/components/site"
-import { Button } from "@madcactus/ui"
-import { Separator } from "@madcactus/ui"
+import { Button } from "@basalt/ui"
+import { Separator } from "@basalt/ui"
 
 function CaseSection(props: { label: string; children: JSX.Element }) {
   return (

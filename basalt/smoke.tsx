@@ -12,13 +12,13 @@ const [{ render }, { default: Home }, { default: UiGallery }, ui] = await Promis
   import("@/routes/index"),
   import("@/ui-gallery"),
   Promise.all([
-    import("@madcactus/ui/button"),
-    import("@madcactus/ui/badge"),
-    import("@madcactus/ui/card"),
-    import("@madcactus/ui/input"),
-    import("@madcactus/ui/label"),
-    import("@madcactus/ui/separator"),
-    import("@madcactus/ui/textarea"),
+    import("@basalt/ui/button"),
+    import("@basalt/ui/badge"),
+    import("@basalt/ui/card"),
+    import("@basalt/ui/input"),
+    import("@basalt/ui/label"),
+    import("@basalt/ui/separator"),
+    import("@basalt/ui/textarea"),
   ]),
 ])
 const [{ Button }, { Badge }, { Card, CardContent }, { Input }, { Label }, { Separator }, { Textarea }] = ui

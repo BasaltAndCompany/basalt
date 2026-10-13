@@ -13,7 +13,7 @@ export default function AdminDocEditor() {
 			<Show when={doc()}>
 				{(d) => (
 					<>
-						<Title>{d().title} — Mad Cactus</Title>
+						<Title>{d().title} — Basalt</Title>
 						<DocEditor id={params.id ?? ""} doc={d()} />
 					</>
 				)}

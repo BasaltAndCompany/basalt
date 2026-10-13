@@ -4,8 +4,8 @@
 import { createAsync } from "@solidjs/router"
 import { For, Show } from "solid-js"
 import { Page } from "@/components/site"
-import { Button } from "@madcactus/ui"
-import { Input } from "@madcactus/ui"
+import { Button } from "@basalt/ui"
+import { Input } from "@basalt/ui"
 
 type Issue = { id: string; issueNumber: number; title: string; publishedAt: string | null }
 

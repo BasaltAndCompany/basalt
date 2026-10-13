@@ -4,7 +4,7 @@
 import { Meta, Title } from "@solidjs/meta"
 import type { JSX } from "solid-js"
 import { Logo } from "@/brand/logo"
-import { Button } from "@madcactus/ui"
+import { Button } from "@basalt/ui"
 
 // The approved text-link look (same as the landing nav).
 function NavLink(props: { href: string; children: string }) {
@@ -54,7 +54,7 @@ export function SiteFooter() {
         </div>
         <div class="flex items-center gap-6">
           <NavLink href="/newsletter">Newsletter</NavLink>
-          <Button variant="link" size="link" as="a" href="mailto:cpfeifer@madcactus.org">
+          <Button variant="link" size="link" as="a" href="mailto:cpfeifer@basalt.ac">
             Email
           </Button>
           <Button

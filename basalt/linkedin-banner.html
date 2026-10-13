@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Basalt LinkedIn banner source. 1584×396 = LinkedIn profile banner size.
+     Plain ink field, favicon mark (white serif B + red dot) on the left.
+     Render: basalt/linkedin-banner.png via headless Chrome screenshot. -->
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1584px; height: 396px; overflow: hidden; }
+  .stage { width: 1584px; height: 396px; background: #0A0A0A; }
+  /* favicon mark at 3.5×; period kerned tight like a wordmark, red like the site wordmark dot */
+  .mark {
+    position: absolute;
+    right: 140px;
+    top: 86px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 161px;
+    line-height: 164px;
+    letter-spacing: -0.04em;
+    color: #FAFAFA;
+  }
+  .mark .dot { color: #C8102E; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="mark">B<span class="dot">.</span></div>
+  </div>
+</body>
+</html>

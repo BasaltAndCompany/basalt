@@ -18,7 +18,7 @@ import { stageLabel, type CampaignCompany, type CampaignTouch, type OutreachStag
 import type { CompanySendStats } from "~/lib/campaign-stats";
 import { fillTemplate, templateSlots } from "~/lib/campaign-fill";
 import { fmtDate } from "~/lib/video-summary";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 import SelectField from "~/components/select-field";
 
 /** getCampaignsQuery row: company + its Gmail-grounded send/reply state. */
@@ -53,7 +53,7 @@ function previewValues(company: { companyName: string; contactEmail: string | nu
 		finding_1: "14 inbound steel shipments last quarter (up from 9)",
 		finding_2: "carrier insurance lapsed twice this year",
 		finding_3: "$4.1M in tariff exposure at current rates",
-		link: "https://madcactus.org/l/demo",
+		link: "https://basalt.ac/l/demo",
 		owner_role: "your head of operations",
 	};
 	if (!company) return samples;
@@ -397,7 +397,7 @@ export default function AdminCampaigns() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Campaigns — Mad Cactus</Title>
+			<Title>Campaigns — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Campaigns</h1>

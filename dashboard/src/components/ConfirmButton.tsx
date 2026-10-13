@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
 import { revalidate } from "@solidjs/router";
-import { Button } from "@madcactus/ui";
+import { Button } from "@basalt/ui";
 import { AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
@@ -8,7 +8,7 @@ import { AlertDialog,
 	AlertDialogDescription,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger, } from "@madcactus/ui";
+	AlertDialogTrigger, } from "@basalt/ui";
 
 /**
  * Button that confirms before running a destructive async action and reports

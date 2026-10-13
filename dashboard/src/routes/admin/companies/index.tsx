@@ -13,7 +13,7 @@ import {
 	getSignedInEmailsQuery,
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
-import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@madcactus/ui";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 
 export default function Companies() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -58,7 +58,7 @@ export default function Companies() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Companies — Mad Cactus</Title>
+			<Title>Companies — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Companies</h1>
@@ -99,7 +99,7 @@ export default function Companies() {
 										{(c) => (
 											<TableRow>
 												<TableCell>
-													<A href={`/admin/companies/${c.id}`} class="gold">{c.name}</A>
+													<A href={`/admin/companies/${c.id}`}>{c.name}</A>
 												</TableCell>
 												<TableCell class="muted">
 													{(members() ?? []).filter((m) =>

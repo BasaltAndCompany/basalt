@@ -1,7 +1,7 @@
 import { E as Show, M as createComponent, h as ssr, l as escape, v as ssrHydrationKey, w as For } from "../_libs/solid-js.mjs";
 import { t as createAsync } from "./createAsync-COGvrKs3.mjs";
-import { t as Page } from "./site-n8E3Se2v.mjs";
-//#region node_modules/.nitro/vite/services/ssr/_build/assets/writing-_fHcNtfw.js
+import { t as Page } from "./site-BN-DxPGT.mjs";
+//#region node_modules/.nitro/vite/services/ssr/_build/assets/writing-C4pNJBpD.js
 var _tmpl$ = [
 	"<section",
 	" class=\"mx-auto max-w-3xl px-6 pb-24 pt-14\"><h1 class=\"font-serif text-5xl leading-[1.05] tracking-[-0.01em]\">Writing</h1><div class=\"mt-12\"><a href=\"/iu\" class=\"group block border-b border-border py-6\"><p class=\"font-sans text-xs uppercase tracking-[0.25em] text-muted-foreground\">Case Study</p><h2 class=\"mt-2 font-serif text-2xl transition-colors group-hover:text-foreground\">Indiana <em>University</em> — the autonomous ticket agent</h2><p class=\"mt-1 font-sans text-sm text-muted-foreground\">45% productivity increase, measured across Q2—Q3.</p></a></div><div class=\"divide-y divide-border\">",

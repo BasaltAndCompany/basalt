@@ -56,7 +56,7 @@ describe("newsletterSubject", () => {
 	test("leading Subject: line wins — legacy issues keep their stored subject", () => {
 		const doc = {
 			id: "x",
-			title: "The Cactus Dispatch — Issue 01",
+			title: "The Basalt Dispatch — Issue 01",
 			markdown: "Subject: A tool that surfaces warm leads\n\n# Some heading\n\nbody",
 		} as Parameters<typeof newsletterSubject>[0];
 		expect(newsletterSubject(doc)).toBe("A tool that surfaces warm leads");
@@ -141,14 +141,14 @@ describe("renderIssueBody (body → appendix)", () => {
 	});
 
 	test("email /l/ links carry the per-person r variable, web links don't", () => {
-		const md = "[blueprint](https://madcactus.org/l/abc1234)";
-		expect(renderIssueBody(md, "", "email")).toContain('href="https://madcactus.org/l/abc1234?r={{email}}"');
+		const md = "[blueprint](https://basalt.ac/l/abc1234)";
+		expect(renderIssueBody(md, "", "email")).toContain('href="https://basalt.ac/l/abc1234?r={{email}}"');
 		expect(renderIssueBody(md, "", "web")).not.toContain("r=");
 	});
 
 	test("r is appended, not duplicated, on /l/ links that already have a query", () => {
-		const md = "[x](https://madcactus.org/l/abc1234?utm_source=n)";
-		expect(renderIssueBody(md, "", "email")).toContain('href="https://madcactus.org/l/abc1234?utm_source=n&r={{email}}"');
+		const md = "[x](https://basalt.ac/l/abc1234?utm_source=n)";
+		expect(renderIssueBody(md, "", "email")).toContain('href="https://basalt.ac/l/abc1234?utm_source=n&r={{email}}"');
 	});
 });
 
@@ -156,14 +156,14 @@ describe("renderIssueEmail (the Dispatch template)", () => {
 	const full = renderIssueEmail({
 		subject: "Teardown #7",
 		markdown: "## The tension\n\nBody copy here.",
-		appendix: "[Build yours →](https://madcactus.org/l/abc1234?r={{email}})",
+		appendix: "[Build yours →](https://basalt.ac/l/abc1234?r={{email}})",
 		issueNumber: 7,
 		tracking: { docId: "d1" },
 	});
 
 	test("web-view chrome: vellum bg, gold eyebrow with issue number, serif title", () => {
 		expect(full).toContain("background:#f6f6f6");
-		expect(full).toContain("THE CACTUS DISPATCH · ISSUE 07");
+		expect(full).toContain("THE BASALT DISPATCH · ISSUE 07");
 		expect(full).toContain("#bc9c5c");
 		expect(full).toContain("<h1 style=\"font-family:Georgia");
 		expect(full).toContain("Teardown #7</h1>");
@@ -174,10 +174,10 @@ describe("renderIssueEmail (the Dispatch template)", () => {
 		expect(full).toContain("<p style=");
 	});
 
-	test("footer seal is the tracked pixel when tracking, static otherwise", () => {
+	test("footer wordmark is the tracked pixel when tracking, static otherwise", () => {
 		expect(full).toContain("/api/track/open/d1?r={{email}}");
 		const plain = renderIssueEmail({ subject: "S", markdown: "b" });
-		expect(plain).toContain('src="https://madcactus.org/cactus-seal.png"');
+		expect(plain).toContain('Basalt<span style="color:#C8102E;">.</span>');
 		expect(plain).not.toContain("/api/track/open");
 	});
 
