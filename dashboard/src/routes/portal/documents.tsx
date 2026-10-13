@@ -8,6 +8,7 @@ import {
 	searchDocumentsQuery,
 } from "~/lib/client-queries";
 import type { DocumentType } from "~/db/schema";
+import { Button, Card } from "@basalt/ui";
 
 const typeLabel: Record<DocumentType, string> = {
 	link: "Link",
@@ -33,7 +34,7 @@ export default function PortalDocuments() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Documents — Mad Cactus Client Portal</Title>
+			<Title>Documents — Basalt Client Portal</Title>
 			<h1 class="page-title">Documents</h1>
 			<p class="page-subtitle">Shared files, links, and meeting transcripts</p>
 
@@ -47,10 +48,10 @@ export default function PortalDocuments() {
 					style={{
 						width: "100%",
 						padding: "12px 16px",
-						background: "var(--bg-card)",
+						background: "var(--card)",
 						border: "1px solid rgba(0,0,0,0.12)",
 						"border-radius": "0px",
-						color: "var(--text)",
+						color: "var(--foreground)",
 						"font-size": "14px",
 						outline: "none",
 					}}
@@ -72,7 +73,7 @@ export default function PortalDocuments() {
 						</div>
 						<For each={searchResults() ?? []}>
 							{(hit) => (
-								<div class="card" style={{ display: "flex", "align-items": "flex-start", gap: "16px", padding: "20px" }}>
+								<Card style={{ display: "flex", "align-items": "flex-start", gap: "16px", padding: "20px" }}>
 									<div style={{ flex: "1" }}>
 										<div style={{ "font-size": "15px", "font-weight": "500" }}>
 											{hit.title}
@@ -96,18 +97,18 @@ export default function PortalDocuments() {
 											when={hit.type === "link" && hit.url}
 											fallback={
 												<Show when={hit.url}>
-													<a href={`/api/download?path=${encodeURIComponent(hit.url!)}`} class="btn btn-sm" download="">
+													<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(hit.url!)}`}  download="">
 														Download
-													</a>
+													</Button>
 												</Show>
 											}
 										>
-											<a href={hit.url!} target="_blank" rel="noopener noreferrer" class="btn btn-sm">
+											<Button as="a" variant="outline" size="sm" href={hit.url!} target="_blank" rel="noopener noreferrer">
 												Open
-											</a>
+											</Button>
 										</Show>
 									</div>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>
@@ -117,12 +118,12 @@ export default function PortalDocuments() {
 					{(list) => (
 						<Show
 							when={list().length > 0}
-							fallback={<div class="card empty">No documents shared yet.</div>}
+							fallback={<Card class="empty">No documents shared yet.</Card>}
 						>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
 								<For each={list()}>
 									{(doc) => (
-										<div class="card" style={{ display: "flex", "align-items": "center", gap: "16px", padding: "20px" }}>
+										<Card style={{ display: "flex", "align-items": "center", gap: "16px", padding: "20px" }}>
 											<div style={{ flex: "1" }}>
 												<div style={{ "font-size": "15px", "font-weight": "500" }}>
 													{doc.title}
@@ -146,36 +147,29 @@ export default function PortalDocuments() {
 													when={doc.type === "link" && doc.url}
 													fallback={
 														<Show when={doc.url}>
-															<a
-																href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
-																class="btn btn-sm"
-																download=""
-															>
+															<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(doc.url!)}`}
+																
+																download="">
 																Download
-															</a>
+															</Button>
 														</Show>
 													}
 												>
-													<a
-														href={doc.url!}
+													<Button as="a" variant="outline" size="sm" href={doc.url!}
 														target="_blank"
-														rel="noopener noreferrer"
-														class="btn btn-sm"
-													>
+														rel="noopener noreferrer">
 														Open
-													</a>
+													</Button>
 												</Show>
 											<Show when={doc.audioPath}>
-												<a
-													href={`/api/download?path=${encodeURIComponent(doc.audioPath!)}`}
-													class="btn btn-sm"
-													download=""
-												>
+												<Button as="a" variant="outline" size="sm" href={`/api/download?path=${encodeURIComponent(doc.audioPath!)}`}
+													
+													download="">
 													Audio
-												</a>
+												</Button>
 											</Show>
 											</div>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>

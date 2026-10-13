@@ -223,7 +223,7 @@ export async function syncEntities(): Promise<{ created: number }> {
 			slug: "madcactus-voice",
 			type: "entity",
 			entityKind: "topic",
-			title: "Mad Cactus Voice",
+			title: "Basalt Voice",
 		});
 		created++;
 	}

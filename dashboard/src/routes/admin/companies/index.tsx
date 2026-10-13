@@ -13,6 +13,7 @@ import {
 	getSignedInEmailsQuery,
 } from "~/lib/admin-queries";
 import { getUserQuery } from "~/lib/queries";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
 
 export default function Companies() {
 	const user = createAsync(() => getUserQuery(), { deferStream: true });
@@ -57,7 +58,7 @@ export default function Companies() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Companies — Mad Cactus</Title>
+			<Title>Companies — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Companies</h1>
@@ -82,39 +83,39 @@ export default function Companies() {
 				<Show when={companies()} fallback={<p class="muted">Loading…</p>}>
 					{(list) => (
 						<Show when={list().length > 0} fallback={
-							<div class="card empty">No companies yet. Create one above.</div>
+							<Card class="empty">No companies yet. Create one above.</Card>
 						}>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Company</th>
-										<th>Members</th>
-										<th>Created</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Company</TableHead>
+										<TableHead>Members</TableHead>
+										<TableHead>Created</TableHead>
+										<TableHead>Actions</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(c) => (
-											<tr>
-												<td>
-													<A href={`/admin/companies/${c.id}`} class="gold">{c.name}</A>
-												</td>
-												<td class="muted">
+											<TableRow>
+												<TableCell>
+													<A href={`/admin/companies/${c.id}`}>{c.name}</A>
+												</TableCell>
+												<TableCell class="muted">
 													{(members() ?? []).filter((m) =>
 														// ponytail: member-company link shown on detail page; here just count
 														false,
 													).length}
-												</td>
-												<td class="muted">{new Date(c.createdAt).toLocaleDateString()}</td>
-												<td>
-													<A href={`/admin/companies/${c.id}`} class="btn btn-sm">Manage</A>
-												</td>
-											</tr>
+												</TableCell>
+												<TableCell class="muted">{new Date(c.createdAt).toLocaleDateString()}</TableCell>
+												<TableCell>
+													<Button as="a" variant="outline" size="sm" href={`/admin/companies/${c.id}`}>Manage</Button>
+												</TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>
@@ -133,45 +134,45 @@ export default function Companies() {
 					<Show when={members()} fallback={<p class="muted">Loading…</p>}>
 						{(list) => (
 							<Show when={list().length > 0} fallback={
-								<div class="card empty">No members yet. Add them from a company detail page.</div>
+								<Card class="empty">No members yet. Add them from a company detail page.</Card>
 							}>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Email</th>
-											<th>Status</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Name</TableHead>
+											<TableHead>Email</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Actions</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={list()}>
 											{(m) => (
-												<tr>
-													<td>{m.name}</td>
-													<td class="muted">{m.email}</td>
-													<td>
+												<TableRow>
+													<TableCell>{m.name}</TableCell>
+													<TableCell class="muted">{m.email}</TableCell>
+													<TableCell>
 														<span class={`badge ${m.isActive ? "badge-active" : "badge-paused"}`}>
 															{m.isActive ? "active" : "disabled"}
 														</span>
-													</td>
-													<td>
+													</TableCell>
+													<TableCell>
 														<div style={{ display: "flex", gap: "8px" }}>
 															<Show when={invitePending(m.email)}>
-																<button class="btn btn-sm" onClick={() => handleResend(m.id)} disabled={resendingId() === m.id}>{resendingId() === m.id ? "Sending…" : "Resend Invite"}</button>
+																<Button variant="outline" size="sm" onClick={() => handleResend(m.id)} disabled={resendingId() === m.id}>{resendingId() === m.id ? "Sending…" : "Resend Invite"}</Button>
 															</Show>
 															<form method="post" action="/admin/companies/toggle-member">
 																<input type="hidden" name="id" value={m.id} />
 																<input type="hidden" name="is_active" value={String(m.isActive)} />
-																<button type="submit" class="btn btn-sm">{m.isActive ? "Disable" : "Enable"}</button>
+																<Button variant="outline" size="sm" type="submit">{m.isActive ? "Disable" : "Enable"}</Button>
 															</form>
 														</div>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						)}
 					</Show>

@@ -18,6 +18,8 @@ import { stageLabel, type CampaignCompany, type CampaignTouch, type OutreachStag
 import type { CompanySendStats } from "~/lib/campaign-stats";
 import { fillTemplate, templateSlots } from "~/lib/campaign-fill";
 import { fmtDate } from "~/lib/video-summary";
+import { Button } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 /** getCampaignsQuery row: company + its Gmail-grounded send/reply state. */
 type CampaignCompanyWithStats = CampaignCompany & { sendStats: CompanySendStats | null };
@@ -51,7 +53,7 @@ function previewValues(company: { companyName: string; contactEmail: string | nu
 		finding_1: "14 inbound steel shipments last quarter (up from 9)",
 		finding_2: "carrier insurance lapsed twice this year",
 		finding_3: "$4.1M in tariff exposure at current rates",
-		link: "https://madcactus.org/l/demo",
+		link: "https://basalt.ac/l/demo",
 		owner_role: "your head of operations",
 	};
 	if (!company) return samples;
@@ -107,12 +109,14 @@ function TemplatesPanel(props: {
 				<Show when={props.campaign.companies.length}>
 					<label class="muted" style={{ "font-size": "12px", "margin-left": "auto" }}>
 						preview fill:{" "}
-						<select value={previewCompany()} onChange={(e) => setPreviewCompany(e.currentTarget.value)}>
-							<option value="">sample company</option>
-							<For each={props.campaign.companies}>
-								{(c) => <option value={c.id}>{c.companyName}</option>}
-							</For>
-						</select>
+						<SelectField
+							value={previewCompany()}
+							onChange={setPreviewCompany}
+							placeholder="sample company"
+							options={() =>
+								props.campaign.companies.map((c) => ({ value: c.id, label: c.companyName }))
+							}
+						/>
 					</label>
 				</Show>
 			</div>
@@ -130,21 +134,19 @@ function TemplatesPanel(props: {
 								onInput={(e) => setTouch(i(), { subject: e.currentTarget.value })}
 								style={{ flex: "1", "font-weight": "600" }}
 							/>
-							<button
-								type="button"
-								class="btn btn-sm"
+							<Button variant="outline" size="sm" type="button"
+								
 								onClick={() => setPreviewFor(previewFor() === i() ? null : i())}
 							>
 								{previewFor() === i() ? "Hide preview" : "Preview"}
-							</button>
+							</Button>
 							<Show when={touches().length > 1}>
-								<button
-									type="button"
-									class="btn btn-sm"
+								<Button variant="outline" size="sm" type="button"
+									
 									onClick={() => setTouches((ts) => ts.filter((_, j) => j !== i()))}
 								>
 									✕
-								</button>
+								</Button>
 							</Show>
 						</div>
 						{/* SSR writes value as an attribute, which browsers ignore on textarea —
@@ -183,14 +185,13 @@ function TemplatesPanel(props: {
 				)}
 			</For>
 			<div style={{ display: "flex", gap: "8px", "margin-top": "10px", "align-items": "center" }}>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => setTouches((ts) => [...ts, { step: ts.length + 1, subject: "", body: "" }])}
 				>
 					Add touch
-				</button>
-				<button type="submit" class="btn btn-primary btn-sm">Save templates</button>
+				</Button>
+				<Button size="sm" type="submit">Save templates</Button>
 				<span class="muted" style={{ "font-size": "12px" }}>Saved copy is voice-linted — violations reject the whole save.</span>
 			</div>
 			<Show when={error()}>
@@ -239,10 +240,9 @@ function CampaignRow(props: { company: CampaignCompanyWithStats }) {
 					value={props.company.nextEmailNote ?? ""}
 					style={{ flex: "1", "min-width": "180px" }}
 				/>
-				<button type="submit" class="btn btn-sm">Save</button>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="submit">Save</Button>
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={async () => {
 						const fd = new FormData();
 						fd.set("id", props.company.id);
@@ -250,7 +250,7 @@ function CampaignRow(props: { company: CampaignCompanyWithStats }) {
 					}}
 				>
 					✕
-				</button>
+				</Button>
 			</form>
 			<div style={{ display: "flex", gap: "10px", "flex-wrap": "wrap", "align-items": "baseline" }}>
 				<Show when={props.company.nextSendAt}>
@@ -311,9 +311,8 @@ function Campaign(props: {
 				<span class="muted" style={{ "font-size": "12px" }}>
 					{c().companies.length} target{c().companies.length === 1 ? "" : "s"} · {c().templates.length} touch{c().templates.length === 1 ? "" : "es"} · {c().prospects.length} on board
 				</span>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					style={{ "margin-left": "auto" }}
 					onClick={(e) => {
 						e.preventDefault();
@@ -324,7 +323,7 @@ function Campaign(props: {
 					}}
 				>
 					Delete campaign
-				</button>
+				</Button>
 			</summary>
 			<Show when={c().description}>
 				<p class="muted" style={{ "font-size": "13px", "margin": "6px 0 0" }}>{c().description}</p>
@@ -382,9 +381,9 @@ function Campaign(props: {
 					<div style={{ display: "flex", gap: "6px", "flex-wrap": "wrap", "margin-top": "8px" }}>
 						<For each={c().prospects}>
 							{(p) => (
-								<a href="/admin/outreach" class="btn btn-sm" title={stageLabel(p.stage)}>
+								<Button as="a" variant="outline" size="sm" href="/admin/outreach"  title={stageLabel(p.stage)}>
 									{p.company} · {stageLabel(p.stage as OutreachStage)}
-								</a>
+								</Button>
 							)}
 						</For>
 					</div>
@@ -401,7 +400,7 @@ export default function AdminCampaigns() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Campaigns — Mad Cactus</Title>
+			<Title>Campaigns — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Campaigns</h1>

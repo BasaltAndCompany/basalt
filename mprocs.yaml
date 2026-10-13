@@ -5,3 +5,7 @@ procs:
     shell: supabase start
   dashboard:
     shell: cd dashboard && bun run dev
+  basalt:
+    # The marketing site (SolidStart). :3000 stays the dashboard until the
+    # domain flip retires the dashboard's marketing routes.
+    shell: cd basalt && bun run dev

@@ -14,6 +14,8 @@ import {
 } from "~/lib/queries";
 import { createDeliverableAction, getDeliverablesQuery, deleteDeliverableAction } from "~/lib/admin-queries";
 import type { DeliverableStatus } from "~/db/schema";
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 const STATUS_OPTIONS: DeliverableStatus[] = [
 	"planned",
@@ -42,6 +44,7 @@ export default function ProjectDetail() {
 	const deleteEntry = useAction(deleteTimeEntryAction);
 	const deleteDeliverable = useAction(deleteDeliverableAction);
 	const createDeliverable = useAction(createDeliverableAction);
+	const statusForms: Record<string, HTMLFormElement> = {};
 	const [error, setError] = createSignal("");
 	// Guard + in-flight indicator: a second click while the action runs must
 	// not submit a duplicate entry.
@@ -75,7 +78,7 @@ export default function ProjectDetail() {
 				<Show when={project()} fallback={<p class="muted">Loading…</p>}>
 					{(p) => (
 						<>
-							<Title>{p().name} — Mad Cactus</Title>
+							<Title>{p().name} — Basalt</Title>
 							<A href="/admin/projects" class="muted" style={{ "font-size": "13px", "margin-bottom": "8px", display: "inline-block" }}>
 								All Projects
 							</A>
@@ -86,10 +89,10 @@ export default function ProjectDetail() {
 							</p>
 
 							<Show when={p().notes}>
-								<div class="card" style={{ "margin-bottom": "32px" }}>
+								<Card style={{ "margin-bottom": "32px" }}>
 									<div class="section-heading" style={{ "margin-top": "0" }}>Scope</div>
 									<p class="muted" style={{ "white-space": "pre-wrap" }}>{p().notes}</p>
-								</div>
+								</Card>
 							</Show>
 
 							{/* Deliverables — client-visible */}
@@ -119,11 +122,11 @@ export default function ProjectDetail() {
 							<Suspense fallback={<p class="muted">Loading…</p>}>
 								<Show when={deliverables()} fallback={<p class="muted">Loading…</p>}>
 									{(list) => (
-										<Show when={list().length > 0} fallback={<div class="card empty">No deliverables yet.</div>}>
+										<Show when={list().length > 0} fallback={<Card class="empty">No deliverables yet.</Card>}>
 											<div style={{ display: "flex", "flex-direction": "column", gap: "12px", "margin-bottom": "40px" }}>
 												<For each={list()}>
 													{(delv) => (
-														<div class="card" style={{ padding: "20px" }}>
+														<Card style={{ padding: "20px" }}>
 															<div style={{ display: "flex", "justify-content": "space-between", "align-items": "flex-start", gap: "12px" }}>
 																<div style={{ flex: "1" }}>
 																	<span style={{ "font-size": "15px", "font-weight": "500" }}>{delv.title}</span>
@@ -132,18 +135,16 @@ export default function ProjectDetail() {
 																	</span>
 																</div>
 																{/* Status changer */}
-																<form method="post" action="/admin/projects/update-deliverable" style={{ display: "inline-flex", gap: "0" }}>
+																<form method="post" action="/admin/projects/update-deliverable" style={{ display: "inline-flex", gap: "0" }} ref={(f) => (statusForms[delv.id] = f)}>
 																	<input type="hidden" name="id" value={delv.id} />
 																	<input type="hidden" name="_referer" value={`/admin/projects/${params.id}`} />
-																	<select name="status" onchange={(e) => e.currentTarget.form?.submit()} style={{ "padding": "6px 12px", "font-size": "13px", "border-radius": "6px", "cursor": "pointer" }}>
-																		<For each={STATUS_OPTIONS}>
-																			{(opt) => (
-																				<option value={opt} selected={opt === delv.status}>
-																					{opt.replace("_", " ")}
-																				</option>
-																			)}
-																		</For>
-																	</select>
+																	<SelectField
+																		name="status"
+																		value={delv.status}
+																		style={{ padding: "6px 12px", "font-size": "13px" }}
+																		options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt.replace("_", " ") }))}
+																		onChange={() => statusForms[delv.id]?.requestSubmit()}
+																	/>
 																</form>
 															</div>
 															<Show when={delv.description}>
@@ -171,17 +172,17 @@ export default function ProjectDetail() {
 																<Show
 																	when={updateDeliverableId() === delv.id}
 																	fallback={
-																		<button class="btn btn-sm" onClick={() => setUpdateDeliverableId(delv.id)}>
+																		<Button variant="outline" size="sm" onClick={() => setUpdateDeliverableId(delv.id)}>
 																			Add Update
-																		</button>
+																		</Button>
 																	}
 																>
 																	<form method="post" action="/admin/projects/add-update" style={{ flex: "1", display: "flex", gap: "8px" }}>
 																		<input type="hidden" name="deliverable_id" value={delv.id} />
 																		<input type="hidden" name="_referer" value={`/admin/projects/${params.id}`} />
 																		<input type="text" name="body" placeholder="Progress update…" required style={{ flex: "1", "padding": "8px 14px", "font-size": "13px" }} />
-																		<button type="submit" class="btn btn-sm btn-primary">Post</button>
-																		<button type="button" class="btn btn-sm" onClick={() => setUpdateDeliverableId(null)}>Cancel</button>
+																		<Button size="sm" type="submit">Post</Button>
+																		<Button variant="outline" size="sm" type="button"  onClick={() => setUpdateDeliverableId(null)}>Cancel</Button>
 																	</form>
 																</Show>
 																<ConfirmButton
@@ -195,7 +196,7 @@ export default function ProjectDetail() {
 																}}
 															/>
 															</div>
-														</div>
+														</Card>
 													)}
 												</For>
 											</div>
@@ -212,7 +213,7 @@ export default function ProjectDetail() {
 
 							{/* Log form — admin only */}
 							<div class="section-heading">Log Time</div>
-							<div class="card" style={{ "margin-bottom": "32px" }}>
+							<Card style={{ "margin-bottom": "32px" }}>
 								<form onSubmit={handleLog}>
 									<input type="hidden" name="project_id" value={p().id} />
 									<div class="form-row">
@@ -238,11 +239,11 @@ export default function ProjectDetail() {
 									<Show when={error()}>
 										<p class="login-error" style={{ "margin-bottom": "12px" }}>{error()}</p>
 									</Show>
-									<button type="submit" class="btn btn-primary" disabled={logging()}>
+									<Button type="submit"  disabled={logging()}>
 							{logging() ? "Logging…" : "Log Entry"}
-						</button>
+						</Button>
 								</form>
-							</div>
+							</Card>
 
 							{/* Entries */}
 							<div style={{ display: "flex", "justify-content": "space-between", "align-items": "baseline" }}>
@@ -257,29 +258,29 @@ export default function ProjectDetail() {
 								when={(entries() ?? []).length > 0}
 								fallback={<p class="empty">No entries yet.</p>}
 							>
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Description</th>
-											<th style={{ "text-align": "right" }}>Hours</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
+								<Table class="table">
+									<TableHeader>
+										<TableRow>
+											<TableHead>Date</TableHead>
+											<TableHead>Description</TableHead>
+											<TableHead style={{ "text-align": "right" }}>Hours</TableHead>
+											<TableHead></TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
 										<For each={entries() ?? []}>
 											{(e) => (
-												<tr>
-													<td class="muted" style={{ "white-space": "nowrap" }}>
+												<TableRow>
+													<TableCell class="muted" style={{ "white-space": "nowrap" }}>
 														{new Date(e.entryDate).toLocaleDateString("en-US", {
 															month: "short",
 															day: "numeric",
 															year: "numeric",
 														})}
-													</td>
-													<td>{e.description}</td>
-													<td class="hours" style={{ "text-align": "right" }}>{e.hours}</td>
-													<td style={{ width: "40px" }}>
+													</TableCell>
+													<TableCell>{e.description}</TableCell>
+													<TableCell class="hours" style={{ "text-align": "right" }}>{e.hours}</TableCell>
+													<TableCell style={{ width: "40px" }}>
 														<ConfirmButton
 													label="Delete"
 													class="delete-btn"
@@ -289,12 +290,12 @@ export default function ProjectDetail() {
 														return deleteEntry(fd);
 													}}
 												/>
-													</td>
-												</tr>
+													</TableCell>
+												</TableRow>
 											)}
 										</For>
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							</Show>
 						</>
 					)}

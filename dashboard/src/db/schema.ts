@@ -557,7 +557,7 @@ export const monthlyHoursByProject = pgView("monthly_hours_by_project").as(
 export const docStatus = pgEnum("doc_status", ["draft", "final", "scheduled", "publishing", "published", "failed"]);
 // where a newsletter goes: both channels (default) or web archive only
 export const publishChannel = pgEnum("publish_channel", ["email+web", "web"]);
-// null kind = plain doc; "post" = LinkedIn post, "newsletter" = Cactus Dispatch issue
+// null kind = plain doc; "post" = LinkedIn post, "newsletter" = Basalt Dispatch issue
 export const docKind = pgEnum("doc_kind", ["post", "newsletter"]);
 
 // ── Docs (CRDT markdown documents + version history) ───────────────
@@ -586,7 +586,7 @@ export const docs = pgTable(
 		// snapshot of the live web version at publish/republish time — later edits
 		// change `markdown` but keep rendering the old version until republished
 		webMarkdown: text("web_markdown"),
-		// Cactus Dispatch issue number — minted once at first publish (max+1
+		// Basalt Dispatch issue number — minted once at first publish (max+1
 		// across newsletters) and never reused, so unlisting an issue doesn't
 		// renumber the rest. Null until first publish; newsletters only.
 		issueNumber: integer("issue_number"),

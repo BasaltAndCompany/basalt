@@ -16,7 +16,7 @@ import {
 } from "~/db/schema";
 
 /**
- * MCP Server — Mad Cactus Client Portal
+ * MCP Server — Basalt Client Portal
  *
  * Stateless JSON-RPC over HTTP. Authenticates via Bearer API key.
  * A member's key grants access to all projects across their companies.

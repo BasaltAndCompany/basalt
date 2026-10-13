@@ -4,13 +4,11 @@
 // g <key>: g e email · g d docs · g a admin · g m meetings · g o outreach
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import {
-	CommandDialog,
+import { CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList,
-} from "~/components/ui/command";
+	CommandList, } from "@basalt/ui";
 
 type Cmd = { label: string; hint?: string; run: () => void };
 
@@ -142,7 +140,6 @@ export default function CommandPalette() {
 				setOpen(o);
 				if (o) setSearch("");
 			}}
-			label="Command menu"
 		>
 			<CommandInput value={search()} onValueChange={setSearch} placeholder="Type a command…" spellcheck={false} />
 			<CommandList>

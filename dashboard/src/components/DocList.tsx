@@ -2,6 +2,8 @@ import { A, createAsync, useAction, useNavigate } from "@solidjs/router";
 import { For, Show, Suspense, createSignal } from "solid-js";
 import CreateDialog from "~/components/CreateDialog";
 import { getDocsQuery, createDocAction, getIssueStatsQuery, addIssueLearningAction } from "~/lib/docs-queries";
+import { Button, Card } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 /** Shared list for the three doc tabs — same table, filtered by kind. */
 export default function DocList(props: {
@@ -47,14 +49,13 @@ export default function DocList(props: {
 						<div style={{ display: "flex", gap: "6px", "margin-top": "6px" }}>
 							<For each={["marketing", "informational", "casual"]}>
 								{(g) => (
-									<button
-										type="button"
-										class="btn btn-sm"
+									<Button variant="outline" size="sm" type="button"
+										
 										style={{ padding: "2px 10px", "font-size": "12px", opacity: genre() === g ? 1 : 0.7 }}
 										onClick={() => setGenre(g)}
 									>
 										{g}
-									</button>
+									</Button>
 								)}
 							</For>
 						</div>
@@ -71,9 +72,9 @@ export default function DocList(props: {
 				>
 					<For each={docs()?.filter((d) => d.kind === props.kind)}>
 						{(d) => (
-							<div class="card" style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
+							<Card style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
 								<A href={`/admin/${props.kind ? `${props.kind}s` : "docs"}/${d.id}`} style={{ display: "block", "text-decoration": "none" }}>
-									<div style={{ "font-size": "15px", "font-weight": 500, color: "var(--text)" }}>{d.title}</div>
+									<div style={{ "font-size": "15px", "font-weight": 500, color: "var(--foreground)" }}>{d.title}</div>
 								<div class="muted" style={{ "font-size": "13px", "margin-top": "4px" }}>
 									{new Date(d.updatedAt).toLocaleString()} · v{d.version}
 									<Show when={d.genre}> · {d.genre}</Show>
@@ -91,7 +92,7 @@ export default function DocList(props: {
 									</div>
 									<AddLearning docId={d.id} />
 								</Show>
-							</div>
+							</Card>
 						)}
 					</For>
 				</Show>
@@ -121,13 +122,18 @@ function AddLearning(props: { docId: string }) {
 					}
 				}}
 			>
-				<select name="topic" class="doc-sched-input" style={{ width: "90px" }}>
-					<option value="subject">subject</option>
-					<option value="cta">cta</option>
-				</select>
+				<SelectField
+					name="topic"
+					options={[
+						{ value: "subject", label: "subject" },
+						{ value: "cta", label: "cta" },
+					]}
+					class="doc-sched-input"
+					style={{ width: "90px" }}
+				/>
 				<input type="hidden" name="doc_id" value={props.docId} />
 				<input name="fact" placeholder="e.g. question subjects beat statement subjects, 41% vs 28% opens" style={{ flex: 1, "min-width": "260px" }} />
-				<button type="submit" class="btn btn-sm">Save</button>
+				<Button variant="outline" size="sm" type="submit">Save</Button>
 			</form>
 			<Show when={msg()}><span class="muted" style={{ "font-size": "12px" }}>{msg()}</span></Show>
 		</details>

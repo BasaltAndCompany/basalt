@@ -81,7 +81,7 @@ const doc = defineComponent({
 	kind: "doc",
 	label: "Doc",
 	description:
-		"CRDT markdown document — plain doc, LinkedIn post, or Cactus Dispatch issue. Agent writes land as versions for human review.",
+		"CRDT markdown document — plain doc, LinkedIn post, or Basalt Dispatch issue. Agent writes land as versions for human review.",
 	table: docs,
 	title: (r) => r.title,
 	subtitle: (r) => [r.kind ?? "doc", r.genre].filter(Boolean).join(" · "),

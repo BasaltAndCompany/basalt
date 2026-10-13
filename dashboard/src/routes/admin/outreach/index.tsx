@@ -24,15 +24,19 @@ import {
 import { OUTREACH_STAGES, stageLabel, type OutreachProspect, type OutreachStage, type Video } from "~/db/schema";
 import type { ProspectEmailStatus } from "~/lib/admin-queries";
 import { fmtDate, fmtDur, videoSummary } from "~/lib/video-summary";
+import { Button } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 const STAGE_COLOR: Record<string, string> = {
-	candidate: "var(--text-subtle)",
+	candidate: "var(--muted-foreground)",
 	proposed: "#8e7cc3",
-	sent: "var(--text-subtle)",
-	watching: "var(--orange)",
+	sent: "var(--muted-foreground)",
+	// ponytail: board dots are per-stage data-viz, not status badges — they keep
+	// distinct hues inline now that --green/--orange vars are gone from the theme.
+	watching: "#c4862a",
 	replied: "#2980b9",
 	meeting: "#2980b9",
-	won: "var(--green)",
+	won: "#3d9970",
 	shutdown: "var(--red)",
 };
 
@@ -91,7 +95,7 @@ function DigestSection(props: { brainUrl: string }) {
 								<For each={(d() as { items: BrainDigestItem[] }).items}>
 									{(item) => (
 										<li style={{ "margin-bottom": "3px" }}>
-											<span class="badge" style={{ color: "var(--text-subtle)", "margin-right": "6px" }}>{item.kind}</span>
+											<span class="badge" style={{ color: "var(--muted-foreground)", "margin-right": "6px" }}>{item.kind}</span>
 											<Show when={item.citationUrl} fallback={<span>{item.headline}</span>}>
 												<a href={item.citationUrl} target="_blank" rel="noreferrer">{item.headline}</a>
 											</Show>
@@ -142,9 +146,9 @@ function ActivityDetails(props: { prospect: OutreachProspect }) {
 						<ActivityMetrics activity={(a() as { activity: BrainActivity }).activity} />
 						<ActivityChart days={(a() as { activity: BrainActivity }).activity.days} />
 						<div style={{ display: "flex", gap: "8px", "align-items": "center", "margin-top": "6px", "flex-wrap": "wrap" }}>
-							<button type="button" class="btn btn-sm" onClick={handleReset}>
+							<Button variant="outline" size="sm" type="button"  onClick={handleReset}>
 								reset metrics
-							</button>
+							</Button>
 							<Show when={resetMsg()}>
 								<span class="muted" style={{ "font-size": "12px" }}>{resetMsg()}</span>
 							</Show>
@@ -280,7 +284,7 @@ function EmailSection(props: { prospect: OutreachProspect }) {
 								<span
 									class="badge"
 									style={{
-										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--green)" : "var(--text-subtle)",
+										color: (d() as { card: { replied: boolean } }).card.replied ? "var(--foreground)" : "var(--muted-foreground)",
 										"margin-left": "auto",
 									}}
 								>
@@ -305,9 +309,9 @@ function EmailSection(props: { prospect: OutreachProspect }) {
 								<span class="muted" style={{ "font-size": "12px", "align-self": "center" }}>link:</span>
 								<For each={(d() as { suggestions: { email: string; lastAt: Date }[] }).suggestions}>
 									{(s) => (
-										<button type="button" class="btn btn-sm" title={fmtDate(s.lastAt)} onClick={() => linkAddress(s.email)}>
+										<Button variant="outline" size="sm" type="button"  title={fmtDate(s.lastAt)} onClick={() => linkAddress(s.email)}>
 											{s.email}
-										</button>
+										</Button>
 									)}
 								</For>
 							</div>
@@ -341,21 +345,19 @@ function VideoSection(props: { videoUrl?: string | null; videoId: string; descri
 				<Show when={props.description}>
 					<div class="muted">{props.description}</div>
 				</Show>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${props.videoId}`)}
 				>
 					copy email link
-				</button>
-				<button
-					type="button"
-					class="btn btn-sm"
+				</Button>
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${props.videoId}?test=1`)}
 				>
 					copy test email link
-				</button>
-				<a class="btn btn-sm" href={props.videoUrl!} target="_blank" rel="noreferrer">cap ↗</a>
+				</Button>
+				<Button as="a" variant="outline" size="sm" href={props.videoUrl!} target="_blank" rel="noreferrer">cap ↗</Button>
 			</div>
 		</Show>
 	);
@@ -560,16 +562,16 @@ function BoardCard(props: {
 			<div style={{ display: "flex", "align-items": "baseline", gap: "6px" }}>
 				<span style={{ "font-weight": "600", "font-size": "13px" }}>{p().company}</span>
 				<Show when={p().icpApproved}>
-					<span class="badge" style={{ color: "var(--green)", "white-space": "nowrap" }}>ICP ✓</span>
+					<span class="badge badge-active" style={{ "white-space": "nowrap" }}>ICP ✓</span>
 				</Show>
 				<Show when={props.due}>
-					<span class="badge" style={{ color: "var(--orange)", "margin-left": "auto", "white-space": "nowrap" }}>due</span>
+					<span class="badge" style={{ "margin-left": "auto", "white-space": "nowrap" }}>due</span>
 				</Show>
 			</div>
 			<Show when={p().stage === "candidate"}>
-				<button type="button" class="btn btn-sm" style={{ margin: "4px 0" }} onClick={() => void approveIcp()}>
+				<Button variant="outline" size="sm" type="button"  style={{ margin: "4px 0" }} onClick={() => void approveIcp()}>
 					{p().icpApproved ? "Un-approve" : "Approve fit"}
-				</button>
+				</Button>
 			</Show>
 			<Show when={p().contactName || p().email}>
 				<div class="muted" style={{ "font-size": "12px" }}>
@@ -581,7 +583,7 @@ function BoardCard(props: {
 				</div>
 			</Show>
 
-			<div class="muted" style={{ "font-size": "12px", margin: "5px 0", color: props.due ? "var(--orange)" : undefined }}>
+			<div class="muted" style={{ "font-size": "12px", margin: "5px 0", color: props.due ? "var(--foreground)" : undefined }}>
 				→ {fmtDate(p().nextActionAt)}
 				<Show when={p().nextActionNote}> — {p().nextActionNote}</Show>
 			</div>
@@ -613,20 +615,19 @@ function BoardCard(props: {
 						<h2 style={{ margin: "0", "font-size": "15px" }}>{p().company}</h2>
 						<div style={{ "margin-left": "auto", display: "flex", gap: "6px" }}>
 						<Show when={ADVANCE[p().stage as OutreachStage]}>
-							<button type="button" class="btn btn-primary btn-sm" onClick={() => void advance()}>
+							<Button size="sm" type="button"  onClick={() => void advance()}>
 								{ADVANCE[p().stage as OutreachStage]!.label}
-							</button>
+							</Button>
 						</Show>
-						<button
-							type="button"
-							class="btn btn-sm"
+						<Button variant="outline" size="sm" type="button"
+							
 							onClick={() => setEditing(!editing())}
 						>
 							{editing() ? "Close editor" : "Edit"}
-						</button>
-								<button type="button" class="btn btn-sm" onClick={() => dialogRef.close()}>
+						</Button>
+								<Button variant="outline" size="sm" type="button"  onClick={() => dialogRef.close()}>
 									Close
-								</button>
+								</Button>
 							</div>
 					</div>
 					<Show when={p().contactName || p().email}>
@@ -640,13 +641,13 @@ function BoardCard(props: {
 					<Show when={p().email}>
 						<EmailSection prospect={p()} />
 					</Show>
-					<div class="muted" style={{ "font-size": "12px", margin: "8px 0", color: props.due ? "var(--orange)" : undefined }}>
+					<div class="muted" style={{ "font-size": "12px", margin: "8px 0", color: props.due ? "var(--foreground)" : undefined }}>
 						→ {fmtDate(p().nextActionAt)}
 						<Show when={p().nextActionNote}> — {p().nextActionNote}</Show>
 					</div>
 					<div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap", margin: "12px 0" }}>
 						<Show when={p().brainUrl}>
-							<a class="btn btn-sm" href={brainHref(p())} target="_blank" rel="noreferrer">brain ↗</a>
+							<Button as="a" variant="outline" size="sm" href={brainHref(p())} target="_blank" rel="noreferrer">brain ↗</Button>
 						</Show>
 						<VideoSection videoUrl={p().video?.url} videoId={p().video?.id ?? p().id} description={p().video?.description} />
 					</div>
@@ -658,7 +659,7 @@ function BoardCard(props: {
 						</details>
 					</Show>
 					<Show when={(() => { const v = p().video; return v ? videoSummary(v) : null; })()}>
-						{(s) => <div style={{ color: "var(--orange)", "font-size": "12px", margin: "8px 0" }}>{s()}</div>}
+						{(s) => <div class="muted" style={{ "font-size": "12px", margin: "8px 0" }}>{s()}</div>}
 					</Show>
 					<Show when={p().notes}>
 						<p class="muted" style={{ "font-size": "12px", margin: "8px 0" }}>{p().notes}</p>
@@ -669,39 +670,57 @@ function BoardCard(props: {
 						<input type="hidden" name="id" value={p().id} />
 						<input type="text" name="contact_name" placeholder="Contact name" value={p().contactName ?? ""} />
 						<input type="email" name="email" placeholder="Email (sent-to address)" value={p().email ?? ""} spellcheck={false} />
-						<select name="stage" value={p().stage}>
-							<For each={OUTREACH_STAGES}>{(s) => <option value={s}>{stageLabel(s)}</option>}</For>
-						</select>
+						<SelectField
+							name="stage"
+							value={p().stage}
+							options={OUTREACH_STAGES.map((s) => ({ value: s, label: stageLabel(s) }))}
+						/>
 						<input type="datetime-local" name="next_action_at" value={toInputValue(p().nextActionAt)} />
 						<input type="url" name="video_url" placeholder="Video URL (cap.so share link)" value={p().video?.url ?? ""} spellcheck={false} />
 						<input type="text" name="video_description" placeholder="Video description (what it shows / why)" value={p().video?.description ?? ""} />
 						<input type="text" name="next_action_note" placeholder="Next action note" value={p().nextActionNote ?? ""} />
 						<input type="url" name="brain_url" placeholder="Brain URL (https://….madcactus.org)" value={p().brainUrl ?? ""} spellcheck={false} />
 						<input type="text" name="brain_activity_key" placeholder="Brain activity key" value={p().brainActivityKey ?? ""} spellcheck={false} />
-						<select name="campaign_id" value={p().campaignId ?? ""}>
-							<option value="">— no campaign —</option>
-							<For each={props.campaigns ?? []}>{(c) => <option value={c.id}>{c.name}</option>}</For>
-						</select>
+						<SelectField
+							name="campaign_id"
+							value={p().campaignId ?? ""}
+							options={() => [
+								{ value: "", label: "— no campaign —" },
+								...(props.campaigns ?? []).map((c) => ({ value: c.id, label: c.name })),
+							]}
+						/>
 						{/* ICP fields — researched, never asked of the lead */}
 						<div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap" }}>
-							<select name="region" value={p().region}>
-								<For each={["unknown", "Midwest", "other"]}>{(v) => <option value={v}>region: {v}</option>}</For>
-							</select>
-							<select name="revenue_band" value={p().revenueBand}>
-								<For each={["unknown", "low", "mid", "high"]}>{(v) => <option value={v}>revenue: {v}</option>}</For>
-							</select>
-							<select name="tech_team" value={p().techTeam}>
-								<For each={["unknown", "none", "small", "large"]}>{(v) => <option value={v}>tech team: {v}</option>}</For>
-							</select>
-							<select name="ai_interest" value={p().aiInterest}>
-								<For each={["unknown", "none", "some", "high"]}>{(v) => <option value={v}>AI interest: {v}</option>}</For>
-							</select>
-							<select name="icp_approved" value={p().icpApproved ? "1" : "0"}>
-								<option value="0">ICP: not approved</option>
-								<option value="1">ICP: approved</option>
-							</select>
+							<SelectField
+								name="region"
+								value={p().region}
+								options={["unknown", "Midwest", "other"].map((v) => ({ value: v, label: "region: " + v }))}
+							/>
+							<SelectField
+								name="revenue_band"
+								value={p().revenueBand}
+								options={["unknown", "low", "mid", "high"].map((v) => ({ value: v, label: "revenue: " + v }))}
+							/>
+							<SelectField
+								name="tech_team"
+								value={p().techTeam}
+								options={["unknown", "none", "small", "large"].map((v) => ({ value: v, label: "tech team: " + v }))}
+							/>
+							<SelectField
+								name="ai_interest"
+								value={p().aiInterest}
+								options={["unknown", "none", "some", "high"].map((v) => ({ value: v, label: "AI interest: " + v }))}
+							/>
+							<SelectField
+								name="icp_approved"
+								value={p().icpApproved ? "1" : "0"}
+								options={[
+									{ value: "0", label: "ICP: not approved" },
+									{ value: "1", label: "ICP: approved" },
+								]}
+							/>
 						</div>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<Button size="sm" type="submit">Save</Button>
 					</form>
 				</Show>
 			</dialog>
@@ -831,7 +850,7 @@ export default function AdminOutreach() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Outreach — Mad Cactus</Title>
+			<Title>Outreach — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Pipeline</h1>
@@ -876,9 +895,12 @@ export default function AdminOutreach() {
 						</div>
 						<div class="form-group">
 							<label for="prospect_stage">Stage</label>
-							<select id="prospect_stage" name="stage">
-								<For each={OUTREACH_STAGES}>{(s) => <option value={s}>{stageLabel(s)}</option>}</For>
-							</select>
+							<SelectField
+								id="prospect_stage"
+								name="stage"
+								value={OUTREACH_STAGES[0]}
+								options={OUTREACH_STAGES.map((s) => ({ value: s, label: stageLabel(s) }))}
+							/>
 						</div>
 					</div>
 					<div class="form-group">

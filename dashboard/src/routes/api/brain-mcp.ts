@@ -17,7 +17,7 @@ import { createVideo, setProspectVideo } from "~/lib/videos";
 
 
 /**
- * MCP Server — Mad Cactus Company Brain (internal agents)
+ * MCP Server — Basalt Company Brain (internal agents)
  *
  * Same stateless JSON-RPC shape as /api/mcp, but scoped to the firm:
  * admin (memberless) API keys only. Serves the generated company/client
@@ -351,7 +351,7 @@ const TOOLS = [
 	{
 		name: "newsletter_subscribe",
 		description:
-			"Add an email to The Cactus Dispatch (Resend contact, Cactus segment) — the nurture handoff when a rung-1 sequence completes. The shutdown email discloses the add; Resend's unsubscribe is honored.",
+			"Add an email to The Basalt Dispatch (Resend contact, Basalt Dispatch segment) — the nurture handoff when a rung-1 sequence completes. The shutdown email discloses the add; Resend's unsubscribe is honored.",
 		inputSchema: {
 			type: "object",
 			properties: { email: { type: "string" } },
@@ -442,7 +442,7 @@ lessons_reviewed: { type: "boolean", description: "true = you called get_voice_l
 	{
 		name: "create_newsletter",
 		description:
-			"Create a Cactus Dispatch newsletter issue draft (kind=newsletter). The doc title IS the email subject — set a real subject as the title (or refine it after with set_newsletter_subject). Read get_voice_lessons with surface=newsletter and your chat_uuid first — fetch topic=subject AND topic=cta lessons too (subject and CTA have their own learnings). HARD GATES: the call is REJECTED if the body has any avoid-violation (fix and resubmit — no override). First write attempt auto-no's: the call bounces with the top voice lessons ranked for YOUR text — apply them, then resubmit with lessons_applied=true. Channel CTA copy goes through set_channel_appendix (never in the body markdown). Collin previews (email + web), edits, and schedules it; you never send. Drafts only.",
+			"Create a Basalt Dispatch newsletter issue draft (kind=newsletter). The doc title IS the email subject — set a real subject as the title (or refine it after with set_newsletter_subject). Read get_voice_lessons with surface=newsletter and your chat_uuid first — fetch topic=subject AND topic=cta lessons too (subject and CTA have their own learnings). HARD GATES: the call is REJECTED if the body has any avoid-violation (fix and resubmit — no override). First write attempt auto-no's: the call bounces with the top voice lessons ranked for YOUR text — apply them, then resubmit with lessons_applied=true. Channel CTA copy goes through set_channel_appendix (never in the body markdown). Collin previews (email + web), edits, and schedules it; you never send. Drafts only.",
 		inputSchema: {
 			type: "object",
 			properties: {
@@ -1150,7 +1150,7 @@ export async function POST(event: APIEvent) {
 								result = { error: `resend contacts.create failed: ${error.message}` };
 							break;
 						}
-						result = { ok: true, email, note: "added to the Cactus Dispatch segment — Resend unsubscribe is honored" };
+						result = { ok: true, email, note: "added to the Basalt Dispatch segment — Resend unsubscribe is honored" };
 						break;
 					}
 				case "get_voice_lessons": {
@@ -1575,7 +1575,7 @@ export async function POST(event: APIEvent) {
 							description: toolArgs.description ? String(toolArgs.description) : null,
 							prospectId,
 						});
-						result = { id: v.id, url: v.url, prospectId: v.prospectId, watchLink: `/v/${v.id}`, fullWatchLink: `https://madcactus.org/v/${v.id}` };
+						result = { id: v.id, url: v.url, prospectId: v.prospectId, watchLink: `/v/${v.id}`, fullWatchLink: `https://basalt.ac/v/${v.id}` };
 						break;
 					}
 					default:

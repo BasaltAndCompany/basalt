@@ -41,6 +41,6 @@ export const GET = async (event: APIEvent) => {
 	}
 	return new Response(null, {
 		status: 302,
-		headers: { Location: "/cactus-seal.png", "Cache-Control": "public, max-age=604800" },
+		headers: { Location: "/basalt-favicon.svg", "Cache-Control": "public, max-age=604800" },
 	});
 };

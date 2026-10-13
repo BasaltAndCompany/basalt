@@ -48,7 +48,7 @@ export function LinkedInPreview(props: { markdown: string; title: string; firstC
 					<div>
 						<div style={{ "font-weight": 600 }}>Collin Pfeifer</div>
 						<div style={{ color: "rgb(0 0 0 / 0.6)", "font-size": "12px" }}>
-							Consultant at Mad Cactus · Follow
+							Consultant at Basalt · Follow
 						</div>
 						<div style={{ color: "rgb(0 0 0 / 0.6)", "font-size": "12px" }}>now · 🌐</div>
 					</div>
@@ -81,7 +81,7 @@ export function LinkedInPreview(props: { markdown: string; title: string; firstC
 						"border-left": "3px solid #0a66c2",
 						padding: "8px 12px",
 						"font-size": "13px",
-						color: "var(--text)",
+						color: "var(--foreground)",
 						background: "rgb(0 0 0 / 0.03)",
 						"border-radius": "6px",
 					}}
@@ -117,12 +117,12 @@ export function NewsletterEmailPreview(props: { markdown: string; title: string;
 	return (
 		<div style={{ width: "100%", "max-width": "640px" }}>
 			<div class="muted" style={{ "font-size": "12px", "margin-bottom": "8px" }}>
-				Inbox preview — from <strong>Collin Pfeifer</strong> · dispatch@madcactus.org
+				Inbox preview — from <strong>Collin Pfeifer</strong> · dispatch@basalt.ac
 			</div>
 			<div style={{ border: "1px solid var(--border, rgb(0 0 0 / 0.15))", "border-radius": "8px", overflow: "hidden" }}>
 				<div style={{ padding: "12px 16px", "border-bottom": "1px solid var(--border, rgb(0 0 0 / 0.1))" }}>
 					<div style={{ "font-weight": 600, "font-size": "15px" }}>{newsletterSubject({ markdown: props.markdown, title: props.title })}</div>
-					<div class="muted" style={{ "font-size": "12px" }}>Collin Pfeifer · The Cactus Dispatch</div>
+					<div class="muted" style={{ "font-size": "12px" }}>Collin Pfeifer · The Basalt Dispatch</div>
 				</div>
 				<iframe
 					// ponytail: srcdoc reloads (scroll reset) on each keystroke while
@@ -143,7 +143,7 @@ export function NewsletterWebPreview(props: { docId: string }) {
 	return (
 		<div style={{ width: "100%" }}>
 			<div class="muted" style={{ "font-size": "12px", "margin-bottom": "8px", "text-align": "center" }}>
-				Web preview — the real madcactus.org issue page (updates on save)
+				Web preview — the real basalt.ac issue page (updates on save)
 			</div>
 			<iframe
 				src={`/admin/docs/issue-preview/${props.docId}`}

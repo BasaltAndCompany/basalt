@@ -13,7 +13,7 @@ describe("short-link primitives", () => {
 	});
 
 	test("target must be http(s) — blocks javascript: via redirect", () => {
-		expect(TARGET_RE.test("https://madcactus.org/x?utm_source=li")).toBe(true);
+		expect(TARGET_RE.test("https://basalt.ac/x?utm_source=li")).toBe(true);
 		expect(TARGET_RE.test("javascript:alert(1)")).toBe(false);
 		expect(TARGET_RE.test("ftp://x")).toBe(false);
 	});
@@ -27,9 +27,9 @@ describe("short-link primitives", () => {
 	});
 
 	test("shortLinkBase: strips trailing slash from PUBLIC_SITE_URL", () => {
-		process.env.PUBLIC_SITE_URL = "https://madcactus.org/";
-		expect(shortLinkBase()).toBe("https://madcactus.org");
+		process.env.PUBLIC_SITE_URL = "https://basalt.ac/";
+		expect(shortLinkBase()).toBe("https://basalt.ac");
 		delete process.env.PUBLIC_SITE_URL;
-		expect(shortLinkBase()).toBe("https://madcactus.org");
+		expect(shortLinkBase()).toBe("https://basalt.ac");
 	});
 });

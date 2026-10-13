@@ -65,7 +65,7 @@ export default function WatchVideo() {
 		<Switch
 			fallback={
 				<main style={{ "background-color": "#111", "min-height": "100vh", padding: "48px 24px" }}>
-					<Title>Not found — Mad Cactus</Title>
+					<Title>Not found — Basalt</Title>
 				</main>
 			}
 		>
@@ -80,7 +80,7 @@ export default function WatchVideo() {
 							color: "#eee",
 						}}
 					>
-						<Title>{v().company} — Mad Cactus</Title>
+						<Title>{v().company} — Basalt</Title>
 						<Switch
 							fallback={
 								// Other hosts (e.g. YouTube): no native stream, bounce to the raw URL.

@@ -9,6 +9,8 @@ import {
 	getUserQuery,
 } from "~/lib/queries";
 import { getCompaniesForSelectQuery } from "~/lib/admin-queries";
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 const statusBadge: Record<string, string> = {
 	active: "badge-active",
@@ -29,7 +31,7 @@ export default function Projects() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Projects — Mad Cactus</Title>
+			<Title>Projects — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Projects</h1>
@@ -49,28 +51,29 @@ export default function Projects() {
 							</div>
 						<div class="form-group">
 							<label for="company_id">Company</label>
-							<select id="company_id" name="company_id" required>
-								<option value="" disabled selected>Select a company…</option>
-								<Show when={companies()}>
-									<For each={companies()}>
-										{(c) => <option value={c.id}>{c.name}</option>}
-									</For>
-								</Show>
-							</select>
+							<SelectField
+								id="company_id"
+								name="company_id"
+								required
+								placeholder="Select a company…"
+								options={() => (companies() ?? []).map((c) => ({ value: c.id, label: c.name }))}
+							/>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group">
 							<label for="engagement_type">Engagement Type</label>
-							<select
+							<SelectField
 								id="engagement_type"
 								name="engagement_type"
-								onChange={(e) => setEngagementType(e.currentTarget.value)}
-							>
-								<option value="hourly">Hourly</option>
-								<option value="retainer">Retainer (monthly cap)</option>
-								<option value="project">Project (fixed price)</option>
-							</select>
+								value="hourly"
+								onChange={setEngagementType}
+								options={[
+									{ value: "hourly", label: "Hourly" },
+									{ value: "retainer", label: "Retainer (monthly cap)" },
+									{ value: "project", label: "Project (fixed price)" },
+								]}
+							/>
 						</div>
 						<Show when={isHourly()}>
 							<div class="form-group">
@@ -102,40 +105,40 @@ export default function Projects() {
 				<Show when={projects()} fallback={<p class="muted">Loading…</p>}>
 					{(list) => (
 						<Show when={list().length > 0} fallback={
-							<div class="card empty">No projects yet. Create your first one above.</div>
+							<Card class="empty">No projects yet. Create your first one above.</Card>
 						}>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Project</th>
-										<th>Company</th>
-										<th>Type</th>
-										<th>Rate / Price</th>
-										<th>Cap</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
+							<Table class="table">
+								<TableHeader>
+									<TableRow>
+										<TableHead>Project</TableHead>
+										<TableHead>Company</TableHead>
+										<TableHead>Type</TableHead>
+										<TableHead>Rate / Price</TableHead>
+										<TableHead>Cap</TableHead>
+										<TableHead>Status</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									<For each={list()}>
 										{(p) => (
-											<tr>
-												<td>
-													<A href={`/admin/projects/${p.id}`} class="gold">{p.name}</A>
-												</td>
-												<td class="muted">{p.companyName}</td>
-												<td style={{ "text-transform": "capitalize" }}>{p.engagementType}</td>
-												<td class="mono">
+											<TableRow>
+												<TableCell>
+													<A href={`/admin/projects/${p.id}`}>{p.name}</A>
+												</TableCell>
+												<TableCell class="muted">{p.companyName}</TableCell>
+												<TableCell style={{ "text-transform": "capitalize" }}>{p.engagementType}</TableCell>
+												<TableCell class="mono">
 													{p.engagementType === "project"
 														? `$${(p.fixedPrice ?? 0).toLocaleString()} fixed`
 														: `$${p.hourlyRate}/hr`}
-												</td>
-												<td class="muted">{p.monthlyCapHours ? `${p.monthlyCapHours}h` : "—"}</td>
-												<td><span class={`badge ${statusBadge[p.status]}`}>{p.status}</span></td>
-											</tr>
+												</TableCell>
+												<TableCell class="muted">{p.monthlyCapHours ? `${p.monthlyCapHours}h` : "—"}</TableCell>
+												<TableCell><span class={`badge ${statusBadge[p.status]}`}>{p.status}</span></TableCell>
+											</TableRow>
 										)}
 									</For>
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</Show>
 					)}
 				</Show>

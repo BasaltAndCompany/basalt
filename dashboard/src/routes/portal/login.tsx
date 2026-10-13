@@ -5,6 +5,8 @@ import {
 	clientLoginAction,
 	setInvitePasswordAction,
 } from "~/lib/client-queries";
+import { Button, Card } from "@basalt/ui";
+import Brand from "~/components/Brand";
 
 export default function ClientLogin() {
 	const login = useAction(clientLoginAction);
@@ -55,28 +57,22 @@ export default function ClientLogin() {
 
 	return (
 		<div class="login-shell">
-			<Title>Client Login — Mad Cactus</Title>
-			<div
-				class="card"
-				style={{
+			<Title>Client Login — Basalt</Title>
+			<Card style={{
 					width: "100%",
 					"max-width": "400px",
 					padding: "40px",
 					"margin": "20px",
-				}}
-			>
-				<div style={{ display: "flex", "align-items": "center", gap: "12px", "margin-bottom": "32px" }}>
-					<img src="/cactus-seal.svg" alt="Mad Cactus" style={{ width: "40px", height: "40px" }} />
-					<div>
-						<div style={{ "font-family": "var(--font-serif)", "font-size": "20px" }}>Mad Cactus</div>
-						<div style={{ "font-family": "var(--font-sans)", "font-size": "9px", "letter-spacing": "1.5px", "text-transform": "uppercase", color: "var(--text-subtle)" }}>Client Portal</div>
-					</div>
+				}}>
+				<div class="login-brand">
+					<div class="login-brand-name"><Brand /></div>
+					<div class="login-brand-sub">Client Portal</div>
 				</div>
 
 				<Show when={invite()}>
-					<h1 style={{ "font-family": "var(--font-serif)", "font-size": "22px", "margin-bottom": "8px" }}>Set your password</h1>
+					<h1 class="login-title">Set your password</h1>
 					<p class="muted" style={{ "margin-bottom": "24px", "font-size": "14px" }}>
-						You've been invited to the Mad Cactus client portal. Choose a password to activate your account.
+						You've been invited to the client portal. Choose a password to activate your account.
 					</p>
 					<form onSubmit={handleSetPassword}>
 						<input type="hidden" name="access_token" value={invite()!.accessToken ?? ""} />
@@ -108,14 +104,14 @@ export default function ClientLogin() {
 						<Show when={error()}>
 							<p class="login-error">{error()}</p>
 						</Show>
-						<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }}>
+						<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }}>
 							Set password & continue
-						</button>
+						</Button>
 					</form>
 				</Show>
 
 				<Show when={linkExpired()}>
-					<h1 style={{ "font-family": "var(--font-serif)", "font-size": "22px", "margin-bottom": "8px" }}>Invite link expired</h1>
+					<h1 class="login-title">Invite link expired</h1>
 					<p class="muted" style={{ "margin-bottom": "24px", "font-size": "14px" }}>
 						This invite link is invalid or has expired. Ask us to resend the invite email.
 					</p>
@@ -125,7 +121,7 @@ export default function ClientLogin() {
 				</Show>
 
 				<Show when={!invite() && !linkExpired()}>
-					<h1 style={{ "font-family": "var(--font-serif)", "font-size": "22px", "margin-bottom": "8px" }}>Sign in</h1>
+					<h1 class="login-title">Sign in</h1>
 					<p class="muted" style={{ "margin-bottom": "24px", "font-size": "14px" }}>
 						Access your project documents, invoices, and status.
 					</p>
@@ -156,12 +152,12 @@ export default function ClientLogin() {
 						<Show when={error()}>
 							<p class="login-error">{error()}</p>
 						</Show>
-						<button type="submit" class="btn btn-primary" style={{ width: "100%", "margin-top": "8px" }}>
+						<Button type="submit"  style={{ width: "100%", "margin-top": "8px" }}>
 							Sign in
-						</button>
+						</Button>
 					</form>
 				</Show>
-			</div>
+			</Card>
 		</div>
 	);
 }

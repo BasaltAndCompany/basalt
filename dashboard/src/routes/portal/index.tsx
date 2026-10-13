@@ -7,6 +7,7 @@ import {
 	getClientUserQuery,
 } from "~/lib/client-queries";
 import type { DeliverableStatus } from "~/db/schema";
+import { Button, Card } from "@basalt/ui";
 
 const statusBadge: Record<DeliverableStatus, string> = {
 	planned: "badge-paused",
@@ -24,7 +25,7 @@ export default function PortalHome() {
 
 	return (
 		<PortalLayout user={user()}>
-			<Title>Overview — Mad Cactus Client Portal</Title>
+			<Title>Overview — Basalt Client Portal</Title>
 			<h1 class="page-title">Projects</h1>
 			<p class="page-subtitle">All engagements across your companies</p>
 
@@ -50,9 +51,9 @@ export default function PortalHome() {
 						<div style={{ "margin-top": "32px" }}>
 							<div class="section-heading">Projects</div>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
-								<For each={d().projects} fallback={<div class="card empty">No projects yet.</div>}>
+								<For each={d().projects} fallback={<Card class="empty">No projects yet.</Card>}>
 									{(proj) => (
-										<div class="card" style={{ padding: "20px" }}>
+										<Card style={{ padding: "20px" }}>
 											<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center" }}>
 												<div>
 													<span style={{ "font-size": "15px", "font-weight": "500" }}>{proj.name}</span>
@@ -64,7 +65,7 @@ export default function PortalHome() {
 														: `$${proj.hourlyRate}/hr`}
 												</span>
 											</div>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>
@@ -74,9 +75,9 @@ export default function PortalHome() {
 						<div style={{ "margin-top": "32px" }}>
 							<div class="section-heading">Deliverables</div>
 							<div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
-								<For each={d().deliverables} fallback={<div class="card empty">No deliverables yet.</div>}>
+								<For each={d().deliverables} fallback={<Card class="empty">No deliverables yet.</Card>}>
 									{(delv) => (
-										<div class="card" style={{ padding: "20px" }}>
+										<Card style={{ padding: "20px" }}>
 											<div style={{ display: "flex", "justify-content": "space-between", "align-items": "flex-start", gap: "12px" }}>
 												<div>
 													<span style={{ "font-size": "15px", "font-weight": "500" }}>{delv.title}</span>
@@ -103,16 +104,16 @@ export default function PortalHome() {
 													</For>
 												</div>
 											</Show>
-										</div>
+										</Card>
 									)}
 								</For>
 							</div>
 						</div>
 
 						<div style={{ "margin-top": "24px", display: "flex", gap: "12px" }}>
-							<A href="/portal/documents" class="btn">View Documents</A>
-							<A href="/portal/invoices" class="btn">View Invoices</A>
-							<A href="/portal/api-keys" class="btn">API Keys</A>
+							<Button as="a" variant="outline" href="/portal/documents">View Documents</Button>
+							<Button as="a" variant="outline" href="/portal/invoices">View Invoices</Button>
+							<Button as="a" variant="outline" href="/portal/api-keys">API Keys</Button>
 						</div>
 					</>
 				)}

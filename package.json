@@ -1,0 +1,5 @@
+{
+  "name": "madcactus",
+  "private": true,
+  "workspaces": ["basalt", "dashboard", "packages/ui"]
+}

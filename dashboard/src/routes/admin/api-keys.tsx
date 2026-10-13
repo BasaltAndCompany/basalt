@@ -10,6 +10,7 @@ import {
 	createAdminApiKeyAction,
 	revokeAdminApiKeyAction,
 } from "~/lib/admin-queries";
+import { Button, Card } from "@basalt/ui";
 
 /** Memberless API keys — server-to-server auth (e.g. the Anarlog publisher).
  *  Raw key is shown once at creation; only a hash is stored. */
@@ -27,7 +28,7 @@ export default function AdminApiKeys() {
 
 	return (
 		<Layout user={user()}>
-			<Title>API Keys — Mad Cactus</Title>
+			<Title>API Keys — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">API Keys</h1>
@@ -59,7 +60,7 @@ export default function AdminApiKeys() {
 					<div style={{ display: "flex", "flex-direction": "column", gap: "8px" }}>
 						<For each={keys()}>
 							{(k) => (
-								<div class="card" style={{ padding: "14px 20px", display: "flex", "align-items": "center", gap: "12px" }}>
+								<Card style={{ padding: "14px 20px", display: "flex", "align-items": "center", gap: "12px" }}>
 									<div style={{ flex: "1" }}>
 										<span style={{ "font-weight": "600", "font-size": "14px" }}>{k.label}</span>
 										<span class="mono muted" style={{ "font-size": "12px", "margin-left": "8px" }}>{k.keyPrefix}</span>
@@ -74,7 +75,7 @@ export default function AdminApiKeys() {
 									>
 										<ConfirmButton label="Revoke" danger onConfirm={() => handleRevoke(k.id)} />
 									</Show>
-								</div>
+								</Card>
 							)}
 						</For>
 					</div>
@@ -95,9 +96,8 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 			</div>
 			<div style={{ display: "flex", gap: "8px", "align-items": "center" }}>
 				<code class="mono" style={{ "font-size": "13px", "word-break": "break-all", flex: "1" }}>{key()}</code>
-				<button
-					type="button"
-					class="btn btn-sm"
+				<Button variant="outline" size="sm" type="button"
+					
 					onClick={() => {
 						navigator.clipboard.writeText(key());
 						setCopied(true);
@@ -105,7 +105,7 @@ function KeyCreated(props: { result: NonNullable<CreateResult> }) {
 					}}
 				>
 					{copied() ? "Copied" : "Copy"}
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

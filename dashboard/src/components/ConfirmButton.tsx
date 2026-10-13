@@ -1,13 +1,23 @@
-import { Show, createSignal, type JSX } from "solid-js";
+import { createSignal, type JSX } from "solid-js";
 import { revalidate } from "@solidjs/router";
+import { Button } from "@basalt/ui";
+import { AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger, } from "@basalt/ui";
 
 /**
  * Button that confirms before running a destructive async action and reports
  * the result inline. Used by every delete/revoke call site so mutating buttons
  * never silently fail (no more bare 500s) and always give on-screen feedback.
  *
- * ponytail: inline confirm ("Delete? Yes / No") instead of a modal lib — zero
- * new deps. Swap for a Kobalte Dialog here if a real modal is wanted later.
+ * Same props contract as the old inline "Delete? Yes / No" version — the
+ * confirm step is now a real <AlertDialog>. `danger` renders the trigger in
+ * the destructive variant; class/style land on the trigger.
  */
 export default function ConfirmButton(props: {
 	label: string;
@@ -19,13 +29,11 @@ export default function ConfirmButton(props: {
 	class?: string;
 	style?: JSX.CSSProperties;
 }) {
-	const [state, setState] = createSignal<
-		"idle" | "confirm" | "busy" | "done" | "error"
-	>("idle");
+	const [state, setState] = createSignal<"busy" | "done" | "error">("busy");
 	const [msg, setMsg] = createSignal("");
+	const [open, setOpen] = createSignal(false);
 
 	async function run() {
-		setState("busy");
 		setMsg("");
 		try {
 			const res = await props.onConfirm();
@@ -37,58 +45,57 @@ export default function ConfirmButton(props: {
 			// Show a brief confirmation, then revert (list revalidates and the row
 			// unmounts on its own; this covers actions that don't remove a row).
 			setState("done");
+			setOpen(false);
 			revalidate();
-			setTimeout(() => setState("idle"), 1200);
+			setTimeout(() => setState("busy"), 1200);
 		} catch (e) {
 			setState("error");
 			setMsg(e instanceof Error ? e.message : "Something went wrong");
 		}
 	}
 
-	const dangerStyle = (): JSX.CSSProperties =>
-		props.danger ? { color: "#ef4444" } : {};
-
 	return (
 		<span style={{ display: "inline-flex", gap: "6px", "align-items": "center" }}>
-			<Show when={state() === "confirm"} fallback={
-				<button
-					type="button"
-					class={props.class ?? "btn btn-sm"}
-					style={{ ...dangerStyle(), ...props.style }}
-					disabled={state() === "busy"}
-					onClick={() => setState("confirm")}
+			<AlertDialog
+				open={open()}
+				onOpenChange={(o: boolean) => {
+					setOpen(o);
+					if (o) setState("busy");
+				}}
+			>
+				<AlertDialogTrigger
+					as={Button}
+					variant={props.danger ? "destructive" : "outline"}
+					size="sm"
+					class={props.class}
+					style={props.style}
 				>
-					{state() === "busy" ? "…" : props.label}
-				</button>
-			}>
-				<span class="muted" style={{ "font-size": "12px" }}>
-					{props.confirmText ?? "Delete?"}
-				</span>
-				<button
-					type="button"
-					class="btn btn-sm"
-					style={{ color: "#ef4444" }}
-					disabled={state() === "busy"}
-					onClick={run}
-				>
-					{state() === "busy" ? "…" : "Yes"}
-				</button>
-				<button
-					type="button"
-					class="btn btn-sm"
-					onClick={() => setState("idle")}
-				>
-					No
-				</button>
-			</Show>
-			<Show when={state() === "done"}>
+					{props.label}
+				</AlertDialogTrigger>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>{props.confirmText ?? "Delete?"}</AlertDialogTitle>
+						<AlertDialogDescription>This cannot be undone.</AlertDialogDescription>
+					</AlertDialogHeader>
+					<div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction
+							disabled={state() === "busy"}
+							onClick={run}
+						>
+							{state() === "busy" ? "…" : "Yes"}
+						</AlertDialogAction>
+					</div>
+				</AlertDialogContent>
+			</AlertDialog>
+			{state() === "done" && (
 				<span style={{ color: "#22c55e", "font-size": "12px" }}>
 					✓ {props.successText ?? "Done"}
 				</span>
-			</Show>
-			<Show when={state() === "error"}>
+			)}
+			{state() === "error" && (
 				<span class="login-error" style={{ "font-size": "12px" }}>{msg()}</span>
-			</Show>
+			)}
 		</span>
 	);
 }

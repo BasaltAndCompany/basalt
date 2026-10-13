@@ -27,7 +27,26 @@ function rateLimited(ip: string): boolean {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function json(body: unknown, status = 200) {
-	return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+	return new Response(JSON.stringify(body), {
+		status,
+		headers: {
+			"Content-Type": "application/json",
+			// the Basalt marketing site (different origin) posts here
+			"Access-Control-Allow-Origin": "*",
+		},
+	});
+}
+
+// CORS preflight for the Basalt marketing site's POSTs.
+export function OPTIONS() {
+	return new Response(null, {
+		status: 204,
+		headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "POST, OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type",
+		},
+	});
 }
 
 export const POST = async (event: APIEvent) => {

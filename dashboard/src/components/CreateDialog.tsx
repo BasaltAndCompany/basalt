@@ -1,18 +1,25 @@
 import { Show, createSignal, type JSX } from "solid-js";
 import { toast } from "~/lib/toast";
+import { Button } from "@basalt/ui";
+import { Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle, } from "@basalt/ui";
 
 /** Result contract for onSubmit: `error` keeps the dialog open and shows the
  *  message inline (inputs preserved); anything else is success. */
 export type CreateResult = { error?: string; success?: string } & Record<string, unknown> | undefined;
 
-/** The one creation pattern everywhere: trigger button → native <dialog>
- *  (ESC / ✕ / Cancel / backdrop close) → success toast + close, or
- *  renderSuccess(result) for one-time secrets that must be copied. */
+/** The one creation pattern everywhere: trigger button → <Dialog> (ESC / ✕ /
+ *  Cancel / backdrop close) → success toast + close, or renderSuccess(result)
+ *  for one-time secrets that must be copied. Same props contract as the old
+ *  native-<dialog> version; triggerClass still lands on the trigger. */
 export default function CreateDialog(props: {
 	label: string;
 	title: string;
 	submitLabel?: string;
-	/** extra classes for the trigger (default "btn btn-primary") */
+	/** extra classes for the trigger (default primary Button) */
 	triggerClass?: string;
 	/** overrides result.success in the toast (for redirect-only actions) */
 	successMessage?: string;
@@ -22,16 +29,16 @@ export default function CreateDialog(props: {
 	renderSuccess?: (result: NonNullable<CreateResult>) => JSX.Element;
 	children?: JSX.Element;
 }) {
-	let dialogRef!: HTMLDialogElement;
+	const [open, setOpen] = createSignal(false);
 	const [error, setError] = createSignal("");
 	// success payload once renderSuccess has taken over the body
 	const [done, setDone] = createSignal<NonNullable<CreateResult> | null>(null);
 	const [pending, setPending] = createSignal(false);
 
-	function open() {
-		setError("");
+	function close() {
+		setOpen(false);
 		setDone(null);
-		dialogRef.showModal();
+		setError("");
 	}
 
 	async function handleSubmit(e: SubmitEvent) {
@@ -59,56 +66,61 @@ export default function CreateDialog(props: {
 		}
 		toast(props.successMessage ?? result?.success ?? "Created.", "success");
 		form.reset();
-		dialogRef.close();
+		close();
 	}
 
 	return (
-		<>
-			<button type="button" class={props.triggerClass ?? "btn btn-primary"} onClick={open}>
-				{props.label}
-			</button>
-			<dialog
-				class="modal"
-				ref={dialogRef}
-				// a click that hits the dialog element itself landed on the backdrop
-				onClick={(e) => {
-					if (e.target === dialogRef) dialogRef.close();
-				}}
-				onClose={() => {
-					setDone(null);
+		<Dialog
+			open={open()}
+			onOpenChange={(o: boolean) => {
+				if (o) {
 					setError("");
-				}}
-			>
+					setDone(null);
+					setOpen(true);
+				} else {
+					close();
+				}
+			}}
+		>
+			<Button type="button" class={props.triggerClass ?? undefined} onClick={() => setOpen(true)}>
+				{props.label}
+			</Button>
+			<DialogContent>
 				<Show
 					when={done() && props.renderSuccess ? props.renderSuccess : null}
 					fallback={
 						<form onSubmit={handleSubmit}>
-							<h2 class="modal-title">{props.title}</h2>
+							<DialogHeader>
+								<DialogTitle>{props.title}</DialogTitle>
+							</DialogHeader>
 							<div class="modal-body">
 								{props.children}
 								<Show when={error()}>
 									<p class="login-error" style={{ margin: "12px 0 0" }}>{error()}</p>
 								</Show>
 							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn" onClick={() => dialogRef.close()}>Cancel</button>
-								<button type="submit" class="btn btn-primary" disabled={pending()}>
+							<DialogFooter>
+								<Button type="button" variant="outline" onClick={close}>Cancel</Button>
+								<Button type="submit" disabled={pending()}>
 									{props.submitText ? props.submitText() : pending() ? "Saving…" : props.submitLabel ?? "Create"}
-								</button>
-							</div>
+								</Button>
+							</DialogFooter>
 						</form>
 					}
 				>
 					{(render) => (
 						<>
+							<DialogHeader>
+								<DialogTitle>{props.title}</DialogTitle>
+							</DialogHeader>
 							<div class="modal-body">{render()(done()!)}</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" onClick={() => dialogRef.close()}>Close</button>
-							</div>
+							<DialogFooter>
+								<Button type="button" onClick={close}>Close</Button>
+							</DialogFooter>
 						</>
 					)}
 				</Show>
-			</dialog>
-		</>
+			</DialogContent>
+		</Dialog>
 	);
 }

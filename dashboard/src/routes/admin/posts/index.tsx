@@ -5,7 +5,7 @@ import DocList from "~/components/DocList";
 export default function AdminPosts() {
 	return (
 		<Layout>
-			<Title>Posts — Mad Cactus</Title>
+			<Title>Posts — Basalt</Title>
 			<DocList
 				kind="post"
 				title="Posts"

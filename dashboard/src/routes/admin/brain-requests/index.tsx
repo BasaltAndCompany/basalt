@@ -6,6 +6,8 @@ import { createAsync, useAction } from "@solidjs/router";
 import { For, Show } from "solid-js";
 import Layout from "~/components/Layout";
 import { getBrainRequestsQuery, setBrainRequestStatusAction, linkBrainRequestToProspectAction } from "~/lib/admin-queries";
+import { Button, Card } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 const STATUSES = ["new", "building", "delivered", "declined"] as const;
 
@@ -16,13 +18,13 @@ export default function BrainRequests() {
 
 	return (
 		<Layout>
-			<Title>Brain requests — Mad Cactus</Title>
+			<Title>Brain requests — Basalt</Title>
 			<h1 class="page-title">Brain requests</h1>
 			<p class="page-subtitle">Free company-brain requests from /brain. Build it from their answers + public data, then link the row to a prospect.</p>
 			<Show when={requests()?.length} fallback={<p class="muted">No requests yet.</p>}>
 				<For each={requests()}>
 					{(r) => (
-						<div class="card" style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
+						<Card style={{ padding: "16px 20px", "margin-bottom": "10px" }}>
 							<div style={{ display: "flex", gap: "10px", "align-items": "baseline", "flex-wrap": "wrap" }}>
 								<strong style={{ "font-size": "15px" }}>{r.company}</strong>
 								<span class="muted" style={{ "font-size": "13px" }}>
@@ -49,10 +51,14 @@ export default function BrainRequests() {
 									}}
 								>
 									<input type="hidden" name="id" value={r.id} />
-									<select name="status" value={r.status} class="doc-sched-input" style={{ width: "120px" }}>
-										<For each={[...STATUSES]}>{(s) => <option value={s}>{s}</option>}</For>
-									</select>
-									<button type="submit" class="btn btn-sm">Set status</button>
+									<SelectField
+										name="status"
+										value={r.status}
+										class="doc-sched-input"
+										style={{ width: "120px" }}
+										options={[...STATUSES].map((s) => ({ value: s, label: s }))}
+									/>
+									<Button variant="outline" size="sm" type="submit">Set status</Button>
 								</form>
 								<Show when={!r.prospectId}>
 									<form
@@ -64,14 +70,14 @@ export default function BrainRequests() {
 									>
 										<input type="hidden" name="id" value={r.id} />
 										<input name="company" placeholder="Prospect company (defaults to request)" class="doc-sched-input" style={{ width: "240px" }} />
-										<button type="submit" class="btn btn-sm">Link to prospect</button>
+										<Button variant="outline" size="sm" type="submit">Link to prospect</Button>
 									</form>
 								</Show>
 								<Show when={r.prospectId}>
-									<a class="btn btn-sm" href="/admin/outreach">prospect linked ↗</a>
+									<Button as="a" variant="outline" size="sm" href="/admin/outreach">prospect linked ↗</Button>
 								</Show>
 							</div>
-						</div>
+						</Card>
 					)}
 				</For>
 			</Show>

@@ -2,6 +2,7 @@ import { A, createAsync } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
 import { For, ParentComponent, Show, createEffect, createSignal, onMount } from "solid-js";
 import Timer from "~/components/Timer";
+import Brand from "~/components/Brand";
 import CommandPalette from "~/components/CommandPalette";
 import Toaster from "~/components/Toaster";
 import { getDueOutreachCountQuery } from "~/lib/admin-queries";
@@ -71,10 +72,8 @@ const Layout: ParentComponent<{ user?: { id?: string; email?: string } | null }>
 					{collapsed() ? "›" : "‹"}
 				</button>
 				<div class="sidebar-logo">
-					<img src="/cactus-seal.svg" alt="Mad Cactus" />
 					<div class="sidebar-logo-text">
-						Mad Cactus
-						<small>Portal</small>
+						<Brand suffix="Portal" />
 					</div>
 				</div>
 				<nav class="sidebar-nav">
@@ -90,9 +89,7 @@ const Layout: ParentComponent<{ user?: { id?: string; email?: string } | null }>
 								<NavIcon d={link.icon} />
 								<span class="nav-label">{link.label}</span>
 								<Show when={link.href === "/admin/outreach"}>
-									<span class="nav-badge" style={{ "margin-left": "auto", color: "var(--orange)", "font-size": "11px" }}>
-										{dueOutreach() ?? ""}
-									</span>
+									<span class="nav-count">{dueOutreach() ?? ""}</span>
 								</Show>
 							</A>
 						)}

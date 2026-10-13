@@ -7,6 +7,8 @@ import { getUserQuery } from "~/lib/queries";
 import { getOutreachQuery, getVideosQuery, setOutreachVideoAction } from "~/lib/admin-queries";
 import { stageLabel } from "~/db/schema";
 import { videoSummary } from "~/lib/video-summary";
+import { Button } from "@basalt/ui";
+import SelectField from "~/components/select-field";
 
 // Mirrors the server's free-plan cap (dashboard/src/routes/api/upload-video.ts).
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -126,7 +128,7 @@ export default function AdminVideos() {
 
 	return (
 		<Layout user={user()}>
-			<Title>Videos — Mad Cactus</Title>
+			<Title>Videos — Basalt</Title>
 			<div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "gap": "16px", "margin-bottom": "32px" }}>
 				<div>
 					<h1 class="page-title">Outreach Videos</h1>
@@ -143,16 +145,17 @@ export default function AdminVideos() {
 				>
 					<div class="form-group">
 						<label for="video_prospect">Prospect</label>
-						<select id="video_prospect" name="id" required>
-							<For each={outreach()?.all ?? []}>
-								{(p) => (
-									<option value={p.id}>
-										{p.company}
-										{p.video ? " (replaces current)" : ""}
-									</option>
-								)}
-							</For>
-						</select>
+						<SelectField
+							id="video_prospect"
+							name="id"
+							required
+							options={() =>
+								(outreach()?.all ?? []).map((p) => ({
+									value: p.id,
+									label: `${p.company}${p.video ? " (replaces current)" : ""}`,
+								}))
+							}
+						/>
 					</div>
 					<div class="form-group">
 						<label for="video_file">Video file</label>
@@ -180,27 +183,26 @@ export default function AdminVideos() {
 							<div class="board-card">
 								<div style={{ display: "flex", "align-items": "baseline", gap: "6px" }}>
 									<span style={{ "font-weight": "600", "font-size": "13px" }}>{company ?? v.title}</span>
-									<span class="badge" style={{ color: "var(--text-subtle)", "margin-left": "auto" }}>{stageLabel(stage ?? v.status)}</span>
+									<span class="badge" style={{ color: "var(--muted-foreground)", "margin-left": "auto" }}>{stageLabel(stage ?? v.status)}</span>
 								</div>
 								<Show when={v.description}>
 									<p class="muted" style={{ "font-size": "12px", margin: "4px 0" }}>{v.description}</p>
 								</Show>
 								<div style={{ "font-size": "12px", margin: "5px 0" }}>
 									<a href={v.url} target="_blank" rel="noreferrer">video ↗</a>{" "}
-									<button
-										type="button"
-										class="btn btn-sm"
+									<Button variant="outline" size="sm" type="button"
+										
 										onClick={() => navigator.clipboard.writeText(`${location.origin}/v/${v.id}`)}
 									>
 										copy email link
-									</button>{" "}
+									</Button>{" "}
 									<a href={`/v/${v.id}?test=1`} target="_blank" rel="noreferrer">test ↗</a>
 								</div>
 								<Show
 									when={videoSummary(v)}
 									fallback={<div class="muted" style={{ "font-size": "12px" }}>not opened yet</div>}
 								>
-									<div style={{ color: "var(--orange)", "font-size": "12px" }}>{videoSummary(v)}</div>
+									<div class="muted" style={{ "font-size": "12px" }}>{videoSummary(v)}</div>
 								</Show>
 							</div>
 						)}
