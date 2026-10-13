@@ -243,12 +243,25 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 			} else {
 				return { ok: false, error: `No api driver for stage ${stageKey}` };
 			}
-			await db.insert(funnelStageResults).values({ itemId: item.id, stage: stageKey, verdict, note, method: "api" });
+			// upsert per (item, stage): a concurrent writer (scheduler enrich, manual
+			// click, verify agent) may have recorded this item after the queue snapshot
+			// — latest verdict wins, evidenceUrl survives (not in set)
+			await db
+				.insert(funnelStageResults)
+				.values({ itemId: item.id, stage: stageKey, verdict, note, method: "api" })
+				.onConflictDoUpdate({
+					target: [funnelStageResults.itemId, funnelStageResults.stage],
+					set: { verdict, note, method: "api", checkedAt: new Date() },
+				});
 			okCount++;
 			await applyVerdictConsequences(item.id, info.stages);
 		} catch (e) {
 			errors++;
-			if (!firstError) firstError = e instanceof Error ? e.message : String(e);
+			if (!firstError) {
+				// drizzle wraps the pg error — the real message (constraint name) is the cause
+				const cause = e instanceof Error && e.cause instanceof Error ? e.cause.message : null;
+				firstError = cause ?? (e instanceof Error ? e.message : String(e));
+			}
 		}
 	}
 	return { ok: true, results: okCount, errors, ...(firstError ? { firstError: firstError.slice(0, 200) } : {}) };
