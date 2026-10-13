@@ -4,7 +4,7 @@ Mad Cactus monorepo.
 
 | Path | What | Stack |
 | --- | --- | --- |
-| `dashboard/` | The whole site — marketing, app (`/admin`), live Cactus Dispatch issues (SSR from DB) — served at madcactus.org | SolidStart + Nitro, Postgres (Supabase), deployed to Fly (`fly deploy` from `dashboard/`) |
+| `web/` | The whole site — marketing, app (`/admin`), live Cactus Dispatch issues (SSR from DB) — served at madcactus.org / basalt.ac | SolidStart + Nitro, Postgres (Supabase), deployed to Fly (`fly deploy` from `web/`) |
 | `supabase/` | DB config, migrations, seed data | Supabase |
 | `tools/` | Meeting publisher service | Bun |
 
@@ -17,7 +17,7 @@ flyctl auth logout                   # optional but recommended: nothing local n
 ./scripts/dev-setup.sh               # Postgres + schema + seed, in any worktree
 ```
 
-Then `cd dashboard && bun dev` → http://localhost:3000/admin.
+Then `cd web && bun dev` → http://localhost:3000/admin.
 
 - Secrets come from a machine-local Keychain cache — no Fly token exists locally,
   so nothing in a worktree can deploy. Deploys ship via GitHub Actions on merge.
@@ -25,9 +25,9 @@ Then `cd dashboard && bun dev` → http://localhost:3000/admin.
 - Default `DATABASE_URL` is the per-worktree local Postgres (writes fine).
 - `--prod-db` tests against real prod data via a **SELECT-only** role — writes fail
   at Postgres level. One-time setup: run `supabase/create-readonly-role.sql` in the
-  Supabase SQL Editor, put `PROD_RO_DB_URL=…` in `dashboard/.env`, re-run.
+  Supabase SQL Editor, put `PROD_RO_DB_URL=…` in `web/.env`, re-run.
   Second guard: `db:push`/`db:migrate` refuse any non-local `DATABASE_URL`
-  (`dashboard/scripts/db-guard.sh`; `ALLOW_REMOTE=1` overrides the guard, never the role).
+  (`web/scripts/db-guard.sh`; `ALLOW_REMOTE=1` overrides the guard, never the role).
 - Each worktree gets its own Postgres port (per-directory hash); set
   `WORKTREE_DB_PORT` to pin one. `./scripts/dev-teardown.sh` removes it all.
 
@@ -38,8 +38,8 @@ Commit hook typechecks (`bunx tsc --noEmit`) — run `bun install` first.
 The migrations folder (`supabase/migrations/`) is written to by drizzle-kit AND auto-applied to
 prod by the Supabase GitHub integration on merge to main. One folder, strict rules:
 
-- Schema lives in `dashboard/src/db/schema.ts`. Change it there, then
-  `cd dashboard && bun run db:generate` → commit the generated migration.
+- Schema lives in `web/src/db/schema.ts`. Change it there, then
+  `cd web && bun run db:generate` → commit the generated migration.
 - SQL drizzle can't express: `bunx drizzle-kit generate --custom`, then edit the new file.
   The `--custom` step keeps the journal in sync — never drop a bare `.sql` file in the folder.
 - `bun run db:push` (drizzle-kit push) is for the **local Docker Postgres only**.
