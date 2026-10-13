@@ -2,7 +2,7 @@
   "name": "dashboard",
   "type": "module",
   "scripts": {
-    "dev": "bun --bun vite dev --port 3000",
+    "dev": "bun --bun vite dev --port 3001",
     "build": "tsc --noEmit && bun --bun vite build && bun run scripts/copy-loro-wasm.ts && bun run scripts/copy-pdfkit-afm.ts && bun run scripts/check-client-bundle.ts",
     "typecheck": "tsc --noEmit",
     "prepare": "command -v git >/dev/null 2>&1 && git config core.hooksPath .githooks || true",

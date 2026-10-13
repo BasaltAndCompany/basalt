@@ -30,7 +30,7 @@ export default function Home() {
 	return (
 		<MarketingPage
 			title="Mad Cactus — Turn Your Business AI-Native"
-			description="We build the intelligence layer, custom agents, and workflows that make AI actually work for your business."
+			description="We embed AI into your operations to drive real revenue — custom agents and workflows that let your team of five operate like a team of twenty-five."
 		>
 			<Header />
 
@@ -44,8 +44,8 @@ export default function Home() {
 							<em>AI-Native.</em>
 						</h1>
 						<p class="hero-body">
-							We build the intelligence layer, custom agents, and workflows that make AI actually work for your business.
-							Letting your team of five operate like a team of twenty-five.
+							We embed AI into your operations to drive real revenue — custom agents and workflows
+							that let your team of five operate like a team of twenty-five.
 						</p>
 						{/* ponytail: plain img — Astro's responsive widths dropped; swap to <picture>/srcset if LCP suffers */}
 						<a href="/brain" class="cta-bracketed cta-hero" data-ph-event="cta_brain">
@@ -105,7 +105,7 @@ export default function Home() {
 					</h2>
 					<p class="dark-band-body">
 						We don't sell hours or piecemeal tools. We embed with your team, audit your operations, build your AI
-						intelligence layer, deploy custom agents, and train your people to run them. The work speaks for itself.
+						intelligence layer, deploy custom agents, and train your people to run them.
 					</p>
 				</div>
 			</div>
@@ -136,38 +136,35 @@ export default function Home() {
 					<h2 class="section-title">Proven in Production</h2>
 					<hr class="section-rule" />
 				</div>
-				<a href="/iu" class="case-study-card" data-ph-event="case_study_click">
+				{/* ponytail: numbers are Collin's estimates — get Customs Data Lock's sign-off before claiming them as measured */}
+				<div class="case-study-card">
 					<div class="case-study-visual">
 						<span class="case-study-institution">
-							INDIANA
+							CUSTOMS
 							<br />
-							<em>UNIVERSITY</em>
+							<em>DATA LOCK</em>
 						</span>
-						<span class="case-study-sector">Data Engineering</span>
+						<span class="case-study-sector">Customs Data Privacy</span>
 					</div>
 					<div class="case-study-content">
-						<h3 class="case-study-title">Autonomous data engineering agent that transformed IU's ticket resolution pipeline.</h3>
 						<p class="case-study-desc">
-							A custom AI agent performing intelligent first-pass analysis on incoming data engineering tickets.
-							Triaging issues, identifying root causes, and routing with context.
+							We taught them to use AI agents to build small software for their outbound operations grow their response rate and save 1/3 of their time. 
+							We automated manual back-end and administrative work. Now they are receiving estimated 2. 75x more revenue
+							per hour worked.
 						</p>
+						{/* ponytail: dollar values hidden on purpose — raw revenue ($2K→$5–6K/yr) reads too small; show the multiplier only */}
 						<div class="case-study-stats">
 							<div class="stat">
-								<strong>45%</strong>
-								<span>Productivity Increase</span>
+								<strong>2.75x</strong>
+								<span>Revenue per work hour</span>
 							</div>
 							<div class="stat">
-								<strong>MTTR</strong>
-								<span>Significantly Reduced</span>
-							</div>
-							<div class="stat">
-								<strong>Q2-Q3</strong>
-								<span>Measured Impact</span>
+								<strong>+175%</strong>
+								<span>Revenue growth</span>
 							</div>
 						</div>
-						<span class="case-study-link cta-bracketed">&#123; READ FULL CASE STUDY &#125;</span>
 					</div>
-				</a>
+				</div>
 			</section>
 
 			{/* ════════ SCORECARD CTA ════════ */}
@@ -177,7 +174,7 @@ export default function Home() {
 						<h3 class="lead-heading">
 							What could your team do
 							<br />
-							<em>with a company brain?</em>
+							<em>if the busywork ran itself?</em>
 						</h3>
 					</div>
 					<div class="lead-right">

@@ -279,7 +279,7 @@
 }
 .mk-root .case-study-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0;
     padding-top: var(--spacing-32);
     border-top: 1px solid var(--color-letterpress-black);
