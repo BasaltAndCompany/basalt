@@ -1,0 +1,27 @@
+# fly.toml — the one app: marketing site + admin + client portal + API.
+# Basalt brand, madcactus-dashboard fly app name (kept — renaming the fly app
+# would force a domain migration for zero user-visible benefit).
+
+app = "madcactus-dashboard"
+primary_region = "iad"
+
+[build]
+dockerfile = "Dockerfile"
+
+[http_service]
+internal_port = 3000
+force_https = true
+auto_stop_machines = "stop"
+auto_start_machines = true
+min_machines_running = 0
+
+[[http_service.checks]]
+interval = "10s"
+timeout = "5s"
+grace_period = "30s"
+method = "GET"
+path = "/admin/login"
+
+[[vm]]
+size = "shared-cpu-1x"
+memory = "512mb"

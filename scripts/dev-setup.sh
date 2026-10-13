@@ -22,7 +22,7 @@ SB_DB=supabase_db_aspectrr-client-dashboard
 sql() { docker exec -i "$SB_DB" psql -U postgres -d madcactus -tA "$@"; }
 
 if [[ "$ARG" == "--example" ]]; then
-	[ -f dashboard/.env ] || { cp dashboard/.env.example dashboard/.env; echo "→ created dashboard/.env from example (integrations off until keys added)"; }
+	[ -f web/.env ] || { cp web/.env.example web/.env; echo "→ created web/.env from example (integrations off until keys added)"; }
 else
 	# --prod-db passes through; otherwise pull-env writes DATABASE_URL = shared dev DB above.
 	DEV_DATABASE_URL="$DB_URL" ./scripts/pull-env.sh "$ARG"
@@ -43,7 +43,7 @@ sql -c 'create extension if not exists vector' >/dev/null 2>&1 || true
 # don't exist locally — pg_restore reports those errors and continues; all else lands.
 ROWCOUNT=$(sql -c 'select count(*) from companies;' 2>/dev/null || echo 0)
 if [[ "${ROWCOUNT// /}" -eq 0 ]]; then
-	PROD_URL=$(grep -h '^PROD_RO_DB_URL=' dashboard/.env 2>/dev/null | tail -1 | cut -d= -f2- || true)
+	PROD_URL=$(grep -h '^PROD_RO_DB_URL=' web/.env 2>/dev/null | tail -1 | cut -d= -f2- || true)
 	if [[ -z "$PROD_URL" ]]; then
 		PROD_URL=$(security find-generic-password -s madcactus-dashboard-env -w 2>/dev/null | base64 -d 2>/dev/null | grep '^PROD_RO_DB_URL=' | tail -1 | cut -d= -f2- || true)
 	fi
@@ -125,17 +125,17 @@ STATUS=$(supabase status -o json 2>/dev/null)
 API_URL=$(echo "$STATUS" | grep -o '"API_URL": "[^"]*"' | cut -d'"' -f4)
 ANON=$(echo "$STATUS" | grep -o '"ANON_KEY": "[^"]*"' | cut -d'"' -f4)
 SVC=$(echo "$STATUS" | grep -o '"SERVICE_ROLE_KEY": "[^"]*"' | cut -d'"' -f4)
-if [ -n "$API_URL" ] && [ -n "$ANON" ] && [ -n "$SVC" ] && [ ! -f dashboard/.env.local ]; then
-	cat > dashboard/.env.local <<LOCAL
+if [ -n "$API_URL" ] && [ -n "$ANON" ] && [ -n "$SVC" ] && [ ! -f web/.env.local ]; then
+	cat > web/.env.local <<LOCAL
 # Local Supabase overrides (dev only) — written by scripts/dev-setup.sh.
-# dashboard/.env DATABASE_URL already points at this stack's Postgres (:54322).
+# web/.env DATABASE_URL already points at this stack's Postgres (:54322).
 SUPABASE_URL=$API_URL
 SUPABASE_ANON_KEY=$ANON
 SUPABASE_SERVICE_KEY=$SVC
 DEV_ADMIN_EMAIL=admin@madcactus.org
 DEV_ADMIN_PASSWORD=cactus-local-dev
 LOCAL
-	echo "→ wrote dashboard/.env.local (local auth + storage; login: admin@madcactus.org / cactus-local-dev)"
+	echo "→ wrote web/.env.local (local auth + storage; login: admin@madcactus.org / cactus-local-dev)"
 fi
 # Dev admin user for the local auth — 422 = already exists, fine.
 curl -s -o /dev/null -m 10 -X POST "$API_URL/auth/v1/signup" \
@@ -148,7 +148,7 @@ Dev environment ready (DATABASE_URL → shared stack Postgres :54322).
   cd dashboard && bun run dev   → http://localhost:3000/admin   (login: admin@madcactus.org / cactus-local-dev)
   Supabase Studio               → http://localhost:54323        (storage, auth users, table editor)
 
-dashboard/.env holds the REAL prod keys (Gmail OAuth, Slack, LLM, Resend…).
+web/.env holds the REAL prod keys (Gmail OAuth, Slack, LLM, Resend…).
 Override anything by editing it — pull-env backs up your edits to .env.bak
 before the next pull. Parallel worktrees share this stack's data by design.
 TIP

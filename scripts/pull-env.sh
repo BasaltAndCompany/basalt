@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# dashboard/.env = real prod secrets, cached in the macOS Keychain (this user, this
+# web/.env = real prod secrets, cached in the macOS Keychain (this user, this
 # machine) after a one-time pull from the Fly machine. All worktrees read the
 # Keychain copy — NO Fly token exists locally, so nothing here can deploy or touch
 # Fly at all. Deploys happen only via GitHub Actions on merge to main.
 #
-#   ./scripts/pull-env.sh             → build dashboard/.env from the Keychain cache
+#   ./scripts/pull-env.sh             → build web/.env from the Keychain cache
 #   ./scripts/pull-env.sh --refresh   → re-pull from the Fly machine (needs `flyctl auth login`;
 #                                       do this when you change secrets on Fly)
 #   ./scripts/pull-env.sh --prod-db   → DATABASE_URL = read-only prod role (see README)
@@ -46,15 +46,15 @@ if [[ -z "$SRC" ]]; then
 fi
 
 # Hand-maintained vars survive re-pulls.
-RO_URL=$(grep -h '^PROD_RO_DB_URL=' dashboard/.env 2>/dev/null | tail -1 | cut -d= -f2- || true)
+RO_URL=$(grep -h '^PROD_RO_DB_URL=' web/.env 2>/dev/null | tail -1 | cut -d= -f2- || true)
 
 # Back up any hand-edited .env (pull-env overwrites it).
-[ -f dashboard/.env ] && cp dashboard/.env dashboard/.env.bak
+[ -f web/.env ] && cp web/.env web/.env.bak
 
 # Cache content first, but WITHOUT keys we override; overrides are appended LAST.
 # (bun dotenv: last definition wins; vite: first wins — dedupe makes both correct.)
 OVERRIDDEN='^(PUBLIC_SITE_URL|DATABASE_URL)='
-printf '%s\n' "$SRC" | awk -v ov="$OVERRIDDEN" '$0 !~ ov' > dashboard/.env
+printf '%s\n' "$SRC" | awk -v ov="$OVERRIDDEN" '$0 !~ ov' > web/.env
 {
 	echo "# ── local overrides (scripts/pull-env.sh; delete this file to re-pull) ──"
 	echo "PUBLIC_SITE_URL=http://localhost:3000  # OAuth redirects → allowlisted localhost URI"
@@ -65,6 +65,6 @@ printf '%s\n' "$SRC" | awk -v ov="$OVERRIDDEN" '$0 !~ ov' > dashboard/.env
 		echo "DATABASE_URL=${DEV_DATABASE_URL:-postgres://postgres:postgres@127.0.0.1:54322/madcactus}"
 	fi
 	echo "# Dev-only portal logins are not in prod env — see supabase/seed-portal.sql + seed.sql"
-} >> dashboard/.env
-grep -q '^SUPABASE_URL=' dashboard/.env || { echo "cached env missing SUPABASE_URL — re-run --refresh"; exit 1; }
-echo "→ dashboard/.env ready: $(grep -cE '^[A-Za-z_]' dashboard/.env) vars (overrides + Keychain cache)"
+} >> web/.env
+grep -q '^SUPABASE_URL=' web/.env || { echo "cached env missing SUPABASE_URL — re-run --refresh"; exit 1; }
+echo "→ web/.env ready: $(grep -cE '^[A-Za-z_]' web/.env) vars (overrides + Keychain cache)"

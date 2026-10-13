@@ -1,1 +1,0 @@
-import{G as e,Q as t,d as n,h as r,o as i,v as a}from"./web-DU4Gp69X.js";import{at as o}from"./src-WBPHOAq_.js";var s=a(`<label>`),c=a=>{let[c,l]=t(a,[`class`]);return(()=>{var t=i(s);return r(t,e({get class(){return o(`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70`,c.class)}},l),!1,!1),n(),t})()};export{c as t};

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Compress a video under the Supabase free-plan 50MB upload cap — the native-ffmpeg
-# twin of the in-browser path in dashboard/src/routes/admin/videos.tsx.
+# twin of the in-browser path in web/src/routes/admin/videos.tsx.
 #
 #   scripts/compress-video.sh recording.mov [output.mp4]
 #

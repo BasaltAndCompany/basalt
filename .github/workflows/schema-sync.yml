@@ -6,10 +6,10 @@ name: Schema sync
 # current schema.ts, the PR is missing a migration.
 on:
   pull_request:
-    paths: ['dashboard/src/db/**', 'supabase/migrations/**']
+    paths: ['web/src/db/**', 'supabase/migrations/**']
   push:
     branches: [main]
-    paths: ['dashboard/src/db/**', 'supabase/migrations/**']
+    paths: ['web/src/db/**', 'supabase/migrations/**']
 
 jobs:
   schema-sync:
@@ -19,17 +19,17 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1
-      - working-directory: dashboard
+      - working-directory: web
         run: bun install --frozen-lockfile
       - name: drizzle-kit generate must be a no-op
-        working-directory: dashboard
+        working-directory: web
         env:
           DATABASE_URL: postgres://dummy@localhost:5/dummy
         run: |
           bunx drizzle-kit generate
           if [ -n "$(git status --porcelain supabase/migrations)" ]; then
             echo "schema.ts has changes not captured by a migration."
-            echo "Run: cd dashboard && bun run db:generate  (then commit the migration)"
+            echo "Run: cd web && bun run db:generate  (then commit the migration)"
             git status --porcelain supabase/migrations
             exit 1
           fi
