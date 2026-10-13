@@ -12,6 +12,7 @@
 import { and, eq, ilike, isNotNull, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "~/db";
+import { getRunStages } from "~/lib/funnels";
 import {
 	companies,
 	clientMembers,
@@ -22,6 +23,8 @@ import {
 	emailOutbox,
 	campaigns,
 	funnelRuns,
+	funnelItems,
+	funnelStageResults,
 	outreachProspects,
 	OUTREACH_STAGE_LABELS,
 	videos,
@@ -243,6 +246,56 @@ const funnelRun = defineComponent({
 	// addressable component — linking to an unregistered kind renders deleted cards
 });
 
+// Custom load: generic table load alone would hide the per-stage verdicts —
+// get_component on a run without this shows a header and zero companies.
+type FunnelItemRow = typeof funnelItems.$inferSelect & {
+	stageResults?: { stage: string; verdict: string; note: string | null; method: string; evidenceUrl: string | null; checkedAt: Date }[];
+	totalStages?: number | null;
+};
+const funnelItem = defineComponent({
+	kind: "funnel-item",
+	label: "Funnel item",
+	description:
+		"One company in a funnel run — its stage verdicts, evidence notes, and promotion state. Children of a funnel-run.",
+	table: funnelItems,
+	load: async (id): Promise<FunnelItemRow | null> => {
+		const [row] = await db.select().from(funnelItems).where(eq(funnelItems.id, id)).limit(1);
+		if (!row) return null;
+		const [stageResults, run] = await Promise.all([
+			db
+				.select({
+					stage: funnelStageResults.stage,
+					verdict: funnelStageResults.verdict,
+					note: funnelStageResults.note,
+					method: funnelStageResults.method,
+					evidenceUrl: funnelStageResults.evidenceUrl,
+					checkedAt: funnelStageResults.checkedAt,
+				})
+				.from(funnelStageResults)
+				.where(eq(funnelStageResults.itemId, id)),
+			getRunStages(row.runId),
+		]);
+		return { ...row, stageResults, totalStages: run?.stages.length ?? null } satisfies FunnelItemRow;
+	},
+	title: (r) => r.companyName,
+	subtitle: (r: FunnelItemRow) => {
+		const place = [r.city, r.state].filter(Boolean).join(", ");
+		const passed = r.stageResults?.filter((s) => s.verdict === "pass").length ?? 0;
+		const gates = r.stageResults?.length ?? 0;
+		const score = gates > 0 ? ` · ${passed}/${r.totalStages ?? gates} gates pass` : "";
+		return place || score ? `${place}${score}` : null;
+	},
+	status: {
+		get: (r) => (r.prospectId ? "promoted" : "pending"),
+		labels: { promoted: "promoted to outreach", pending: "in funnel" },
+	},
+	adminPath: (r) => `/admin/funnels/${r.runId}`,
+	search: { columns: [funnelItems.companyName, funnelItems.city, funnelItems.state] },
+	ownerLinks: [{ key: "runId", column: funnelItems.runId, kind: "funnel-run" }],
+	// a run's roster is the payload — 10 (default) would hide most companies
+	ownerQueryLimit: 500,
+});
+
 // NOTE: brain tables (brain_pages, brain_facts, …) are deliberately NOT
 // registered — distilled knowledge is a separate subsystem with its own
 // vocabulary (entity slugs). Unifying the two is a later, deliberate
@@ -264,6 +317,7 @@ export const COMPONENTS: Record<string, AnyComponentDefinition> = {
 	invoice: invoice as AnyComponentDefinition,
 	deliverable: deliverable as AnyComponentDefinition,
 	"funnel-run": funnelRun as AnyComponentDefinition,
+	"funnel-item": funnelItem as AnyComponentDefinition,
 };
 
 export function getComponent(kind: string): AnyComponentDefinition | undefined {
@@ -426,7 +480,7 @@ export async function linksFor(ref: EntityRef): Promise<ComponentLinks> {
 						.select()
 						.from(d.table!)
 						.where(and(eq(link.column, ref.id), d.where ?? sql`true`))
-						.limit(10);
+						.limit(d.ownerQueryLimit ?? 10);
 					for (const r of rows as Record<string, unknown>[]) {
 						children.push({ via: `${d.kind}.${link.key}`, card: cardFromRow(d, r) });
 					}

@@ -12,7 +12,7 @@ import { getUserQuery } from "~/lib/queries";
 type Stage = { key: string; label: string; gate: string; method: string; params?: Record<string, number> | null; soft?: boolean };
 type Run = { id: string; funnelId: string; source: string; status: string; note: string | null; createdAt: string; closedAt: string | null };
 type AiMatchRow = { name: string; title: string | null; evidence: string; linkedinUrl: string | null };
-type Item = { id: string; companyName: string; city: string | null; state: string | null; sourceUrl: string | null; sourceKind: string | null; prospectId: string | null; promotedAt: string | null; rawData?: { prospeo?: { domain?: string | null }; aiMatches?: { matches: AiMatchRow[]; pastMatches: AiMatchRow[] } } | null };
+type Item = { id: string; companyName: string; city: string | null; state: string | null; sourceUrl: string | null; sourceKind: string | null; prospectId: string | null; promotedAt: string | null; rawData?: { prospeo?: { domain?: string | null } | null; aiMatches?: { matches: AiMatchRow[]; pastMatches: AiMatchRow[] } } | null };
 type Result = { id: string; itemId: string; stage: string; verdict: "pass" | "fail"; evidenceUrl: string | null; note: string | null; method: string; checkedAt: string };
 type Summary = { total: number; byStage: { stage: string; label: string; passed: number; failed: number; awaiting: number }[] };
 
@@ -28,6 +28,16 @@ const post = async (url: string, body: unknown) => {
 	const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 	return (await r.json().catch(() => ({}))) as { error?: string; ok?: boolean; results?: number; errors?: number; firstError?: string; fetched?: number; imported?: number; duplicated?: number; skippedPromoted?: number };
 };
+
+// Why a company has no website link, as a visible chip instead of a silent gap.
+// Read off the cached Prospeo payload in rawData (already fetched — no new calls):
+// null = vendor name-miss, object without domain = matched but no site, no key =
+// not enriched yet. "Run stage" re-queues enrichment either way.
+function WebsiteChip(props: { item: Item }) {
+	const raw = props.item.rawData;
+	const label = !raw || !("prospeo" in raw) ? "enrichment pending" : raw.prospeo === null ? "not in Prospeo" : "matched, no domain";
+	return <span class="badge muted" style={{ "font-size": "11px" }}>{label}</span>;
+}
 
 // One funnel run: summary bar, item table with stage chips, per-stage queues.
 // Redo clears a stage (re-queues the item); a fail on a promoted prospect
@@ -486,7 +496,8 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 							<Show when={it().sourceUrl}>
 								<a class="btn btn-sm" href={it().sourceUrl!} target="_blank" rel="noreferrer">{it().sourceKind === "fmcsa" ? "FMCSA ↗" : "Source ↗"}</a>
 							</Show>
-							<Show when={it().rawData?.prospeo?.domain}>
+							{/* website state: silent gap → four explicit states, so "is it us or Prospeo" is answerable per company */}
+							<Show when={it().rawData?.prospeo?.domain} fallback={<WebsiteChip item={it()} />}>
 								{(domain) => <a class="btn btn-sm" href={`https://${domain()}`} target="_blank" rel="noreferrer">Website ↗</a>}
 							</Show>
 							<a class="btn btn-sm" href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(it().companyName)}`} target="_blank" rel="noreferrer">LinkedIn ↗</a>

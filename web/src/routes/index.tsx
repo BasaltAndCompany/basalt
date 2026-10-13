@@ -71,7 +71,7 @@ export function Site(props: { heroVideo: string | null }) {
     })
 
   return (
-    <div class="bg-background text-foreground">
+    <div class="home-narrative bg-background text-foreground">
       {/* ── Fixed stage: the surface never scrolls away ─────────── */}
       <div class="fixed inset-0" aria-hidden="true">
         <Show when={props.heroVideo} keyed>
