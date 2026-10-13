@@ -8,7 +8,7 @@ const errT = (m: string) => toast(m, "error");
 const okT = (m: string) => toast(m, "success");
 import { getUserQuery } from "~/lib/queries";
 
-type Stage = { key: string; label: string; gate: string; method: string };
+type Stage = { key: string; label: string; gate: string; method: string; params?: Record<string, number> | null; soft?: boolean };
 type Run = { id: string; funnelId: string; source: string; status: string; note: string | null; createdAt: string; closedAt: string | null };
 type Item = { id: string; companyName: string; city: string | null; state: string | null; sourceUrl: string | null; sourceKind: string | null; prospectId: string | null; promotedAt: string | null };
 type Result = { id: string; itemId: string; stage: string; verdict: "pass" | "fail"; evidenceUrl: string | null; note: string | null; method: string; checkedAt: string };
@@ -60,6 +60,18 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 		okT("Schedule saved");
 		await loadSchedule();
 	}
+	async function saveTuning(e: Event, s: Stage) {
+		e.preventDefault();
+		if (!run()) return;
+		const fd = new FormData(e.target as HTMLFormElement);
+		const params: Record<string, number> = {};
+		for (const k of Object.keys(s.params ?? {})) params[k] = Number(fd.get(`p_${k}`) || 0);
+		const body = await post(`/api/funnels/${run()!.funnelId}/stages`, { key: s.key, params, soft: fd.get("soft") === "on" });
+		if (body.error) return errT(body.error);
+		okT("Tuning saved");
+		await refresh();
+	}
+
 	const [headFilter, setHeadFilter] = createSignal<{ stage: string; mode: "filled" | "awaiting" } | null>(null);
 	const cycleHeadFilter = (stage: string) => {
 		setPage(0);
@@ -120,7 +132,8 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 			return stages().every((s, i) => {
 				if (i > at) return true;
 				const r = resultFor(it.id, s.key);
-				return i < at ? r?.verdict === "pass" : !r;
+				// soft stages are signal-only: their verdict never gates later queues
+				return i < at ? (s.soft ? true : r?.verdict === "pass") : !r;
 			});
 		});
 
@@ -394,6 +407,17 @@ export default function AdminFunnelRun(props: { params: { id: string } }) {
 									</label>{" "}
 								</Show>
 							</div>
+							<form class="form-row" onSubmit={(e) => saveTuning(e, s())} style={{ "margin-top": "10px", "flex-wrap": "wrap", gap: "8px" }}>
+								<For each={Object.entries(s().params ?? {})}>{([k, v]) => (
+									<label class="muted" style={{ "font-size": "12px" }}>
+										{k} <input name={`p_${k}`} type="number" class="num" value={v} />
+									</label>
+								)}</For>
+								<label class="muted" style={{ "font-size": "12px" }}>
+									<input type="checkbox" name="soft" checked={s().soft ?? false} /> signal only (fail doesn't disqualify)
+								</label>
+								<button type="submit" class="btn btn-sm">Save tuning</button>
+							</form>
 						</div>
 					)}
 				</Show>

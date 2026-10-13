@@ -149,7 +149,16 @@ export const outreachProspects = pgTable(
 export const FUNNEL_METHODS = ["source", "api", "agent", "human"] as const;
 export type FunnelMethod = (typeof FUNNEL_METHODS)[number];
 
-export type FunnelStage = { key: string; label: string; gate: string; method: FunnelMethod };
+export type FunnelStage = {
+	key: string;
+	label: string;
+	gate: string;
+	method: FunnelMethod;
+	/** Tunable gate numbers, edited at runtime on the run page; code holds defaults. */
+	params?: Record<string, number> | null;
+	/** Signal-only stage: verdicts are recorded but never block later stages or promotion. */
+	soft?: boolean;
+};
 
 export const funnels = pgTable("funnels", {
 	id: uuid("id").primaryKey().defaultRandom(),
