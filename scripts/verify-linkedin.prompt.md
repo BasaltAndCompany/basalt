@@ -14,8 +14,8 @@ earlier stages all passed and that have no tech_team result yet.
 3. Count total hits across the titles.
 
 **Verdict:**
-- 0–2 hits → `pass` (no real tech team)
-- 3+ hits → `fail` (real tech team — gatekeeper risk)
+- 0–6 hits → `pass` (no real tech team — small in-house teams of 3-6 are fine)
+- 7+ hits → `fail` (real tech team — gatekeeper risk)
 - POST to `<BASE>/api/funnels/results`:
   `{"itemId": "...", "stage": "tech_team", "verdict": "pass"|"fail",
     "evidenceUrl": "<linkedin people URL>", "note": "3 tech-title hits",

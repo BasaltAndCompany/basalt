@@ -19,10 +19,10 @@ import {
 export const FREIGHT_STAGES: FunnelStage[] = [
 	{ key: "hq_state", label: "Indiana HQ", gate: "Address/city is in Indiana, not a name token", method: "source" },
 	{ key: "industry_type", label: "Industry", gate: "Freight brokerage / 3PL / knowledge-heavy carrier", method: "source" },
-	{ key: "headcount", label: "Headcount", gate: "15-250 employees", method: "api" },
-	{ key: "revenue_band", label: "Revenue", gate: "$10-70M estimate; rev/employee $150-500k sanity", method: "api" },
-	{ key: "tech_team", label: "Tech team", gate: "≤2 title hits for CTO/VP Eng/IT Director/engineer/developer", method: "api" },
-	{ key: "owner_led", label: "Owner-led", gate: "Founder/CEO still running it, not a PE roll-up", method: "agent" },
+	{ key: "headcount", label: "Headcount", gate: "15-250 employees", method: "api", params: { min: 15, max: 250 } },
+	{ key: "revenue_band", label: "Revenue", gate: "$10-70M estimate; rev/employee $150-500k sanity; no Prospeo revenue → headcount × $325k/emp estimate", method: "api", params: { min: 10_000_000, max: 70_000_000, perEmp: 325_000 } },
+	{ key: "tech_team", label: "Tech team", gate: "≤6 title hits for CTO/VP Eng/IT Director/engineer/developer", method: "api", params: { maxHits: 6 } },
+	{ key: "owner_led", label: "Owner-led", gate: "Founder/CEO still running it, not a PE roll-up", method: "agent", soft: true },
 	{ key: "ai_signal", label: "AI signal", gate: "≥1 employee self-labels AI (Prospeo roster); site evidence corroborates only; vendor-hint recorded separately", method: "api" },
 ];
 
@@ -127,9 +127,15 @@ export async function ensureFreightFunnel() {
 		}).onConflictDoNothing();
 		return;
 	}
-	// stage definitions evolve (method changes) — keep the seeded row in sync
-	if (JSON.stringify(existing[0].stages) !== JSON.stringify(FREIGHT_STAGES)) {
-		await db.update(funnels).set({ stages: FREIGHT_STAGES }).where(eq(funnels.id, existing[0].id));
+	// stage definitions evolve (method changes) — keep the seeded row in sync,
+	// but runtime tuning (params/soft edited on the run page) always wins
+	const tuned = new Map(existing[0].stages.map((s) => [s.key, s]));
+	const merged: FunnelStage[] = FREIGHT_STAGES.map((s) => {
+		const t = tuned.get(s.key);
+		return t ? { ...s, ...(t.params ? { params: t.params } : {}), ...(t.soft !== undefined ? { soft: t.soft } : {}) } : s;
+	});
+	if (JSON.stringify(existing[0].stages) !== JSON.stringify(merged)) {
+		await db.update(funnels).set({ stages: merged }).where(eq(funnels.id, existing[0].id));
 	}
 }
 
@@ -159,7 +165,8 @@ export async function getQueue(runId: string, stageKey: string) {
 	if (!info) return null;
 	const idx = info.stages.findIndex((s) => s.key === stageKey);
 	if (idx === -1) return null;
-	const earlier = info.stages.slice(0, idx).map((s) => s.key);
+	// soft stages are signal-only — their verdicts never gate later queues
+	const gates = info.stages.slice(0, idx).filter((s) => !s.soft).map((s) => s.key);
 	const rows = await db
 		.select()
 		.from(funnelItems)
@@ -169,7 +176,7 @@ export async function getQueue(runId: string, stageKey: string) {
 				// no result at this stage yet
 				sql`not exists (select 1 from ${funnelStageResults} r where r.item_id = ${funnelItems.id} and r.stage = ${stageKey})`,
 				// every earlier stage has a passing result
-				...earlier.map(
+				...gates.map(
 					(k) =>
 						sql`exists (select 1 from ${funnelStageResults} r where r.item_id = ${funnelItems.id} and r.stage = ${k} and r.verdict = 'pass')`,
 				),
@@ -219,8 +226,12 @@ export async function applyVerdictConsequences(itemId: string, stages: FunnelSta
 		.select({ stage: funnelStageResults.stage, verdict: funnelStageResults.verdict, note: funnelStageResults.note })
 		.from(funnelStageResults)
 		.where(eq(funnelStageResults.itemId, itemId));
-	const allPass = stages.every((s) => results.some((r) => r.stage === s.key && r.verdict === "pass"));
-	const anyFail = results.some((r) => r.verdict === "fail");
+	// soft stages record signals but never block promotion or un-approve —
+	// a fail there is "worth knowing", not "drop"
+	const allPass = stages
+		.filter((s) => !s.soft)
+		.every((s) => results.some((r) => r.stage === s.key && r.verdict === "pass"));
+	const anyFail = results.some((r) => (stages.find((s) => s.key === r.stage)?.soft ? false : r.verdict === "fail"));
 
 	// ai_signal note tier → aiInterest (tier1=high, tier2=some) — only on a
 	// pass; a tier2 FAIL note (site-only rescue evidence) must never set it.

@@ -3,7 +3,7 @@
 // 0 credits on miss), Apollo (tech_team), cache reads (ai_signal roster/site).
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
-import { funnelItems, funnelStageResults } from "~/db/schema";
+import { funnelItems, funnelStageResults, type FunnelStage } from "~/db/schema";
 import { applyVerdictConsequences, getQueue, getRunStages } from "~/lib/funnels";
 import {
 	cleanName,
@@ -18,7 +18,50 @@ import { scoreAiSignal, scoreRoster, scanSite } from "~/lib/ai-signal";
 
 const M = 1_000_000;
 
+/** Runtime-tuned gate number from the funnel row's stage params (code default otherwise). */
+const num = (stage: FunnelStage | undefined, k: string, dflt: number) =>
+	typeof stage?.params?.[k] === "number" ? (stage.params![k] as number) : dflt;
+
+export type RevenueInputs = {
+	revenueMin: number | null;
+	revenueMax: number | null;
+	employeeCount: number | null;
+	employeeRange: string | null;
+};
+
+/** The revenue_band gate. Real Prospeo range → overlap test on the band.
+ *  Missing/one-sided range → estimate headcount × perEmp (the gate's own
+ *  rev/employee sanity, midpoint). Nothing at all → honest fail, never a
+ *  throw — an error records no verdict and the item re-errors every run. */
+export function revenueBandVerdict(
+	co: RevenueInputs | null,
+	{ min = 10_000_000, max = 70_000_000, perEmp = 325_000 }: { min?: number; max?: number; perEmp?: number } = {},
+): { verdict: "pass" | "fail"; note: string } {
+	if (co && co.revenueMin !== null && co.revenueMax !== null) {
+		return {
+			verdict: co.revenueMax >= min && co.revenueMin <= max ? "pass" : "fail",
+			note: `$${Math.round(co.revenueMin / M)}–$${Math.round(co.revenueMax / M)}M (Prospeo)`,
+		};
+	}
+	const n = co?.employeeCount ?? rangeMidpoint(co?.employeeRange ?? null);
+	if (n === null) return { verdict: "fail", note: "no revenue or headcount data (Prospeo)" };
+	const est = n * perEmp;
+	return {
+		verdict: est >= min && est <= max ? "pass" : "fail",
+		note: `est. $${Math.round(est / M)}M from ~${n} employees @ $${Math.round(perEmp / 1000)}k/emp (Prospeo has no revenue)`,
+	};
+}
+
 export type BatchResult = { ok: true; results: number; errors: number; firstError?: string } | { ok: false; error: string };
+
+/** Cached Prospeo payload written by the headcount run (null = never enriched). */
+function cachedProspeo(item: typeof funnelItems.$inferSelect): RevenueInputs | null {
+	return ((item.rawData as Record<string, unknown> | null)?.prospeo ?? null) as RevenueInputs | null;
+}
+
+/** Enough firmographics to settle revenue_band from the cache alone. */
+const hasFirmographics = (c: RevenueInputs | null) =>
+	!!c && (c.revenueMin !== null || c.revenueMax !== null || c.employeeCount !== null || c.employeeRange !== null);
 
 /** One Prospeo call carries the whole firmographic payload — cache it on the
  *  item so later stages (revenue) read it free instead of re-enriching. */
@@ -93,9 +136,14 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 	// and its own cached roster instead.
 	const enriched = new Map<string, ProspeoCompany | null>();
 	if ((stageKey === "headcount" || stageKey === "revenue_band") && prospeoConfigured() && items.length > 0) {
+		// revenue_band: the headcount run already cached the payload — re-enriching
+		// matched companies burns 1 credit each for data we have. Enrich only the
+		// items the cache can't answer.
+		const todo =
+			stageKey === "revenue_band" ? items.filter((it) => !hasFirmographics(cachedProspeo(it))) : items;
 		try {
-			for (let i = 0; i < items.length; i += 50) {
-				const chunk = items.slice(i, i + 50);
+			for (let i = 0; i < todo.length; i += 50) {
+				const chunk = todo.slice(i, i + 50);
 				const res = await prospeoEnrichBatch(chunk.map((c) => c.companyName));
 				for (const c of chunk) enriched.set(c.id, res.get(c.companyName) ?? null);
 			}
@@ -111,25 +159,26 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 				const co = enriched.get(item.id) ?? null;
 				await cacheProspeo(item.id, co);
 				const n = co?.employeeCount ?? rangeMidpoint(co?.employeeRange ?? null);
-				// null = not in Prospeo → almost certainly <15 employees → honest fail
-				verdict = n !== null && n >= 15 && n <= 250 ? "pass" : "fail";
-				note = n !== null ? `${co?.employeeCount ?? `${co?.employeeRange} range`} → ~${n} employees (Prospeo)` : "not in Prospeo — likely under 15 employees";
+				// null = not in Prospeo → almost certainly under the minimum → honest fail
+				const min = num(stage, "min", 15);
+				const max = num(stage, "max", 250);
+				verdict = n !== null && n >= min && n <= max ? "pass" : "fail";
+				note = n !== null ? `${co?.employeeCount ?? `${co?.employeeRange} range`} → ~${n} employees (Prospeo)` : `not in Prospeo — likely under ${min} employees`;
 			} else if (stageKey === "revenue_band") {
-				// prefer the payload cached by the headcount run (free); enrich only if absent
-				const cached = ((item.rawData as Record<string, unknown> | null)?.prospeo ?? null) as
-					| { revenueMin?: number | null; revenueMax?: number | null }
-					| null;
-				const co =
-					cached && (cached.revenueMin !== null || cached.revenueMax !== null)
-						? (cached as { revenueMin: number | null; revenueMax: number | null })
-						: enriched.get(item.id) ?? null;
-				if (!co || co.revenueMin === null || co.revenueMax === null) throw new Error("no revenue data (Prospeo)");
-				verdict = co.revenueMax >= 10 * M && co.revenueMin <= 70 * M ? "pass" : "fail";
-				note = `$${Math.round(co.revenueMin / M)}–$${Math.round(co.revenueMax / M)}M (Prospeo)`;
+				// cached payload answers most items free; the fresh enrich above only
+				// ran for cache-less items
+				const cached = cachedProspeo(item);
+				const co = hasFirmographics(cached) ? cached : (enriched.get(item.id) ?? null);
+				({ verdict, note } = revenueBandVerdict(co, {
+					min: num(stage, "min", 10_000_000),
+					max: num(stage, "max", 70_000_000),
+					perEmp: num(stage, "perEmp", 325_000),
+				}));
 			} else if (stageKey === "tech_team") {
 				// roster-based gate: tech titles in Prospeo's 25-person sample —
 				// one vendor, zero extra API calls when ai_signal already cached
-				// the roster. Sample proxy for "no real tech team" (≤2 hits passes).
+				// the roster. Sample proxy for "no real tech team" (≤6 hits passes —
+				// small in-house tech teams of 3-6 are common and still good targets).
 				const raw0 = (item.rawData ?? {}) as Record<string, unknown>;
 				const p0 = (raw0.prospeo ?? null) as { companyId?: string | null; domain?: string | null } | null;
 				const refs0 = { companyId: p0?.companyId ?? null, domain: p0?.domain ?? null, name: cleanName(item.companyName) };
@@ -142,7 +191,7 @@ export async function runStageBatch(runId: string, stageKey: string, limit = 50)
 				const hits = roster0.people.filter(
 					(p) => TECH.test(p.title ?? "") || p.historyTitles.some((t) => TECH.test(t)),
 				).length;
-				verdict = hits <= 2 ? "pass" : "fail";
+				verdict = hits <= num(stage, "maxHits", 6) ? "pass" : "fail";
 				note = `${hits} tech titles in ${roster0.people.length}-person sample (Prospeo)`;
 			} else if (stageKey === "ai_signal") {
 				const raw = (item.rawData ?? {}) as Record<string, unknown>;

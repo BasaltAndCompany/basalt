@@ -11,7 +11,7 @@
 | Indiana HQ | Address/city, not name tokens (Franklin, Anderson etc. exist nationwide) | drop |
 | $10-70M revenue | IBJ/Inc/Buzzfile/ZoomInfo estimate; sanity-check rev/employee $150-500k | drop |
 | Owner-operated | Founder/CEO still running it, not PE roll-up with shared corporate IT | drop |
-| No real tech team | LinkedIn people search: ≤2 hits for CTO/VP Engineering/IT Director/"software engineer"/"developer" | drop |
+| No real tech team | LinkedIn people search: ≤6 hits for CTO/VP Engineering/IT Director/"software engineer"/"developer" | drop |
 | Knowledge-heavy | Their product is judgment, relationships, data-wrangling, compliance — not physical goods or software | deprioritize |
 
 ## Industries, ranked by brain-reuse
@@ -55,7 +55,7 @@ Ranked by signal-per-hour. Everything below is free or cheap unless noted.
 
 ## 5-minute tech-gap verification (per company)
 
-1. LinkedIn company page → People tab → search titles: `CTO`, `VP Engineering`, `IT Director`, `software engineer`, `developer`, `data engineer`. **0-2 hits = qualify.** A real tech org has 5+ per 100 employees.
+1. LinkedIn company page → People tab → search titles: `CTO`, `VP Engineering`, `IT Director`, `software engineer`, `developer`, `data engineer`. **0-6 hits = qualify.** A real tech org has 5+ per 100 employees.
 2. Check total headcount. 15-250 employees + $10-70M = right size.
 3. Careers page / Indeed: no engineering postings = confirmed. **Postings saying "hiring first developer" = strongest possible timing signal.**
 4. Website: no product/engineering pages, template vendor sites, no GitHub org.
