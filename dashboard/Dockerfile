@@ -1,11 +1,18 @@
 # ═══ Builder: install + compile ═══
+# Build context is the REPO ROOT (ci.yml + fly.yml pass --dockerfile
+# dashboard/Dockerfile): dashboard imports the @basalt/ui workspace package
+# from packages/ui, so the old dashboard-only context can't resolve it.
 FROM oven/bun:1.4 AS builder
 WORKDIR /app
 
 COPY package.json bun.lock* bun.lockb* ./
+COPY dashboard/package.json dashboard/package.json
+COPY packages/ui/package.json packages/ui/package.json
+COPY basalt/package.json basalt/package.json
 RUN bun install
 
 COPY . .
+WORKDIR /app/dashboard
 # dummy url: db/index.ts throws at import without it, which would silently
 # kill the marketing prerender in this build stage (queries fail harmlessly;
 # runtime uses the real fly secret, this env stays in the builder only)
@@ -22,7 +29,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/dashboard/.output ./.output
 
 EXPOSE 3000
 ENV HOST=0.0.0.0 PORT=3000 NODE_ENV=production

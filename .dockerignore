@@ -1,0 +1,9 @@
+**/node_modules
+**/.output
+**/dist
+**/.astro
+.git
+.env
+.env.*
+**/*.log
+.DS_Store
