@@ -41,7 +41,7 @@ jobs:
         with:
           # repo-root context: dashboard/Dockerfile copies the workspace packages
           context: .
-          dockerfile: dashboard/Dockerfile
+          file: dashboard/Dockerfile
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
